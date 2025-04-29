@@ -5,7 +5,7 @@
 [![image](https://img.shields.io/conda/vn/conda-forge/ecospat.svg)](https://anaconda.org/conda-forge/ecospat)
 
 
-**A python package to o characterize the range dynamics and shifts of North American tree species.**
+**A python package to characterize the range dynamics and shifts of North American tree species.**
 
 
 -   Free software: MIT License
