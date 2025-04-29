@@ -12,5 +12,6 @@ rasterio
 requests
 scikit-learn
 scipy
+setuptools
 shapely
 
