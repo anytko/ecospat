@@ -1,5 +1,5 @@
 site_name: ecospat
-site_description: A python package to o characterize the range dynamics and shifts of North American tree species.
+site_description: Ecological Spatial Analysis - A python package to characterize the range dynamics and shifts of North American tree species.
 site_author: anytko
 site_url: https://anytko.github.io/ecospat
 repo_url: https://github.com/anytko/ecospat
@@ -90,3 +90,4 @@ nav:
           - common module: common.md
           - ipyleaflet mapping module: mapping.md
           - folium mapping module: foliummap.md
+
