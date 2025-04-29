@@ -36,4 +36,20 @@
          <loc>https://anytko.github.io/ecospat/examples/intro/</loc>
          <lastmod>2025-04-29</lastmod>
     </url>
+    <url>
+         <loc>https://anytko.github.io/ecospat/examples/mapping/</loc>
+         <lastmod>2025-04-29</lastmod>
+    </url>
+    <url>
+         <loc>https://anytko.github.io/ecospat/examples/raster/</loc>
+         <lastmod>2025-04-29</lastmod>
+    </url>
+    <url>
+         <loc>https://anytko.github.io/ecospat/examples/split_map/</loc>
+         <lastmod>2025-04-29</lastmod>
+    </url>
+    <url>
+         <loc>https://anytko.github.io/ecospat/examples/widgets/</loc>
+         <lastmod>2025-04-29</lastmod>
+    </url>
 </urlset>
