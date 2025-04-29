@@ -1,1 +1,16 @@
+folium
+geopandas
+geopy
+ipyleaflet
+ipywidgets
+localtileserver
+matplotlib
 numpy
+pygbif
+pytest
+rasterio
+requests
+scikit-learn
+scipy
+shapely
+

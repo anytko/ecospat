@@ -81,6 +81,12 @@ nav:
     - Report Issues: https://github.com/anytko/ecospat/issues
     - Examples:
         - examples/intro.ipynb
+        - examples/mapping.ipynb
+        - examples/split_map.ipynb
+        - examples/raster.ipynb
+        - examples/widgets.ipynb
     - API Reference:
           - ecospat module: ecospat.md
           - common module: common.md
+          - ipyleaflet mapping module: mapping.md
+          - folium mapping module: foliummap.md
