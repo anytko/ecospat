@@ -10,7 +10,7 @@
 
 -   Free software: MIT License
 -   Documentation: https://anytko.github.io/ecospat
-    
+
 
 ## Features
 
