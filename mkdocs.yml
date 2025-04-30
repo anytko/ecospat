@@ -85,6 +85,7 @@ nav:
         - examples/split_map.ipynb
         - examples/raster.ipynb
         - examples/widgets.ipynb
+        - examples/interactive_leafmap.ipynb
     - API Reference:
           - ecospat module: ecospat.md
           - common module: common.md
