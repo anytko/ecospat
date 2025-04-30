@@ -11,6 +11,7 @@ from ipyleaflet import Marker, Popup
 import rasterio
 import ipywidgets as widgets
 from typing import Optional
+import leafmap
 
 
 class Map(ipyleaflet.Map):
