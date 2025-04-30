@@ -6,6 +6,7 @@ ipyleaflet
 ipywidgets
 leafmap
 localtileserver
+mapclassify
 matplotlib
 numpy
 pygbif
