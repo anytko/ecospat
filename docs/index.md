@@ -13,4 +13,5 @@
 
 ## Features
 
--   TODO
+-   Maps and identifies edges of historical and contemporary ranges for over 600 tree species.
+-   Generates a persistence raster that can be downloaded and used in further analyses.
