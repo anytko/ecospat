@@ -12,15 +12,15 @@ theme:
           #   primary: blue
           #   accent: indigo
           toggle:
-              icon: lux/toggle-switch-off-outline
+              icon: material/toggle-switch-off-outline
               name: Switch to dark mode
         - scheme: slate
           primary: indigo
           accent: indigo
           toggle:
-              icon: lux/toggle-switch
+              icon: material/toggle-switch
               name: Switch to light mode
-    name: lux
+    name: material
     icon:
         repo: fontawesome/brands/github
     # logo: assets/logo.png
