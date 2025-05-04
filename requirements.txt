@@ -9,6 +9,7 @@ localtileserver
 mapclassify
 matplotlib
 numpy
+pydeck
 pygbif
 pytest
 rasterio
