@@ -23,8 +23,7 @@ repos:
             args:
                 [
                     "--skip=*.csv,*.geojson,*.json,*.yml,*.js,*.html,*cff,*.pdf",
-                    "--ignore-words=.codespellignore",
-                    "--ignore-words-list=americanus"
+                    "--ignore-words=.codespellignore"
                 ]
 
     - repo: https://github.com/kynan/nbstripout
