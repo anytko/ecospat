@@ -80,15 +80,16 @@ nav:
     - Changelog: changelog.md
     - Report Issues: https://github.com/anytko/ecospat/issues
     - Examples:
-        - examples/intro.ipynb
-        - examples/mapping.ipynb
-        - examples/split_map.ipynb
-        - examples/raster.ipynb
+        - examples/leaflet_base.ipynb
+        - examples/folium_base.ipynb
+        - examples/range_edges.ipynb
+        - examples/range_movement.ipynb
+        - examples/population_density.ipynb
+        - examples/persistence_raster.ipynb
         - examples/widgets.ipynb
-        - examples/interactive_leafmap.ipynb
     - API Reference:
           - ecospat module: ecospat.md
-          - common module: common.md
+          - stand alone module: stand_alone.md
           - ipyleaflet mapping module: mapping.md
           - folium mapping module: foliummap.md
 
