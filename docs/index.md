@@ -2,9 +2,7 @@
 
 
 [![image](https://img.shields.io/pypi/v/ecospat.svg)](https://pypi.python.org/pypi/ecospat)
-<div style="text-align: center;">
-  <img src="/logo.png" alt="ecospat logo" width="300"/>
-</div>
+[![logo](/logo.png)](/logo.png)
 
 
 **A python package to characterize the range dynamics and shifts of North American tree species.**
@@ -21,6 +19,7 @@
 - Core: Largest, most central populations
 - Trailing Edge: Populations south of the core
 - Relict (latitudinal or longitudinal): Highly disconnected populations south of the trailing edge or very far east or west of the range
+
 If we understand how these edges are moving, we can also infer biologically important characteristics of these populations. Under climate change, species are expected to move northward to track their climate envelopes. Using this model of Positive/all-together movement, the leading edge is expected to demonstrate low genetic and functional diversity, while the trailing edge gains genetic and functional diversity. However, not all range movements are equal under climate change or disturbance; other patterns of movement such as negative movement, stability, pull-apart patterns, and reabsorption to the core exist and affect the genetic and functional diversity of populations. At present, there are no widely adopted software implementations for characterizing range dynamics.
 
 Using the historical ranges of over 670 North American tree species and modern GBIF data, **ecospat** categorizes the range edges of species, northward movement of ranges, and changes in population density over time to identify range patterns and create a predicted persistence raster to be used in species distribution models and further research.
