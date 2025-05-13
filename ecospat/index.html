@@ -15,14 +15,14 @@
         <link rel="canonical" href="https://anytko.github.io/ecospat/ecospat/">
       
       
-        <link rel="prev" href="../examples/interactive_leafmap/">
+        <link rel="prev" href="../examples/widgets/">
       
       
-        <link rel="next" href="../common/">
+        <link rel="next" href="../stand_alone/">
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.12">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
     
     
       
@@ -30,7 +30,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.2afb09e1.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -461,12 +461,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/intro/" class="md-nav__link">
+      <a href="../examples/leaflet_base/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Intro
+    Leaflet base
     
   </span>
   
@@ -484,12 +484,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/mapping/" class="md-nav__link">
+      <a href="../examples/folium_base/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Mapping
+    Folium base
     
   </span>
   
@@ -507,12 +507,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/split_map/" class="md-nav__link">
+      <a href="../examples/range_edges/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Split map
+    Range edges
     
   </span>
   
@@ -530,12 +530,58 @@
   
   
     <li class="md-nav__item">
-      <a href="../examples/raster/" class="md-nav__link">
+      <a href="../examples/range_movement/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Raster
+    Range movement
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/population_density/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Population density
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/persistence_raster/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Persistence raster
     
   </span>
   
@@ -559,29 +605,6 @@
   
   <span class="md-ellipsis">
     Widgets
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../examples/interactive_leafmap/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Interactive leafmap
     
   </span>
   
@@ -705,17 +728,17 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map" class="md-nav__link">
     <span class="md-ellipsis">
-      HistoricalMap
+      Map
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="HistoricalMap">
+    <nav class="md-nav" aria-label="Map">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.add_basemap" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.add_basemap" class="md-nav__link">
     <span class="md-ellipsis">
       add_basemap()
     </span>
@@ -724,7 +747,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.add_basemap_gui" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.add_basemap_gui" class="md-nav__link">
     <span class="md-ellipsis">
       add_basemap_gui()
     </span>
@@ -733,16 +756,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.add_gbif_polygons" class="md-nav__link">
-    <span class="md-ellipsis">
-      add_gbif_polygons()
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.add_geojson" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.add_geojson" class="md-nav__link">
     <span class="md-ellipsis">
       add_geojson()
     </span>
@@ -751,7 +765,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.add_google_map" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.add_google_map" class="md-nav__link">
     <span class="md-ellipsis">
       add_google_map()
     </span>
@@ -760,7 +774,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.add_layer_control" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.add_layer_control" class="md-nav__link">
     <span class="md-ellipsis">
       add_layer_control()
     </span>
@@ -769,7 +783,16 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.add_shp" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.add_range_polygons" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_range_polygons()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ecospat.ecospat.Map.add_shp" class="md-nav__link">
     <span class="md-ellipsis">
       add_shp()
     </span>
@@ -778,7 +801,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.add_shp_from_url" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.add_shp_from_url" class="md-nav__link">
     <span class="md-ellipsis">
       add_shp_from_url()
     </span>
@@ -787,7 +810,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.add_widget" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.add_widget" class="md-nav__link">
     <span class="md-ellipsis">
       add_widget()
     </span>
@@ -796,7 +819,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.handle_hover" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.handle_hover" class="md-nav__link">
     <span class="md-ellipsis">
       handle_hover()
     </span>
@@ -805,7 +828,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.handle_mouseout" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.handle_mouseout" class="md-nav__link">
     <span class="md-ellipsis">
       handle_mouseout()
     </span>
@@ -814,7 +837,16 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.remove_lakes" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.load_historic_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_historic_data()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ecospat.ecospat.Map.remove_lakes" class="md-nav__link">
     <span class="md-ellipsis">
       remove_lakes()
     </span>
@@ -823,7 +855,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.shorten_name" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.shorten_name" class="md-nav__link">
     <span class="md-ellipsis">
       shorten_name()
     </span>
@@ -832,7 +864,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.style_callback" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.style_callback" class="md-nav__link">
     <span class="md-ellipsis">
       style_callback()
     </span>
@@ -861,12 +893,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../common/" class="md-nav__link">
+      <a href="../stand_alone/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    common module
+    stand alone module
     
   </span>
   
@@ -966,17 +998,17 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map" class="md-nav__link">
     <span class="md-ellipsis">
-      HistoricalMap
+      Map
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="HistoricalMap">
+    <nav class="md-nav" aria-label="Map">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.add_basemap" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.add_basemap" class="md-nav__link">
     <span class="md-ellipsis">
       add_basemap()
     </span>
@@ -985,7 +1017,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.add_basemap_gui" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.add_basemap_gui" class="md-nav__link">
     <span class="md-ellipsis">
       add_basemap_gui()
     </span>
@@ -994,16 +1026,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.add_gbif_polygons" class="md-nav__link">
-    <span class="md-ellipsis">
-      add_gbif_polygons()
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.add_geojson" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.add_geojson" class="md-nav__link">
     <span class="md-ellipsis">
       add_geojson()
     </span>
@@ -1012,7 +1035,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.add_google_map" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.add_google_map" class="md-nav__link">
     <span class="md-ellipsis">
       add_google_map()
     </span>
@@ -1021,7 +1044,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.add_layer_control" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.add_layer_control" class="md-nav__link">
     <span class="md-ellipsis">
       add_layer_control()
     </span>
@@ -1030,7 +1053,16 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.add_shp" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.add_range_polygons" class="md-nav__link">
+    <span class="md-ellipsis">
+      add_range_polygons()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ecospat.ecospat.Map.add_shp" class="md-nav__link">
     <span class="md-ellipsis">
       add_shp()
     </span>
@@ -1039,7 +1071,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.add_shp_from_url" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.add_shp_from_url" class="md-nav__link">
     <span class="md-ellipsis">
       add_shp_from_url()
     </span>
@@ -1048,7 +1080,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.add_widget" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.add_widget" class="md-nav__link">
     <span class="md-ellipsis">
       add_widget()
     </span>
@@ -1057,7 +1089,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.handle_hover" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.handle_hover" class="md-nav__link">
     <span class="md-ellipsis">
       handle_hover()
     </span>
@@ -1066,7 +1098,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.handle_mouseout" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.handle_mouseout" class="md-nav__link">
     <span class="md-ellipsis">
       handle_mouseout()
     </span>
@@ -1075,7 +1107,16 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.remove_lakes" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.load_historic_data" class="md-nav__link">
+    <span class="md-ellipsis">
+      load_historic_data()
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ecospat.ecospat.Map.remove_lakes" class="md-nav__link">
     <span class="md-ellipsis">
       remove_lakes()
     </span>
@@ -1084,7 +1125,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.shorten_name" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.shorten_name" class="md-nav__link">
     <span class="md-ellipsis">
       shorten_name()
     </span>
@@ -1093,7 +1134,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ecospat.ecospat.HistoricalMap.style_callback" class="md-nav__link">
+  <a href="#ecospat.ecospat.Map.style_callback" class="md-nav__link">
     <span class="md-ellipsis">
       style_callback()
     </span>
@@ -1152,21 +1193,21 @@
 
 
 
-<h2 id="ecospat.ecospat.HistoricalMap" class="doc doc-heading">
+<h2 id="ecospat.ecospat.Map" class="doc doc-heading">
         <code>
-HistoricalMap            (<span title="ipyleaflet.leaflet.Map">Map</span>)
+Map            (<span title="ipyleaflet.leaflet.Map">Map</span>)
         </code>
 
 
 
-<a href="#ecospat.ecospat.HistoricalMap" class="headerlink" title="Permanent link">&para;</a></h2>
+<a href="#ecospat.ecospat.Map" class="headerlink" title="Permanent link">&para;</a></h2>
 
     <div class="doc doc-contents ">
 
 
         <details class="quote">
           <summary>Source code in <code>ecospat/ecospat.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">HistoricalMap</span><span class="p">(</span><span class="n">ipyleaflet</span><span class="o">.</span><span class="n">Map</span><span class="p">):</span>
+          <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Map</span><span class="p">(</span><span class="n">ipyleaflet</span><span class="o">.</span><span class="n">Map</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mf">42.94033923363183</span><span class="p">,</span> <span class="o">-</span><span class="mf">80.9033203125</span><span class="p">],</span>
@@ -1202,7 +1243,8 @@ HistoricalMap            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Helper to shorten the species name.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">species_name</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="n">species_name</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">][:</span><span class="mi">4</span><span class="p">])</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">load_historic_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">species_name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">load_historic_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">species_name</span><span class="p">,</span> <span class="n">add_to_map</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load historic range data, optionally add to map.&quot;&quot;&quot;</span>
         <span class="c1"># Create the short name (first 4 letters of each word, lowercase)</span>
         <span class="n">short_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shorten_name</span><span class="p">(</span><span class="n">species_name</span><span class="p">)</span>
 
@@ -1223,7 +1265,12 @@ HistoricalMap            (<span title="ipyleaflet.leaflet.Map">Map</span>)
             <span class="c1"># Save it internally</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">gdfs</span><span class="p">[</span><span class="n">short_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">species_range</span>
 
-            <span class="c1"># No prints, no plots - clean loading!</span>
+            <span class="n">geojson_dict</span> <span class="o">=</span> <span class="n">species_range</span><span class="o">.</span><span class="n">__geo_interface__</span>
+
+            <span class="c1"># Only add to map if add_to_map is True</span>
+            <span class="k">if</span> <span class="n">add_to_map</span><span class="p">:</span>
+                <span class="n">geojson_layer</span> <span class="o">=</span> <span class="n">GeoJSON</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">geojson_dict</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">species_name</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">geojson_layer</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error loading </span><span class="si">{</span><span class="n">geojson_url</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1409,7 +1456,10 @@ HistoricalMap            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 
                 <span class="c1"># Add new basemap</span>
                 <span class="n">url</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ipyleaflet.basemaps.</span><span class="si">{</span><span class="n">change</span><span class="p">[</span><span class="s1">&#39;new&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">build_url</span><span class="p">()</span>
-                <span class="n">new_tile_layer</span> <span class="o">=</span> <span class="n">ipyleaflet</span><span class="o">.</span><span class="n">TileLayer</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">change</span><span class="p">[</span><span class="s2">&quot;new&quot;</span><span class="p">])</span>
+                <span class="c1"># new_tile_layer = ipyleaflet.TileLayer(url=url, name=change[&quot;new&quot;])</span>
+                <span class="n">new_tile_layer</span> <span class="o">=</span> <span class="n">ipyleaflet</span><span class="o">.</span><span class="n">TileLayer</span><span class="p">(</span>
+                    <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Basemap&quot;</span>  <span class="c1"># So we can recognize and update only this</span>
+                <span class="p">)</span>
 
                 <span class="c1"># Add the new basemap as the bottom layer (first in the list)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">new_tile_layer</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span>
@@ -1592,10 +1642,6 @@ HistoricalMap            (<span title="ipyleaflet.leaflet.Map">Map</span>)
             <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;button_color&quot;</span><span class="p">:</span> <span class="s2">&quot;white&quot;</span><span class="p">},</span>
         <span class="p">)</span>
 
-        <span class="n">species_input</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Species:&quot;</span><span class="p">,</span> <span class="n">placeholder</span><span class="o">=</span><span class="s2">&quot;Enter species name&quot;</span>
-        <span class="p">)</span>
-
         <span class="n">end_date_picker</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">DatePicker</span><span class="p">(</span>
             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;End Date:&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">()</span>
         <span class="p">)</span>
@@ -1610,24 +1656,52 @@ HistoricalMap            (<span title="ipyleaflet.leaflet.Map">Map</span>)
         <span class="p">)</span>
 
         <span class="n">generate_3d_checkbox</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span>
-            <span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Generate 3D population density map&quot;</span><span class="p">,</span>
-            <span class="n">layout</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span>
-                <span class="n">margin</span><span class="o">=</span><span class="s2">&quot;0px 0px 0px 0px&quot;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;0px 20px 0px 0px&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span>
-            <span class="p">),</span>
+            <span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Generate 3D population density map&quot;</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
 
         <span class="n">save_map_checkbox</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span>
-            <span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Save this map to your local device&quot;</span><span class="p">,</span>
-            <span class="n">layout</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span>
-                <span class="n">margin</span><span class="o">=</span><span class="s2">&quot;0px 0px 0px 0px&quot;</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s2">&quot;0px 20px 0px 0px&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span>
-            <span class="p">),</span>
+            <span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Save 3D Population Density Map&quot;</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">False</span>
         <span class="p">)</span>
+
+        <span class="n">save_results_checkbox</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span>
+            <span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Save Movement Results&quot;</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+
+        <span class="n">save_modern_label</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s2">&quot;Save Selection:&quot;</span><span class="p">)</span>
+
+        <span class="n">save_modern_gbif_checkbox</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span>
+            <span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Save Modern GBIF Data&quot;</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Stack them vertically</span>
+        <span class="n">save_modern_box</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">([</span><span class="n">save_modern_label</span><span class="p">,</span> <span class="n">save_modern_gbif_checkbox</span><span class="p">])</span>
+
+        <span class="n">save_historic_gbif_checkbox</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span>
+            <span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Save Historic GBIF Data&quot;</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+
+        <span class="n">save_raster_radio</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">RadioButtons</span><span class="p">(</span>
+            <span class="n">options</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Yes&quot;</span><span class="p">,</span> <span class="s2">&quot;No&quot;</span><span class="p">],</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Save Predicted Persistence Raster&quot;</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="s2">&quot;No&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">save_range_checkbox</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Save to range extent&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="n">save_global_checkbox</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Checkbox</span><span class="p">(</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Save to global extent&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+        <span class="n">resolution_input</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">FloatText</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="mf">0.1666667</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Resolution&quot;</span><span class="p">)</span>
+
+        <span class="n">conditional_raster_box</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
+            <span class="n">children</span><span class="o">=</span><span class="p">[</span><span class="n">save_range_checkbox</span><span class="p">,</span> <span class="n">save_global_checkbox</span><span class="p">,</span> <span class="n">resolution_input</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">conditional_raster_box</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span>  <span class="c1"># hidden initially</span>
 
         <span class="n">toggle_buttons</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HBox</span><span class="p">([</span><span class="n">toggle</span><span class="p">,</span> <span class="n">output_toggle</span><span class="p">])</span>
 
-        <span class="n">save_map_box</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HBox</span><span class="p">([</span><span class="n">widgets</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="s2">&quot;    &quot;</span><span class="p">),</span> <span class="n">save_map_checkbox</span><span class="p">])</span>
+        <span class="c1"># save_map_box = widgets.HBox([widgets.Label(&quot;    &quot;), save_map_checkbox])</span>
 
         <span class="n">process_button</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span>
             <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Run Analysis&quot;</span><span class="p">,</span> <span class="n">button_style</span><span class="o">=</span><span class="s2">&quot;success&quot;</span><span class="p">,</span> <span class="n">icon</span><span class="o">=</span><span class="s2">&quot;play&quot;</span>
@@ -1643,6 +1717,13 @@ HistoricalMap            (<span title="ipyleaflet.leaflet.Map">Map</span>)
         <span class="n">collapsible_output_area</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span>  <span class="c1"># Initially hidden</span>
         <span class="n">collapsible_output_area</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">padding</span> <span class="o">=</span> <span class="s2">&quot;0px 20px 0px 0px&quot;</span>
 
+        <span class="n">species_input</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">Dropdown</span><span class="p">(</span>
+            <span class="n">options</span><span class="o">=</span><span class="nb">sorted</span><span class="p">(</span><span class="n">NAME_REFERENCES</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+            <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Species:&quot;</span><span class="p">,</span>
+            <span class="n">style</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;description_width&quot;</span><span class="p">:</span> <span class="s2">&quot;initial&quot;</span><span class="p">},</span>
+            <span class="n">layout</span><span class="o">=</span><span class="n">widgets</span><span class="o">.</span><span class="n">Layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="s2">&quot;300px&quot;</span><span class="p">),</span>
+        <span class="p">)</span>
+
         <span class="c1"># Add gbif_limit_input to controls_box</span>
         <span class="n">controls_box</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">VBox</span><span class="p">(</span>
             <span class="p">[</span>
@@ -1651,7 +1732,12 @@ HistoricalMap            (<span title="ipyleaflet.leaflet.Map">Map</span>)
                 <span class="n">end_date_picker</span><span class="p">,</span>
                 <span class="n">map_type_radio</span><span class="p">,</span>
                 <span class="n">generate_3d_checkbox</span><span class="p">,</span>
-                <span class="n">save_map_box</span><span class="p">,</span>
+                <span class="n">save_modern_box</span><span class="p">,</span>
+                <span class="n">save_historic_gbif_checkbox</span><span class="p">,</span>
+                <span class="n">save_map_checkbox</span><span class="p">,</span>
+                <span class="n">save_results_checkbox</span><span class="p">,</span>
+                <span class="n">save_raster_radio</span><span class="p">,</span>
+                <span class="n">conditional_raster_box</span><span class="p">,</span>
                 <span class="n">process_button</span><span class="p">,</span>
             <span class="p">]</span>
         <span class="p">)</span>
@@ -1665,12 +1751,20 @@ HistoricalMap            (<span title="ipyleaflet.leaflet.Map">Map</span>)
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">collapsible_output_area</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span>
 
+        <span class="k">def</span><span class="w"> </span><span class="nf">toggle_save_options</span><span class="p">(</span><span class="n">change</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;new&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Yes&quot;</span><span class="p">:</span>
+                <span class="n">conditional_raster_box</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s2">&quot;flex&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">conditional_raster_box</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span>
+
         <span class="c1"># Function to toggle the control panel visibility</span>
         <span class="k">def</span><span class="w"> </span><span class="nf">toggle_control_panel_visibility</span><span class="p">(</span><span class="n">change</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">change</span><span class="p">[</span><span class="s2">&quot;new&quot;</span><span class="p">]:</span>
                 <span class="n">controls_box</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s2">&quot;block&quot;</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">controls_box</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span>
+
+        <span class="n">save_raster_radio</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">toggle_save_options</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
 
         <span class="n">toggle</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">toggle_control_panel_visibility</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
         <span class="n">output_toggle</span><span class="o">.</span><span class="n">observe</span><span class="p">(</span><span class="n">toggle_output_visibility</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="s2">&quot;value&quot;</span><span class="p">)</span>
@@ -1682,8 +1776,11 @@ HistoricalMap            (<span title="ipyleaflet.leaflet.Map">Map</span>)
             <span class="n">end_year_int</span> <span class="o">=</span> <span class="n">end_date</span><span class="o">.</span><span class="n">year</span>
             <span class="n">use_3d</span> <span class="o">=</span> <span class="n">generate_3d_checkbox</span><span class="o">.</span><span class="n">value</span>
             <span class="n">save_map</span> <span class="o">=</span> <span class="n">save_map_checkbox</span><span class="o">.</span><span class="n">value</span>
+            <span class="n">save_results</span> <span class="o">=</span> <span class="n">save_results_checkbox</span><span class="o">.</span><span class="n">value</span>
+            <span class="n">resolution</span> <span class="o">=</span> <span class="n">resolution_input</span><span class="o">.</span><span class="n">value</span>
 
             <span class="n">collapsible_output_area</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
+
             <span class="n">collapsible_output_area</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s2">&quot;block&quot;</span>
 
             <span class="c1"># Check if species exists in reference data</span>
@@ -1718,10 +1815,10 @@ HistoricalMap            (<span title="ipyleaflet.leaflet.Map">Map</span>)
                         <span class="n">summarized_poly</span> <span class="o">=</span> <span class="n">summarize_polygons_with_points</span><span class="p">(</span>
                             <span class="n">classified_modern</span>
                         <span class="p">)</span>
-                        <span class="n">map_widget</span><span class="o">.</span><span class="n">add_gbif_polygons</span><span class="p">(</span><span class="n">summarized_poly</span><span class="p">)</span>
+                        <span class="n">map_widget</span><span class="o">.</span><span class="n">add_range_polygons</span><span class="p">(</span><span class="n">summarized_poly</span><span class="p">)</span>
 
                     <span class="k">elif</span> <span class="n">map_type_radio</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;Historic&quot;</span><span class="p">:</span>
-                        <span class="n">map_widget</span><span class="o">.</span><span class="n">add_gbif_polygons</span><span class="p">(</span><span class="n">hist_range</span><span class="p">)</span>
+                        <span class="n">map_widget</span><span class="o">.</span><span class="n">add_range_polygons</span><span class="p">(</span><span class="n">hist_range</span><span class="p">)</span>
 
                     <span class="c1"># Population map handling</span>
                     <span class="k">if</span> <span class="n">generate_3d_checkbox</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
@@ -1793,6 +1890,49 @@ HistoricalMap            (<span title="ipyleaflet.leaflet.Map">Map</span>)
                     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Population Density:&quot;</span><span class="p">)</span>
                     <span class="nb">print</span><span class="p">(</span><span class="n">change</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 
+                    <span class="n">mean_clim</span><span class="p">,</span> <span class="n">clim_data</span> <span class="o">=</span> <span class="n">extract_raster_means_single_species</span><span class="p">(</span>
+                        <span class="n">classified_modern</span><span class="p">,</span> <span class="n">species</span>
+                    <span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">save_results_checkbox</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                        <span class="n">save_results_as_csv</span><span class="p">(</span>
+                            <span class="n">northward_rate_df</span><span class="p">,</span>
+                            <span class="n">final_result</span><span class="p">,</span>
+                            <span class="n">change</span><span class="p">,</span>
+                            <span class="n">mean_clim</span><span class="p">,</span>
+                            <span class="n">clim_data</span><span class="p">,</span>
+                            <span class="n">species</span><span class="p">,</span>
+                        <span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">save_modern_gbif_checkbox</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                        <span class="n">save_modern_gbif_csv</span><span class="p">(</span><span class="n">classified_modern</span><span class="p">,</span> <span class="n">species</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">save_historic_gbif_checkbox</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                        <span class="n">save_historic_gbif_csv</span><span class="p">(</span><span class="n">classified_historic</span><span class="p">,</span> <span class="n">species</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">save_raster_radio</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;Yes&quot;</span><span class="p">:</span>
+                        <span class="c1"># Call the pipeline function once</span>
+                        <span class="n">full_show</span><span class="p">,</span> <span class="n">full_save</span><span class="p">,</span> <span class="n">show_bounds</span><span class="p">,</span> <span class="n">save_bounds</span> <span class="o">=</span> <span class="p">(</span>
+                            <span class="n">full_propagule_pressure_pipeline</span><span class="p">(</span>
+                                <span class="n">classified_modern</span><span class="p">,</span>
+                                <span class="n">northward_rate_df</span><span class="p">,</span>
+                                <span class="n">change</span><span class="p">,</span>
+                                <span class="n">resolution</span><span class="o">=</span><span class="n">resolution</span><span class="p">,</span>
+                            <span class="p">)</span>
+                        <span class="p">)</span>
+
+                        <span class="k">if</span> <span class="n">save_range_checkbox</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                            <span class="c1"># Save the raster for the range extent</span>
+                            <span class="n">save_raster_to_downloads_range</span><span class="p">(</span>
+                                <span class="n">full_show</span><span class="p">,</span> <span class="n">show_bounds</span><span class="p">,</span> <span class="n">species</span>
+                            <span class="p">)</span>
+
+                        <span class="k">elif</span> <span class="n">save_global_checkbox</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                            <span class="c1"># Save the raster for the global extent</span>
+                            <span class="n">save_raster_to_downloads_global</span><span class="p">(</span>
+                                <span class="n">full_save</span><span class="p">,</span> <span class="n">save_bounds</span><span class="p">,</span> <span class="n">species</span>
+                            <span class="p">)</span>
+
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">collapsible_output_area</span><span class="o">.</span><span class="n">clear_output</span><span class="p">()</span>
                 <span class="n">collapsible_output_area</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s2">&quot;block&quot;</span>
@@ -1800,6 +1940,7 @@ HistoricalMap            (<span title="ipyleaflet.leaflet.Map">Map</span>)
                     <span class="nb">print</span><span class="p">(</span>
                         <span class="sa">f</span><span class="s2">&quot;Species &#39;</span><span class="si">{</span><span class="n">species</span><span class="si">}</span><span class="s2">&#39; not available in the reference data. Try another species.&quot;</span>
                     <span class="p">)</span>
+            <span class="n">controls_box</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span>
 
         <span class="n">process_button</span><span class="o">.</span><span class="n">on_click</span><span class="p">(</span><span class="n">on_run_button_clicked</span><span class="p">)</span>
 
@@ -1813,7 +1954,7 @@ HistoricalMap            (<span title="ipyleaflet.leaflet.Map">Map</span>)
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">output_control</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">add_gbif_polygons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">summarized_poly</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_range_polygons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">summarized_poly</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Add polygons from a GeoDataFrame to ipyleaflet, with hover tooltips.&quot;&quot;&quot;</span>
 
         <span class="c1"># Create the tooltip as an independent widget</span>
@@ -1881,6 +2022,17 @@ HistoricalMap            (<span title="ipyleaflet.leaflet.Map">Map</span>)
                 <span class="bp">self</span><span class="o">.</span><span class="n">remove_control</span><span class="p">(</span><span class="n">hover_control</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">inner</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_raster</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="kn">from</span><span class="w"> </span><span class="nn">localtileserver</span><span class="w"> </span><span class="kn">import</span> <span class="n">TileClient</span><span class="p">,</span> <span class="n">get_leaflet_tile_layer</span>
+
+        <span class="n">client</span> <span class="o">=</span> <span class="n">TileClient</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="n">tile_layer</span> <span class="o">=</span> <span class="n">get_leaflet_tile_layer</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tile_layer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">center</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zoom</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">default_zoom</span>
 </code></pre></div>
         </details>
 
@@ -1901,11 +2053,11 @@ HistoricalMap            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 
 
 
-<h3 id="ecospat.ecospat.HistoricalMap.add_basemap" class="doc doc-heading">
+<h3 id="ecospat.ecospat.Map.add_basemap" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">add_basemap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">basemap</span><span class="o">=</span><span class="s1">&#39;OpenTopoMap&#39;</span><span class="p">)</span></code>
 
 
-<a href="#ecospat.ecospat.HistoricalMap.add_basemap" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ecospat.ecospat.Map.add_basemap" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -1971,11 +2123,11 @@ HistoricalMap            (<span title="ipyleaflet.leaflet.Map">Map</span>)
 
 
 
-<h3 id="ecospat.ecospat.HistoricalMap.add_basemap_gui" class="doc doc-heading">
+<h3 id="ecospat.ecospat.Map.add_basemap_gui" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">add_basemap_gui</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;topleft&#39;</span><span class="p">)</span></code>
 
 
-<a href="#ecospat.ecospat.HistoricalMap.add_basemap_gui" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ecospat.ecospat.Map.add_basemap_gui" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -2120,7 +2272,10 @@ Defaults to ["OpenStreetMap.Mapnik", "OpenTopoMap", "Esri.WorldImagery", "Esri.W
 
             <span class="c1"># Add new basemap</span>
             <span class="n">url</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ipyleaflet.basemaps.</span><span class="si">{</span><span class="n">change</span><span class="p">[</span><span class="s1">&#39;new&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">build_url</span><span class="p">()</span>
-            <span class="n">new_tile_layer</span> <span class="o">=</span> <span class="n">ipyleaflet</span><span class="o">.</span><span class="n">TileLayer</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">change</span><span class="p">[</span><span class="s2">&quot;new&quot;</span><span class="p">])</span>
+            <span class="c1"># new_tile_layer = ipyleaflet.TileLayer(url=url, name=change[&quot;new&quot;])</span>
+            <span class="n">new_tile_layer</span> <span class="o">=</span> <span class="n">ipyleaflet</span><span class="o">.</span><span class="n">TileLayer</span><span class="p">(</span>
+                <span class="n">url</span><span class="o">=</span><span class="n">url</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Basemap&quot;</span>  <span class="c1"># So we can recognize and update only this</span>
+            <span class="p">)</span>
 
             <span class="c1"># Add the new basemap as the bottom layer (first in the list)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="p">[</span><span class="n">new_tile_layer</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span>
@@ -2146,71 +2301,11 @@ Defaults to ["OpenStreetMap.Mapnik", "OpenTopoMap", "Esri.WorldImagery", "Esri.W
 
 
 
-<h3 id="ecospat.ecospat.HistoricalMap.add_gbif_polygons" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">add_gbif_polygons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">summarized_poly</span><span class="p">)</span></code>
-
-
-<a href="#ecospat.ecospat.HistoricalMap.add_gbif_polygons" class="headerlink" title="Permanent link">&para;</a></h3>
-
-    <div class="doc doc-contents ">
-
-      <p>Add polygons from a GeoDataFrame to ipyleaflet, with hover tooltips.</p>
-
-        <details class="quote">
-          <summary>Source code in <code>ecospat/ecospat.py</code></summary>
-          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_gbif_polygons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">summarized_poly</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add polygons from a GeoDataFrame to ipyleaflet, with hover tooltips.&quot;&quot;&quot;</span>
-
-    <span class="c1"># Create the tooltip as an independent widget</span>
-    <span class="n">tooltip</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>  <span class="c1"># Start with an empty value</span>
-    <span class="n">tooltip</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">margin</span> <span class="o">=</span> <span class="s2">&quot;10px&quot;</span>
-    <span class="n">tooltip</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">visibility</span> <span class="o">=</span> <span class="s2">&quot;hidden&quot;</span>
-    <span class="n">tooltip</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span>
-    <span class="n">tooltip</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span>
-
-    <span class="n">tooltip</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s2">&quot;flex&quot;</span>  <span class="c1"># Make it a flex container to enable alignment</span>
-    <span class="n">tooltip</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">align_items</span> <span class="o">=</span> <span class="s2">&quot;center&quot;</span>  <span class="c1"># Center vertically</span>
-    <span class="n">tooltip</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">justify_content</span> <span class="o">=</span> <span class="s2">&quot;center&quot;</span>  <span class="c1"># Center horizontally</span>
-    <span class="n">tooltip</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">text_align</span> <span class="o">=</span> <span class="s2">&quot;center&quot;</span>
-
-    <span class="c1"># Widget control for the tooltip, positioned at the bottom right of the map</span>
-    <span class="n">hover_control</span> <span class="o">=</span> <span class="n">WidgetControl</span><span class="p">(</span><span class="n">widget</span><span class="o">=</span><span class="n">tooltip</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s2">&quot;bottomleft&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Convert GeoDataFrame to GeoJSON format</span>
-    <span class="n">geojson_data</span> <span class="o">=</span> <span class="n">summarized_poly</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span>
-
-    <span class="c1"># Load the GeoJSON string into a Python dictionary</span>
-    <span class="n">geojson_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">geojson_data</span><span class="p">)</span>
-
-    <span class="c1"># Create GeoJSON layer for ipyleaflet</span>
-    <span class="n">geojson_layer</span> <span class="o">=</span> <span class="n">GeoJSON</span><span class="p">(</span>
-        <span class="n">data</span><span class="o">=</span><span class="n">geojson_dict</span><span class="p">,</span>  <span class="c1"># Pass the Python dictionary (not a string)</span>
-        <span class="n">style_callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">style_callback</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="c1"># Attach hover and mouseout event handlers</span>
-    <span class="n">geojson_layer</span><span class="o">.</span><span class="n">on_hover</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handle_hover</span><span class="p">(</span><span class="n">tooltip</span><span class="p">,</span> <span class="n">hover_control</span><span class="p">))</span>
-    <span class="n">geojson_layer</span><span class="o">.</span><span class="n">on_msg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handle_mouseout</span><span class="p">(</span><span class="n">tooltip</span><span class="p">,</span> <span class="n">hover_control</span><span class="p">))</span>
-
-    <span class="c1"># Add the GeoJSON layer to the map (now directly using self)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">geojson_layer</span><span class="p">)</span>
-</code></pre></div>
-        </details>
-    </div>
-
-  </div>
-
-
-
-  <div class="doc doc-object doc-method">
-
-
-
-<h3 id="ecospat.ecospat.HistoricalMap.add_geojson" class="doc doc-heading">
+<h3 id="ecospat.ecospat.Map.add_geojson" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">add_geojson</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">zoom_to_layer</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">hover_style</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
 
-<a href="#ecospat.ecospat.HistoricalMap.add_geojson" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ecospat.ecospat.Map.add_geojson" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -2316,11 +2411,11 @@ Defaults to ["OpenStreetMap.Mapnik", "OpenTopoMap", "Esri.WorldImagery", "Esri.W
 
 
 
-<h3 id="ecospat.ecospat.HistoricalMap.add_google_map" class="doc doc-heading">
+<h3 id="ecospat.ecospat.Map.add_google_map" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">add_google_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_type</span><span class="o">=</span><span class="s1">&#39;ROADMAP&#39;</span><span class="p">)</span></code>
 
 
-<a href="#ecospat.ecospat.HistoricalMap.add_google_map" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ecospat.ecospat.Map.add_google_map" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -2378,11 +2473,11 @@ Defaults to ["OpenStreetMap.Mapnik", "OpenTopoMap", "Esri.WorldImagery", "Esri.W
 
 
 
-<h3 id="ecospat.ecospat.HistoricalMap.add_layer_control" class="doc doc-heading">
+<h3 id="ecospat.ecospat.Map.add_layer_control" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">add_layer_control</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></code>
 
 
-<a href="#ecospat.ecospat.HistoricalMap.add_layer_control" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ecospat.ecospat.Map.add_layer_control" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -2406,11 +2501,72 @@ Defaults to ["OpenStreetMap.Mapnik", "OpenTopoMap", "Esri.WorldImagery", "Esri.W
 
 
 
-<h3 id="ecospat.ecospat.HistoricalMap.add_shp" class="doc doc-heading">
+<h3 id="ecospat.ecospat.Map.add_range_polygons" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">add_range_polygons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">summarized_poly</span><span class="p">)</span></code>
+
+
+<a href="#ecospat.ecospat.Map.add_range_polygons" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Add polygons from a GeoDataFrame to ipyleaflet, with hover tooltips.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>ecospat/ecospat.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">add_range_polygons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">summarized_poly</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add polygons from a GeoDataFrame to ipyleaflet, with hover tooltips.&quot;&quot;&quot;</span>
+
+    <span class="c1"># Create the tooltip as an independent widget</span>
+    <span class="n">tooltip</span> <span class="o">=</span> <span class="n">widgets</span><span class="o">.</span><span class="n">HTML</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>  <span class="c1"># Start with an empty value</span>
+    <span class="n">tooltip</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">margin</span> <span class="o">=</span> <span class="s2">&quot;10px&quot;</span>
+    <span class="n">tooltip</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">visibility</span> <span class="o">=</span> <span class="s2">&quot;hidden&quot;</span>
+    <span class="n">tooltip</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span>
+    <span class="n">tooltip</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span>
+
+    <span class="n">tooltip</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">display</span> <span class="o">=</span> <span class="s2">&quot;flex&quot;</span>  <span class="c1"># Make it a flex container to enable alignment</span>
+    <span class="n">tooltip</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">align_items</span> <span class="o">=</span> <span class="s2">&quot;center&quot;</span>  <span class="c1"># Center vertically</span>
+    <span class="n">tooltip</span><span class="o">.</span><span class="n">layout</span><span class="o">.</span><span class="n">justify_content</span> <span class="o">=</span> <span class="s2">&quot;center&quot;</span>  <span class="c1"># Center horizontally</span>
+    <span class="n">tooltip</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">text_align</span> <span class="o">=</span> <span class="s2">&quot;center&quot;</span>
+
+    <span class="c1"># Widget control for the tooltip, positioned at the bottom right of the map</span>
+    <span class="n">hover_control</span> <span class="o">=</span> <span class="n">WidgetControl</span><span class="p">(</span><span class="n">widget</span><span class="o">=</span><span class="n">tooltip</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s2">&quot;bottomleft&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Convert GeoDataFrame to GeoJSON format</span>
+    <span class="n">geojson_data</span> <span class="o">=</span> <span class="n">summarized_poly</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span>
+
+    <span class="c1"># Load the GeoJSON string into a Python dictionary</span>
+    <span class="n">geojson_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">geojson_data</span><span class="p">)</span>
+
+    <span class="c1"># Create GeoJSON layer for ipyleaflet</span>
+    <span class="n">geojson_layer</span> <span class="o">=</span> <span class="n">GeoJSON</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">geojson_dict</span><span class="p">,</span>  <span class="c1"># Pass the Python dictionary (not a string)</span>
+        <span class="n">style_callback</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">style_callback</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Attach hover and mouseout event handlers</span>
+    <span class="n">geojson_layer</span><span class="o">.</span><span class="n">on_hover</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handle_hover</span><span class="p">(</span><span class="n">tooltip</span><span class="p">,</span> <span class="n">hover_control</span><span class="p">))</span>
+    <span class="n">geojson_layer</span><span class="o">.</span><span class="n">on_msg</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">handle_mouseout</span><span class="p">(</span><span class="n">tooltip</span><span class="p">,</span> <span class="n">hover_control</span><span class="p">))</span>
+
+    <span class="c1"># Add the GeoJSON layer to the map (now directly using self)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">geojson_layer</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
+
+
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="ecospat.ecospat.Map.add_shp" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">add_shp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
 
-<a href="#ecospat.ecospat.HistoricalMap.add_shp" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ecospat.ecospat.Map.add_shp" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -2468,11 +2624,11 @@ Defaults to ["OpenStreetMap.Mapnik", "OpenTopoMap", "Esri.WorldImagery", "Esri.W
 
 
 
-<h3 id="ecospat.ecospat.HistoricalMap.add_shp_from_url" class="doc doc-heading">
+<h3 id="ecospat.ecospat.Map.add_shp_from_url" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">add_shp_from_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
 
-<a href="#ecospat.ecospat.HistoricalMap.add_shp_from_url" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ecospat.ecospat.Map.add_shp_from_url" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -2573,11 +2729,11 @@ the CRS to be EPSG:4326 (WGS84).</p>
 
 
 
-<h3 id="ecospat.ecospat.HistoricalMap.add_widget" class="doc doc-heading">
+<h3 id="ecospat.ecospat.Map.add_widget" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">add_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="s1">&#39;topright&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
 
-<a href="#ecospat.ecospat.HistoricalMap.add_widget" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ecospat.ecospat.Map.add_widget" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -2639,11 +2795,11 @@ the CRS to be EPSG:4326 (WGS84).</p>
 
 
 
-<h3 id="ecospat.ecospat.HistoricalMap.handle_hover" class="doc doc-heading">
+<h3 id="ecospat.ecospat.Map.handle_hover" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">handle_hover</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tooltip</span><span class="p">,</span> <span class="n">hover_control</span><span class="p">)</span></code>
 
 
-<a href="#ecospat.ecospat.HistoricalMap.handle_hover" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ecospat.ecospat.Map.handle_hover" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -2676,11 +2832,11 @@ the CRS to be EPSG:4326 (WGS84).</p>
 
 
 
-<h3 id="ecospat.ecospat.HistoricalMap.handle_mouseout" class="doc doc-heading">
+<h3 id="ecospat.ecospat.Map.handle_mouseout" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">handle_mouseout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tooltip</span><span class="p">,</span> <span class="n">hover_control</span><span class="p">)</span></code>
 
 
-<a href="#ecospat.ecospat.HistoricalMap.handle_mouseout" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ecospat.ecospat.Map.handle_mouseout" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -2707,17 +2863,71 @@ the CRS to be EPSG:4326 (WGS84).</p>
 
 
 
+  <div class="doc doc-object doc-method">
+
+
+
+<h3 id="ecospat.ecospat.Map.load_historic_data" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">load_historic_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">species_name</span><span class="p">,</span> <span class="n">add_to_map</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+
+<a href="#ecospat.ecospat.Map.load_historic_data" class="headerlink" title="Permanent link">&para;</a></h3>
+
+    <div class="doc doc-contents ">
+
+      <p>Load historic range data, optionally add to map.</p>
+
+        <details class="quote">
+          <summary>Source code in <code>ecospat/ecospat.py</code></summary>
+          <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">load_historic_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">species_name</span><span class="p">,</span> <span class="n">add_to_map</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load historic range data, optionally add to map.&quot;&quot;&quot;</span>
+    <span class="c1"># Create the short name (first 4 letters of each word, lowercase)</span>
+    <span class="n">short_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shorten_name</span><span class="p">(</span><span class="n">species_name</span><span class="p">)</span>
+
+    <span class="c1"># Build the URL</span>
+    <span class="n">geojson_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">github_historic_url</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">short_name</span><span class="si">}</span><span class="s2">.geojson&quot;</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Download the GeoJSON file</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">geojson_url</span><span class="p">)</span>
+        <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+
+        <span class="c1"># Read it into a GeoDataFrame</span>
+        <span class="n">species_range</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">))</span>
+
+        <span class="c1"># Reproject to WGS84</span>
+        <span class="n">species_range</span> <span class="o">=</span> <span class="n">species_range</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">epsg</span><span class="o">=</span><span class="mi">4326</span><span class="p">)</span>
+
+        <span class="c1"># Save it internally</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gdfs</span><span class="p">[</span><span class="n">short_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">species_range</span>
+
+        <span class="n">geojson_dict</span> <span class="o">=</span> <span class="n">species_range</span><span class="o">.</span><span class="n">__geo_interface__</span>
+
+        <span class="c1"># Only add to map if add_to_map is True</span>
+        <span class="k">if</span> <span class="n">add_to_map</span><span class="p">:</span>
+            <span class="n">geojson_layer</span> <span class="o">=</span> <span class="n">GeoJSON</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">geojson_dict</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">species_name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_layer</span><span class="p">(</span><span class="n">geojson_layer</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error loading </span><span class="si">{</span><span class="n">geojson_url</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+        </details>
+    </div>
+
+  </div>
+
+
 
 
   <div class="doc doc-object doc-method">
 
 
 
-<h3 id="ecospat.ecospat.HistoricalMap.remove_lakes" class="doc doc-heading">
+<h3 id="ecospat.ecospat.Map.remove_lakes" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">remove_lakes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">polygons_gdf</span><span class="p">)</span></code>
 
 
-<a href="#ecospat.ecospat.HistoricalMap.remove_lakes" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ecospat.ecospat.Map.remove_lakes" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -2774,11 +2984,11 @@ All operations in EPSG:3395 for consistency.</p>
 
 
 
-<h3 id="ecospat.ecospat.HistoricalMap.shorten_name" class="doc doc-heading">
+<h3 id="ecospat.ecospat.Map.shorten_name" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">shorten_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">species_name</span><span class="p">)</span></code>
 
 
-<a href="#ecospat.ecospat.HistoricalMap.shorten_name" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ecospat.ecospat.Map.shorten_name" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -2802,11 +3012,11 @@ All operations in EPSG:3395 for consistency.</p>
 
 
 
-<h3 id="ecospat.ecospat.HistoricalMap.style_callback" class="doc doc-heading">
+<h3 id="ecospat.ecospat.Map.style_callback" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">style_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">)</span></code>
 
 
-<a href="#ecospat.ecospat.HistoricalMap.style_callback" class="headerlink" title="Permanent link">&para;</a></h3>
+<a href="#ecospat.ecospat.Map.style_callback" class="headerlink" title="Permanent link">&para;</a></h3>
 
     <div class="doc doc-contents ">
 
@@ -2937,10 +3147,10 @@ All operations in EPSG:3395 for consistency.</p>
     
     
       
-      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "search.highlight", "search.share"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.top", "search.highlight", "search.share"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
+      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
       
         <script src="../js/timeago.min.js"></script>
       
