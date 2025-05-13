@@ -22,6 +22,13 @@ from io import BytesIO
 from scipy.spatial.distance import cdist
 from ipywidgets import widgets
 from ipyleaflet import Map, GeoJSON, WidgetControl
+from ipyleaflet import ImageOverlay
+import rasterio
+from rasterio.transform import from_bounds
+from rasterio.io import MemoryFile
+from ipyleaflet import TileLayer
+import os
+from .name_references import NAME_REFERENCES
 
 
 from datetime import date
@@ -36,10 +43,17 @@ from .stand_alone_functions import (
     analyze_northward_shift,
     categorize_species,
     calculate_rate_of_change_first_last,
+    save_results_as_csv,
+    save_modern_gbif_csv,
+    save_historic_gbif_csv,
+    extract_raster_means_single_species,
+    full_propagule_pressure_pipeline,
+    save_raster_to_downloads_range,
+    save_raster_to_downloads_global,
 )
 
 
-class HistoricalMap(ipyleaflet.Map):
+class Map(ipyleaflet.Map):
     def __init__(
         self,
         center=[42.94033923363183, -80.9033203125],
@@ -75,7 +89,8 @@ class HistoricalMap(ipyleaflet.Map):
         """Helper to shorten the species name."""
         return (species_name.split()[0][:4] + species_name.split()[1][:4]).lower()
 
-    def load_historic_data(self, species_name):
+    def load_historic_data(self, species_name, add_to_map=False):
+        """Load historic range data, optionally add to map."""
         # Create the short name (first 4 letters of each word, lowercase)
         short_name = self.shorten_name(species_name)
 
@@ -96,7 +111,12 @@ class HistoricalMap(ipyleaflet.Map):
             # Save it internally
             self.gdfs[short_name] = species_range
 
-            # No prints, no plots - clean loading!
+            geojson_dict = species_range.__geo_interface__
+
+            # Only add to map if add_to_map is True
+            if add_to_map:
+                geojson_layer = GeoJSON(data=geojson_dict, name=species_name)
+                self.add_layer(geojson_layer)
 
         except Exception as e:
             print(f"Error loading {geojson_url}: {e}")
@@ -282,7 +302,10 @@ class HistoricalMap(ipyleaflet.Map):
 
                 # Add new basemap
                 url = eval(f"ipyleaflet.basemaps.{change['new']}").build_url()
-                new_tile_layer = ipyleaflet.TileLayer(url=url, name=change["new"])
+                # new_tile_layer = ipyleaflet.TileLayer(url=url, name=change["new"])
+                new_tile_layer = ipyleaflet.TileLayer(
+                    url=url, name="Basemap"  # So we can recognize and update only this
+                )
 
                 # Add the new basemap as the bottom layer (first in the list)
                 self.layers = [new_tile_layer] + [
@@ -465,10 +488,6 @@ class HistoricalMap(ipyleaflet.Map):
             style={"button_color": "white"},
         )
 
-        species_input = widgets.Text(
-            description="Species:", placeholder="Enter species name"
-        )
-
         end_date_picker = widgets.DatePicker(
             description="End Date:", value=date.today()
         )
@@ -483,24 +502,52 @@ class HistoricalMap(ipyleaflet.Map):
         )
 
         generate_3d_checkbox = widgets.Checkbox(
-            value=False,
-            description="Generate 3D population density map",
-            layout=widgets.Layout(
-                margin="0px 0px 0px 0px", padding="0px 20px 0px 0px", width="auto"
-            ),
+            value=False, description="Generate 3D population density map", indent=False
         )
 
         save_map_checkbox = widgets.Checkbox(
-            value=False,
-            description="Save this map to your local device",
-            layout=widgets.Layout(
-                margin="0px 0px 0px 0px", padding="0px 20px 0px 0px", width="auto"
-            ),
+            value=False, description="Save 3D Population Density Map", indent=False
         )
+
+        save_results_checkbox = widgets.Checkbox(
+            value=False, description="Save Movement Results", indent=False
+        )
+
+        save_modern_label = widgets.Label("Save Selection:")
+
+        save_modern_gbif_checkbox = widgets.Checkbox(
+            value=False, description="Save Modern GBIF Data", indent=False
+        )
+
+        # Stack them vertically
+        save_modern_box = widgets.VBox([save_modern_label, save_modern_gbif_checkbox])
+
+        save_historic_gbif_checkbox = widgets.Checkbox(
+            value=False, description="Save Historic GBIF Data", indent=False
+        )
+
+        save_raster_radio = widgets.RadioButtons(
+            options=["Yes", "No"],
+            description="Save Predicted Persistence Raster",
+            value="No",
+        )
+
+        save_range_checkbox = widgets.Checkbox(
+            description="Save to range extent", value=False
+        )
+        save_global_checkbox = widgets.Checkbox(
+            description="Save to global extent", value=False
+        )
+        resolution_input = widgets.FloatText(value=0.1666667, description="Resolution")
+
+        conditional_raster_box = widgets.VBox(
+            children=[save_range_checkbox, save_global_checkbox, resolution_input]
+        )
+        conditional_raster_box.layout.display = "none"  # hidden initially
 
         toggle_buttons = widgets.HBox([toggle, output_toggle])
 
-        save_map_box = widgets.HBox([widgets.Label("    "), save_map_checkbox])
+        # save_map_box = widgets.HBox([widgets.Label("    "), save_map_checkbox])
 
         process_button = widgets.Button(
             description="Run Analysis", button_style="success", icon="play"
@@ -516,6 +563,13 @@ class HistoricalMap(ipyleaflet.Map):
         collapsible_output_area.layout.display = "none"  # Initially hidden
         collapsible_output_area.layout.padding = "0px 20px 0px 0px"
 
+        species_input = widgets.Dropdown(
+            options=sorted(NAME_REFERENCES.keys()),
+            description="Species:",
+            style={"description_width": "initial"},
+            layout=widgets.Layout(width="300px"),
+        )
+
         # Add gbif_limit_input to controls_box
         controls_box = widgets.VBox(
             [
@@ -524,7 +578,12 @@ class HistoricalMap(ipyleaflet.Map):
                 end_date_picker,
                 map_type_radio,
                 generate_3d_checkbox,
-                save_map_box,
+                save_modern_box,
+                save_historic_gbif_checkbox,
+                save_map_checkbox,
+                save_results_checkbox,
+                save_raster_radio,
+                conditional_raster_box,
                 process_button,
             ]
         )
@@ -538,12 +597,20 @@ class HistoricalMap(ipyleaflet.Map):
             else:
                 collapsible_output_area.layout.display = "none"
 
+        def toggle_save_options(change):
+            if change["new"] == "Yes":
+                conditional_raster_box.layout.display = "flex"
+            else:
+                conditional_raster_box.layout.display = "none"
+
         # Function to toggle the control panel visibility
         def toggle_control_panel_visibility(change):
             if change["new"]:
                 controls_box.layout.display = "block"
             else:
                 controls_box.layout.display = "none"
+
+        save_raster_radio.observe(toggle_save_options, names="value")
 
         toggle.observe(toggle_control_panel_visibility, names="value")
         output_toggle.observe(toggle_output_visibility, names="value")
@@ -555,8 +622,11 @@ class HistoricalMap(ipyleaflet.Map):
             end_year_int = end_date.year
             use_3d = generate_3d_checkbox.value
             save_map = save_map_checkbox.value
+            save_results = save_results_checkbox.value
+            resolution = resolution_input.value
 
             collapsible_output_area.clear_output()
+
             collapsible_output_area.layout.display = "block"
 
             # Check if species exists in reference data
@@ -591,10 +661,10 @@ class HistoricalMap(ipyleaflet.Map):
                         summarized_poly = summarize_polygons_with_points(
                             classified_modern
                         )
-                        map_widget.add_gbif_polygons(summarized_poly)
+                        map_widget.add_range_polygons(summarized_poly)
 
                     elif map_type_radio.value == "Historic":
-                        map_widget.add_gbif_polygons(hist_range)
+                        map_widget.add_range_polygons(hist_range)
 
                     # Population map handling
                     if generate_3d_checkbox.value:
@@ -666,6 +736,49 @@ class HistoricalMap(ipyleaflet.Map):
                     print("Population Density:")
                     print(change.to_string(index=False))
 
+                    mean_clim, clim_data = extract_raster_means_single_species(
+                        classified_modern, species
+                    )
+
+                    if save_results_checkbox.value:
+                        save_results_as_csv(
+                            northward_rate_df,
+                            final_result,
+                            change,
+                            mean_clim,
+                            clim_data,
+                            species,
+                        )
+
+                    if save_modern_gbif_checkbox.value:
+                        save_modern_gbif_csv(classified_modern, species)
+
+                    if save_historic_gbif_checkbox.value:
+                        save_historic_gbif_csv(classified_historic, species)
+
+                    if save_raster_radio.value == "Yes":
+                        # Call the pipeline function once
+                        full_show, full_save, show_bounds, save_bounds = (
+                            full_propagule_pressure_pipeline(
+                                classified_modern,
+                                northward_rate_df,
+                                change,
+                                resolution=resolution,
+                            )
+                        )
+
+                        if save_range_checkbox.value:
+                            # Save the raster for the range extent
+                            save_raster_to_downloads_range(
+                                full_show, show_bounds, species
+                            )
+
+                        elif save_global_checkbox.value:
+                            # Save the raster for the global extent
+                            save_raster_to_downloads_global(
+                                full_save, save_bounds, species
+                            )
+
             else:
                 collapsible_output_area.clear_output()
                 collapsible_output_area.layout.display = "block"
@@ -673,6 +786,7 @@ class HistoricalMap(ipyleaflet.Map):
                     print(
                         f"Species '{species}' not available in the reference data. Try another species."
                     )
+            controls_box.layout.display = "none"
 
         process_button.on_click(on_run_button_clicked)
 
@@ -686,7 +800,7 @@ class HistoricalMap(ipyleaflet.Map):
         )
         self.add(output_control)
 
-    def add_gbif_polygons(self, summarized_poly):
+    def add_range_polygons(self, summarized_poly):
         """Add polygons from a GeoDataFrame to ipyleaflet, with hover tooltips."""
 
         # Create the tooltip as an independent widget
@@ -754,3 +868,14 @@ class HistoricalMap(ipyleaflet.Map):
                 self.remove_control(hover_control)
 
         return inner
+
+    def add_raster(self, filepath, **kwargs):
+
+        from localtileserver import TileClient, get_leaflet_tile_layer
+
+        client = TileClient(filepath)
+        tile_layer = get_leaflet_tile_layer(client, **kwargs)
+
+        self.add(tile_layer)
+        self.center = client.center()
+        self.zoom = client.default_zoom

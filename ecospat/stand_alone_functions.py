@@ -1423,7 +1423,7 @@ def fetch_historic_records(species_name, limit=2000, year=1971):
     page_limit = 300
     consecutive_empty_years = 0  # stop if multiple years in a row return nothing
 
-    while len(all_data) < limit and year >= 1800:
+    while len(all_data) < limit and year >= 1960:
         offset = 0
         year_data = []
         while len(all_data) < limit:
@@ -1475,7 +1475,7 @@ def fetch_gbif_data_with_historic(
     Returns:
         dict: {
             'modern': [...],  # from start_year + 1 to end_year
-            'historic': [...] # from start_year backwards to ~1800
+            'historic': [...] # from start_year backwards to ~1960
         }
     """
     modern = fetch_gbif_data_modern(
@@ -1587,6 +1587,9 @@ def analyze_species_distribution(species_name, record_limit=100, end_year=2025):
     classified_historic = process_gbif_data_pipeline(
         historic_gdf, is_modern=False, end_year=end_year
     )
+
+    classified_modern = calculate_density(classified_modern)
+    classified_historic = calculate_density(classified_historic)
 
     return classified_modern, classified_historic
 
@@ -1803,9 +1806,9 @@ def categorize_species(df):
                 if -2 <= leading <= 2 and -2 <= core <= 2:
                     category = "likely stable"
                 elif leading > 2 and core > 2:
-                    category = "likely moving together"
+                    category = "likely positive moving together"
                 elif leading < -2 and core < -2:
-                    category = "likely moving together"
+                    category = "likely negative moving together"
                 elif leading > 2 and core < -2:
                     category = "likely pull apart"
                 elif leading > 2 and -2 <= core <= 2:
@@ -2277,3 +2280,717 @@ def process_species_historical_range(new_map, species_name):
     updated_polygon = update_polygon_categories(largest_polygons, classified_polygons)
 
     return updated_polygon
+
+
+import os
+import datetime
+
+
+def save_results_as_csv(
+    northward_rate_df,
+    final_result,
+    change,
+    total_clim_result,
+    category_clim_result,
+    species_name,
+):
+    # Set up paths
+    home_dir = os.path.expanduser("~")
+    downloads_path = os.path.join(home_dir, "Downloads")
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    folder_name = f"{species_name.replace(' ', '_')}_Results_{timestamp}"
+    results_folder = os.path.join(downloads_path, folder_name)
+
+    # Create results folder
+    os.makedirs(results_folder, exist_ok=True)
+
+    # Standardize the column name to 'category' and normalize categories to title case
+    for df in [northward_rate_df, change, category_clim_result]:
+        if "Category" in df.columns:
+            df.rename(columns={"Category": "category"}, inplace=True)
+        if "category" in df.columns:
+            df["category"] = df["category"].str.title()
+
+    # Merge the three DataFrames by category
+    merged_df = northward_rate_df.merge(change, on="category", how="outer").merge(
+        category_clim_result, on="category", how="outer"
+    )
+
+    # Drop duplicate species columns (if they exist)
+    if "species_x" in merged_df.columns and "species_y" in merged_df.columns:
+        merged_df.drop(columns=["species_x", "species_y"], inplace=True)
+
+    merged_single = final_result.merge(total_clim_result, on="species", how="outer")
+
+    # Save final_result as range_pattern.csv
+    merged_single.to_csv(os.path.join(results_folder, "range_pattern.csv"), index=False)
+
+    # Save the merged DataFrame (category_summary.csv)
+    merged_df.to_csv(os.path.join(results_folder, "category_summary.csv"), index=False)
+
+    # Optional: print file path
+    # print(f"Results saved in folder: {results_folder}")
+
+
+def save_modern_gbif_csv(classified_modern, species_name):
+    # Set up paths
+    home_dir = os.path.expanduser("~")
+    downloads_path = os.path.join(home_dir, "Downloads")
+
+    # Define the file name
+    file_name = f"{species_name.replace(' ', '_')}_classified_modern.csv"
+
+    # Save the DataFrame to CSV in the Downloads folder
+    classified_modern.to_csv(os.path.join(downloads_path, file_name), index=False)
+
+
+def save_historic_gbif_csv(classified_historic, species_name):
+    # Set up paths
+    home_dir = os.path.expanduser("~")
+    downloads_path = os.path.join(home_dir, "Downloads")
+
+    # Define the file name
+    file_name = f"{species_name.replace(' ', '_')}_classified_historic.csv"
+
+    # Save the DataFrame to CSV in the Downloads folder
+    classified_historic.to_csv(os.path.join(downloads_path, file_name), index=False)
+
+
+import requests
+import geopandas as gpd
+import pandas as pd
+from rasterio import MemoryFile
+from rasterstats import zonal_stats
+
+
+def extract_raster_means_single_species(gdf, species_name):
+    """
+    gdf: GeoDataFrame with polygons (for a single species)
+    species_name: string, the species name to assign to the output
+
+    Returns:
+    - total_df: DataFrame with species-wide averages
+    - category_df: DataFrame with category-level averages
+    """
+
+    # Hardcoded GitHub raw URLs for rasters
+    raster_urls = {
+        "precipitation(mm)": "https://raw.githubusercontent.com/anytko/biospat_large_files/main/avg_precip.tif",
+        "temperature(c)": "https://raw.githubusercontent.com/anytko/biospat_large_files/main/avg_temp.tif",
+        "elevation(m)": "https://raw.githubusercontent.com/anytko/biospat_large_files/main/elev.tif",
+    }
+
+    # -------- Species-wide average --------
+    row = {"species": species_name}
+
+    for var_name, url in raster_urls.items():
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            with MemoryFile(response.content) as memfile:
+                with memfile.open() as src:
+                    # Get zonal stats
+                    stats = zonal_stats(
+                        gdf.geometry,
+                        src.read(1),
+                        affine=src.transform,
+                        nodata=src.nodata,
+                        stats="mean",
+                    )
+                    values = [s["mean"] for s in stats if s["mean"] is not None]
+
+                    # If zonal stats don't return valid values, use centroid fallback
+                    if not values:
+                        print(
+                            f"No valid zonal stats for {var_name}, falling back to centroid method..."
+                        )
+                        values = []
+                        for geom in gdf.geometry:
+                            centroid = geom.centroid
+                            row_idx, col_idx = src.index(centroid.x, centroid.y)
+                            value = src.read(1)[row_idx, col_idx]
+                            values.append(value)
+
+                    # Ensure values are not empty before calculating the mean
+                    if values:
+                        row[var_name] = float(
+                            sum(values) / len(values)
+                        )  # Ensure the result is a float
+                    else:
+                        row[var_name] = None  # If no valid values, assign None
+        except Exception as e:
+            print(f"Error processing {var_name}: {e}")
+            row[var_name] = None
+
+    bounds = gdf.total_bounds  # [minx, miny, maxx, maxy]
+    minx, miny, maxx, maxy = bounds
+    row["latitudinal_difference"] = maxy - miny
+    row["longitudinal_difference"] = maxx - minx
+
+    total_df = pd.DataFrame([row])
+
+    # -------- Normalize and collapse category labels --------
+    if "category" in gdf.columns:
+        gdf["category"] = gdf["category"].str.strip().str.lower()
+
+        category_mapping = {
+            "leading (0.99)": "leading",
+            "leading (0.95)": "leading",
+            "leading (0.9)": "leading",
+            "trailing (0.1)": "trailing",
+            "trailing (0.05)": "trailing",
+            "relict (0.01 latitude)": "relict",
+            "relict (longitude)": "relict",
+        }
+
+        gdf["category"] = gdf["category"].replace(category_mapping)
+
+    # -------- Category-level averages --------
+    category_rows = []
+
+    if "category" in gdf.columns:
+        for category in gdf["category"].unique():
+            subset = gdf[gdf["category"] == category]
+            row = {
+                "species": species_name,
+                "category": category,
+            }  # Reinitialize row here to avoid overwriting
+            for var_name, url in raster_urls.items():
+                try:
+                    response = requests.get(url)
+                    response.raise_for_status()
+                    with MemoryFile(response.content) as memfile:
+                        with memfile.open() as src:
+                            # Get zonal stats
+                            stats = zonal_stats(
+                                subset.geometry,
+                                src.read(1),
+                                affine=src.transform,
+                                nodata=src.nodata,
+                                stats="mean",
+                            )
+                            values = [s["mean"] for s in stats if s["mean"] is not None]
+
+                            # If zonal stats don't return valid values, use centroid fallback
+                            if not values:
+                                # print(f"No valid zonal stats for category '{category}' and {var_name}, falling back to centroid method...")
+                                values = []
+                                for geom in subset.geometry:
+                                    centroid = geom.centroid
+                                    row_idx, col_idx = src.index(centroid.x, centroid.y)
+                                    value = src.read(1)[row_idx, col_idx]
+                                    values.append(value)
+
+                            # Ensure values are not empty before calculating the mean
+                            if values:
+                                row[var_name] = float(
+                                    sum(values) / len(values)
+                                )  # Ensure the result is a float
+                            else:
+                                row[var_name] = None  # If no valid values, assign None
+                except Exception as e:
+                    print(f"Error processing {var_name} for category '{category}': {e}")
+                    row[var_name] = None
+
+            category_rows.append(row)
+
+    category_df = pd.DataFrame(category_rows)
+
+    return total_df, category_df
+
+
+def calculate_density(df):
+    # Count number of points per unique polygon (using geometry_id)
+    point_counts = df.groupby("geometry_id").size().reset_index(name="point_count")
+
+    # Merge point counts back into original dataframe
+    df = df.merge(point_counts, on="geometry_id", how="left")
+
+    # Calculate density: points per km²
+    df["density"] = df["point_count"] / df["AREA"]
+    df = df.drop(columns=["point_count"])
+
+    return df
+
+
+def merge_category_dataframes(northward_rate_df, change):
+    """
+    Merges three category-level dataframes on the 'category' column and returns the merged result.
+    Standardizes 'category' casing to title case before merging.
+    """
+    import pandas as pd
+
+    # Standardize 'category' column
+    for df in [northward_rate_df, change]:
+        if "Category" in df.columns:
+            df.rename(columns={"Category": "category"}, inplace=True)
+        if "category" in df.columns:
+            df["category"] = df["category"].str.title()
+
+    # Merge dataframes
+    merged_df = northward_rate_df.merge(change, on="category", how="outer")
+
+    # Drop duplicated species columns if they exist
+    if "species_x" in merged_df.columns and "species_y" in merged_df.columns:
+        merged_df.drop(columns=["species_x", "species_y"], inplace=True)
+
+    cols_to_keep = [
+        "species",
+        "category",
+        "northward_rate_km_per_year",
+        "Rate of Change",
+    ]
+    merged_df = merged_df[[col for col in cols_to_keep if col in merged_df.columns]]
+
+    return merged_df
+
+
+import pandas as pd
+import geopandas as gpd
+
+
+def prepare_gdf_for_rasterization(gdf, df_values):
+    """
+    Merge polygon-level GeoDataFrame with range-level category values,
+    and remove duplicate polygons.
+
+    Parameters:
+    - gdf: GeoDataFrame with polygons and category/density
+    - df_values: DataFrame with category, northward_rate_km_per_year, Rate of Change
+
+    Returns:
+    - GeoDataFrame with merged attributes and unique geometries
+    """
+
+    # Standardize category column casing
+    gdf["category"] = gdf["category"].str.title()
+    df_values["category"] = df_values["category"].str.title()
+
+    # Merge based on 'category'
+    merged = gdf.merge(df_values, on="category", how="left")
+
+    # Optional: handle missing Rate of Change or movement values
+    merged.fillna({"Rate of Change": 0, "northward_rate_km_per_year": 0}, inplace=True)
+
+    # Select relevant columns
+    relevant_columns = [
+        "geometry",
+        "category",
+        "density",
+        "northward_rate_km_per_year",
+        "Rate of Change",
+    ]
+    final_gdf = merged[relevant_columns]
+
+    # Drop duplicate geometries
+    final_gdf = final_gdf.drop_duplicates(subset="geometry")
+
+    return final_gdf
+
+
+def rasterize_multiband_gdf_match(
+    gdf, value_columns, bounds=None, resolution=0.1666667
+):
+    """
+    Rasterizes multiple value columns of a GeoDataFrame into a multiband raster with a specified resolution.
+
+    Parameters:
+    - gdf: GeoDataFrame with polygon geometries and numeric value_columns
+    - value_columns: list of column names to rasterize into bands
+    - bounds: bounding box (minx, miny, maxx, maxy). If None, computed from gdf.
+    - resolution: The desired resolution of the raster in degrees (default is 10 minutes = 0.1666667 degrees).
+
+    Returns:
+    - 3D numpy array (bands, height, width)
+    - affine transform
+    - bounds used for rasterization
+    """
+    import numpy as np
+    import rasterio
+    from rasterio.features import rasterize
+    from rasterio.transform import from_bounds
+
+    # Calculate bounds if not given
+    if bounds is None:
+        bounds = gdf.total_bounds  # (minx, miny, maxx, maxy)
+
+    minx, miny, maxx, maxy = bounds
+
+    # Calculate the width and height of the raster
+    width = int((maxx - minx) / resolution)  # number of cells in the x-direction
+    height = int((maxy - miny) / resolution)  # number of cells in the y-direction
+
+    # Create the transform based on bounds and resolution
+    transform = from_bounds(minx, miny, maxx, maxy, width, height)
+
+    bands = []
+
+    for col in value_columns:
+        shapes = [(geom, value) for geom, value in zip(gdf.geometry, gdf[col])]
+        raster = rasterize(
+            shapes,
+            out_shape=(height, width),
+            transform=transform,
+            fill=np.nan,
+            dtype="float32",
+        )
+        bands.append(raster)
+
+    stacked = np.stack(bands, axis=0)  # shape: (bands, height, width)
+    return stacked, transform, (minx, miny, maxx, maxy)
+
+
+def rasterize_multiband_gdf_world(gdf, value_columns, resolution=0.1666667):
+    """
+    Rasterizes multiple value columns of a GeoDataFrame into a multiband raster with a specified resolution
+    covering the entire world.
+
+    Parameters:
+    - gdf: GeoDataFrame with polygon geometries and numeric value_columns
+    - value_columns: list of column names to rasterize into bands
+    - resolution: The desired resolution of the raster in degrees (default is 10 minutes = 0.1666667 degrees).
+
+    Returns:
+    - 3D numpy array (bands, height, width)
+    - affine transform
+    """
+    import numpy as np
+    import rasterio
+    from rasterio.features import rasterize
+    from rasterio.transform import from_bounds
+
+    # Define the bounds of the entire world
+    minx, miny, maxx, maxy = -180, -90, 180, 90
+
+    # Calculate the width and height of the raster based on the resolution
+    width = int((maxx - minx) / resolution)  # number of cells in the x-direction
+    height = int((maxy - miny) / resolution)  # number of cells in the y-direction
+
+    # Create the transform based on the world bounds and new resolution
+    transform = from_bounds(minx, miny, maxx, maxy, width, height)
+
+    bands = []
+
+    for col in value_columns:
+        shapes = [(geom, value) for geom, value in zip(gdf.geometry, gdf[col])]
+        raster = rasterize(
+            shapes,
+            out_shape=(
+                height,
+                width,
+            ),  # Ensure this matches the calculated height and width
+            transform=transform,
+            fill=np.nan,  # Fill areas outside the polygons with NaN
+            dtype="float32",
+        )
+        bands.append(raster)
+
+    stacked = np.stack(bands, axis=0)  # shape: (bands, height, width)
+    return stacked, transform, (minx, miny, maxx, maxy)
+
+
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy.ndimage import distance_transform_edt
+
+
+def compute_propagule_pressure_range(stacked_raster, D=0.3, S=10.0, show_plot=True):
+    # Extract input data
+    density = stacked_raster[0]
+    northward_rate = stacked_raster[1]  # in km/y
+    category_raw = stacked_raster[3]
+
+    # Replace NaNs with zeros
+    density = np.nan_to_num(density, nan=0.0)
+    northward_rate = np.nan_to_num(northward_rate, nan=0.0)
+    category = np.nan_to_num(category_raw, nan=0).astype(int)
+
+    # Identify occupied cells
+    occupied_mask = density > 0
+
+    # Compute distance and indices of nearest occupied cell
+    distance, indices = distance_transform_edt(~occupied_mask, return_indices=True)
+
+    # Gather source values
+    nearest_y = indices[0]  # y-coordinate of nearest occupied cell
+    current_y = np.indices(density.shape)[0]  # Current y-coordinates for each cell
+    delta_y = (
+        current_y - nearest_y
+    )  # Distance from each cell to the nearest occupied cell
+
+    # Debug: Check delta_y values for correct calculation
+    # print(f"Delta Y (Calculated): {delta_y}")
+
+    # Initialize direction modifier to 1
+    direction_modifier = np.ones_like(northward_rate, dtype="float32")
+
+    # Check northward rate for moving north or south and apply corresponding logic
+    northward_mask = northward_rate > 0  # Mask for northward movement
+    southward_mask = northward_rate < 0  # Mask for southward movement
+
+    # Apply southward movement logic
+    for y in range(density.shape[0]):
+        for x in range(density.shape[1]):
+            if occupied_mask[y, x]:
+                rate = northward_rate[y, x]
+                if rate != 0:
+                    direction = 1 if rate < 0 else -1  # south = 1, north = -1
+                    for dy in range(1, 4):  # How far outward to apply
+                        ny = y + dy * direction
+                        if 0 <= ny < density.shape[0]:
+                            for dx in range(-dy, dy + 1):  # widen as you go further
+                                nx = x + dx
+                                if 0 <= nx < density.shape[1]:
+                                    distance_factor = np.sqrt(dy**2 + dx**2)
+                                    modifier = (abs(rate) * distance_factor) / S
+                                    direction_modifier[ny, nx] += modifier
+
+    # Clip to prevent out-of-bounds influence
+    direction_modifier = np.clip(direction_modifier, 0.1, 2.0)
+
+    # Apply northward movement logic
+    # if np.any(northward_mask):
+    # direction_modifier[northward_mask & (delta_y > 0)] = 1 - (np.abs(northward_rate[northward_mask & (delta_y > 0)]) * np.abs(delta_y[northward_mask & (delta_y > 0)])) / S
+    # direction_modifier[northward_mask & (delta_y < 0)] = 1 + (np.abs(northward_rate[northward_mask & (delta_y < 0)]) * np.abs(delta_y[northward_mask & (delta_y < 0)])) / S
+    # direction_modifier = np.clip(direction_modifier, 0.1, 2.0)
+
+    for y in range(density.shape[0]):
+        for x in range(density.shape[1]):
+            if occupied_mask[y, x]:
+                rate = northward_rate[y, x]
+                if rate != 0:
+                    direction = (
+                        -1 if rate < 0 else 1
+                    )  # north = -1, south = 1 (flipped direction)
+                    for dy in range(1, 4):  # How far outward to apply
+                        ny = y + dy * direction
+                        if 0 <= ny < density.shape[0]:
+                            for dx in range(-dy, dy + 1):  # widen as you go further
+                                nx = x + dx
+                                if 0 <= nx < density.shape[1]:
+                                    distance_factor = np.sqrt(dy**2 + dx**2)
+                                    modifier = (abs(rate) * distance_factor) / S
+                                    direction_modifier[ny, nx] += modifier
+
+    # Compute pressure from source density and distance
+    pressure = density[nearest_y, indices[1]] * np.exp(-D * distance)
+    # pressure = nearest_y * np.exp(-D * distance)
+
+    # Apply directional influence (adjusting based on the direction_modifier)
+    pressure_directional = pressure * direction_modifier
+
+    # Apply category-based scaling
+    scale_factors = {
+        1: 1.5,  # Core
+        2: 1.2,  # Leading
+        3: 0.8,  # Trailing
+        4: 1.0,  # Relict
+    }
+    scaling = np.ones_like(category, dtype="float32")
+    for cat, factor in scale_factors.items():
+        scaling[category == cat] = factor
+
+    # Final pressure scaled
+    pressure_scaled = pressure_directional * scaling
+
+    edge_change_rate = np.nan_to_num(stacked_raster[2], nan=0.0)
+
+    # Initialize modifier matrix (default = 1)
+    edge_modifier = np.ones_like(edge_change_rate, dtype="float32")
+
+    # Define which categories to include (Core=1, Leading=2, Trailing=3)
+    target_categories = [1, 2, 3]
+
+    for y in range(density.shape[0]):
+        for x in range(density.shape[1]):
+            if category[y, x] in target_categories:
+                rate = edge_change_rate[y, x]
+                if rate != 0:
+                    # Spread influence outward from this cell
+                    for dy in range(-3, 4):
+                        for dx in range(-3, 4):
+                            ny, nx = y + dy, x + dx
+                            if (
+                                0 <= ny < density.shape[0]
+                                and 0 <= nx < density.shape[1]
+                            ):
+                                distance_factor = np.sqrt(dy**2 + dx**2)
+                                if distance_factor == 0:
+                                    distance_factor = 1  # to avoid division by zero
+                                modifier = (rate * (1 / distance_factor)) / S
+                                edge_modifier[ny, nx] += modifier
+
+    # Clip to keep values within a stable range
+    edge_modifier = np.clip(edge_modifier, 0.1, 2.0)
+
+    # Apply additional edge-based pressure influence
+    pressure_scaled *= edge_modifier
+
+    return pressure_scaled
+
+
+def cat_int_mapping(preped_gdf):
+    """
+    Copies the input GeoDataFrame, maps the 'category' column to integers,
+    and transforms the CRS to EPSG:4326.
+
+    Parameters:
+        preped_gdf (GeoDataFrame): Input GeoDataFrame with a 'category' column.
+
+    Returns:
+        GeoDataFrame: Transformed GeoDataFrame with a new 'category_int' column and EPSG:4326 CRS.
+    """
+    category_map = {"Core": 1, "Leading": 2, "Trailing": 3, "Relict": 4}
+    gdf = preped_gdf.copy()
+    gdf["category_int"] = gdf["category"].map(category_map)
+    gdf = gdf.to_crs("EPSG:4326")
+    return gdf
+
+
+def full_propagule_pressure_pipeline(
+    classified_modern, northward_rate_df, change, resolution=0.1666667
+):
+    """
+    Full wrapper pipeline to compute propagule pressure from input data.
+
+    Steps:
+        1. Merge category dataframes.
+        2. Prepare GeoDataFrame for rasterization.
+        3. Map category strings to integers.
+        4. Rasterize to show and save versions.
+        5. Compute propagule pressure for both rasters.
+
+    Parameters:
+        classified_modern (GeoDataFrame): GeoDataFrame with spatial features and categories.
+        northward_rate_df (DataFrame): Contains northward movement rate per point or cell.
+        change (DataFrame): Contains rate of change per point or cell.
+
+    Returns:
+        tuple: (pressure_show, pressure_save), both as 2D numpy arrays
+    """
+
+    # Step 1: Merge data
+    merged = merge_category_dataframes(northward_rate_df, change)
+
+    # Step 2: Prepare for rasterization
+    preped_gdf = prepare_gdf_for_rasterization(classified_modern, merged)
+
+    # Step 3: Map category to integers
+    preped_gdf_new = cat_int_mapping(
+        preped_gdf
+    )  # assumes this was renamed from cat_int_mapping
+
+    # Step 4: Rasterize
+    value_columns = [
+        "density",
+        "northward_rate_km_per_year",
+        "Rate of Change",
+        "category_int",
+    ]
+    raster_show, transform, show_bounds = rasterize_multiband_gdf_match(
+        preped_gdf_new, value_columns, resolution=resolution
+    )
+    raster_save, transform, save_bounds = rasterize_multiband_gdf_world(
+        preped_gdf_new, value_columns, resolution=resolution
+    )
+
+    # Step 5: Compute propagule pressure
+    pressure_show = compute_propagule_pressure_range(raster_show)
+    pressure_save = compute_propagule_pressure_range(raster_save)
+
+    return pressure_show, pressure_save, show_bounds, save_bounds
+
+
+import os
+import rasterio
+from rasterio.transform import from_bounds
+
+
+def save_raster_to_downloads_range(array, bounds, species):
+    """
+    Saves a NumPy raster array as a GeoTIFF to the user's Downloads folder.
+
+    Parameters:
+        array (ndarray): The raster data to save.
+        bounds (tuple): Bounding box in the format (minx, miny, maxx, maxy).
+        species (str): The species name to use in the output filename.
+    """
+    try:
+        # Clean filename
+        clean_species = species.strip().replace(" ", "_")
+        filename = f"{clean_species}_persistence_raster.tif"
+
+        # Determine Downloads path
+        home_dir = os.path.expanduser("~")
+        downloads_path = os.path.join(home_dir, "Downloads", filename)
+
+        # Generate raster transform
+        transform = from_bounds(
+            bounds[0], bounds[1], bounds[2], bounds[3], array.shape[1], array.shape[0]
+        )
+
+        # Write to GeoTIFF
+        with rasterio.open(
+            downloads_path,
+            "w",
+            driver="GTiff",
+            height=array.shape[0],
+            width=array.shape[1],
+            count=1,
+            dtype=array.dtype,
+            crs="EPSG:4326",
+            transform=transform,
+        ) as dst:
+            dst.write(array, 1)
+
+        # print(f"Raster successfully saved to: {downloads_path}")
+        return downloads_path
+
+    except Exception as e:
+        print(f"Error saving raster: {e}")
+        return None
+
+
+def save_raster_to_downloads_global(array, bounds, species):
+    """
+    Saves a NumPy raster array as a GeoTIFF to the user's Downloads folder.
+
+    Parameters:
+        array (ndarray): The raster data to save.
+        bounds (tuple): Bounding box in the format (minx, miny, maxx, maxy).
+        species (str): The species name to use in the output filename.
+    """
+    try:
+        # Clean filename
+        clean_species = species.strip().replace(" ", "_")
+        filename = f"{clean_species}_persistence_raster_global.tif"
+
+        # Determine Downloads path
+        home_dir = os.path.expanduser("~")
+        downloads_path = os.path.join(home_dir, "Downloads", filename)
+
+        # Generate raster transform
+        transform = from_bounds(
+            bounds[0], bounds[1], bounds[2], bounds[3], array.shape[1], array.shape[0]
+        )
+
+        # Write to GeoTIFF
+        with rasterio.open(
+            downloads_path,
+            "w",
+            driver="GTiff",
+            height=array.shape[0],
+            width=array.shape[1],
+            count=1,
+            dtype=array.dtype,
+            crs="EPSG:4326",
+            transform=transform,
+        ) as dst:
+            dst.write(array, 1)
+
+        # print(f"Raster successfully saved to: {downloads_path}")
+        return downloads_path
+
+    except Exception as e:
+        print(f"Error saving raster: {e}")
+        return None

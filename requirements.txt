@@ -13,6 +13,7 @@ pydeck
 pygbif
 pytest
 rasterio
+rasterstats
 requests
 scikit-learn
 scipy
