@@ -28,6 +28,6 @@ Using the historical ranges of over 670 North American tree species and modern G
 ## Features
 
 -   Maps and identifies edges of historical and contemporary ranges for over 600 tree species.
--   Calculates the northward rate of movement and change in population density through time.
+-   Calculates the northward rate of movement, change in population density through time, average temperature, precipitation, and elevation of range edges.
 -   Assigns a range movement pattern (i.e. Moving together, Pulling apart, Stability, or Reabsorption)
 -   Generates a predicted persistence raster that can be downloaded and used in further analyses.
