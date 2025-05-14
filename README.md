@@ -1,11 +1,22 @@
 # Welcome to ecospat
 
+<div align="center">
 
-[![image](https://img.shields.io/pypi/v/ecospat.svg)](https://pypi.python.org/pypi/ecospat)
-[![logo](/logo.png)](/logo.png)
+  <a href="https://pypi.python.org/pypi/ecospat">
+    <img src="https://img.shields.io/pypi/v/ecospat.svg" alt="PyPI version"/>
+  </a>
 
+  <br/>
 
-**A python package to characterize the range dynamics and shifts of North American tree species.**
+  <a href="https://raw.githubusercontent.com/anytko/ecospat/master/logo.png">
+    <img src="https://raw.githubusercontent.com/anytko/ecospat/master/logo.png" alt="logo" width="150"/>
+  </a>
+
+  <br/><br/>
+
+  <strong>A python package to characterize the range dynamics and shifts of North American tree species.</strong>
+
+</div>
 
 -   GitHub Repo: <https://github.com/anytko/ecospat>
 -   Documentation: <https://anytko.github.io/ecospat>
