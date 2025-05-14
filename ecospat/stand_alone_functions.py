@@ -2773,7 +2773,14 @@ def compute_propagule_pressure_range(stacked_raster, D=0.3, S=10.0, show_plot=Tr
                                     direction_modifier[ny, nx] += modifier
 
     # Compute pressure from source density and distance
-    pressure = density[nearest_y, indices[1]] * np.exp(-D * distance)
+
+    pressure_nearest = density[nearest_y, indices[1]] * np.exp(-D * distance)
+
+    D_self = density
+
+    pressure = pressure_nearest + (D_self * np.exp(-D * 0))
+
+    # pressure = density[nearest_y, indices[1]] * np.exp(-D * distance)
     # pressure = nearest_y * np.exp(-D * distance)
 
     # Apply directional influence (adjusting based on the direction_modifier)
