@@ -8,8 +8,8 @@
 
   <br/>
 
-  <a href="https://raw.githubusercontent.com/anytko/ecospat/master/logo.png">
-    <img src="https://raw.githubusercontent.com/anytko/ecospat/master/logo.png" alt="logo" width="150"/>
+  <a href="https://raw.githubusercontent.com/anytko/ecospat/master/images/logo.png">
+    <img src="https://raw.githubusercontent.com/anytko/ecospat/master/images/logo.png" alt="logo" width="150"/>
   </a>
 
   <br/><br/>
