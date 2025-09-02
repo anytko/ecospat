@@ -8,8 +8,8 @@
 
   <br/>
 
-  <a href="https://raw.githubusercontent.com/anytko/ecospat/master/logo.png">
-    <img src="https://raw.githubusercontent.com/anytko/ecospat/master/logo.png" alt="logo" width="150"/>
+  <a href="https://raw.githubusercontent.com/anytko/ecospat/master/images/logo.png">
+    <img src="https://raw.githubusercontent.com/anytko/ecospat/master/images/logo.png" alt="logo" width="150"/>
   </a>
 
   <br/><br/>
@@ -36,11 +36,11 @@ Species ranges are often noncontiguous and comprised of disjunct populations. We
 We expect that species are moving northward to track their climate envelopes; however, under climate change, populations have demonstrated a wide variety of range movement dynamics - including moving north or southward together, pulling apart, reabsorbing into the core zone of admixture, and remaining stable. Not only are species' ranges moving, but individuals within and across range edges are also moving, resulting in differential population dynamics.
 
 #### Therefore, if we can identify
-        1. range edges
-        2. range movement patterns ()
-        3. population dynamics within and across range edges
+1. range edges
+2. range movement patterns
+3. population dynamics within and across range edges
 
-we can better understand how species have responded to past climate change and infer their potential for persistence at individual, population, community, and ecosystem levels. For instance, populations across a species’ range may gain or lose relative importance for maintaining ecosystem services and functions depending on their abundance and the persistence of their individuals.
+We can better understand how species have responded to past climate change and infer their potential for persistence at individual, population, community, and ecosystem levels. For instance, populations across a species’ range may gain or lose relative importance for maintaining ecosystem services and functions depending on their abundance and the persistence of their individuals.
 
 At present, there are no widely adopted software implementations for characterizing range edges or their dynamics. However, occurrence data spanning both small and large spatial and temporal scales makes this possible.
 
