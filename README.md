@@ -14,7 +14,7 @@
 
   <br/><br/>
 
-  <strong>A python package to that uses GBIF data to categorize the range edges of species through time to understand patterns of range movement, population dynamics, and individual persistence.</strong>
+  <strong>A python package that uses GBIF data to categorize the range edges of species through time to understand patterns of range movement, population dynamics, and individual persistence.</strong>
 
 </div>
 

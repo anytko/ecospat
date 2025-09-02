@@ -4,7 +4,7 @@ version = "1.0.0"
 dynamic = [
     "dependencies",
 ]
-description = "A python package to o characterize the range dynamics and shifts of North American tree species."
+description = "A python package that uses GBIF data to categorize the range edges of species through time to understand patterns of range movement, population dynamics, and individual persistence."
 readme = "README.md"
 requires-python = ">=3.8"
 keywords = [
