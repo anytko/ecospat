@@ -4,7 +4,7 @@ site_author: anytko
 site_url: https://anytko.github.io/ecospat
 repo_url: https://github.com/anytko/ecospat
 
-copyright: "Copyright &copy; 2024 - 2024 Alivia Nytko"
+copyright: "Copyright &copy; 2024 - 2025 Alivia Nytko"
 
 theme:
     palette:
@@ -86,6 +86,7 @@ nav:
         - examples/range_movement.ipynb
         - examples/population_density.ipynb
         - examples/persistence_raster.ipynb
+        - examples/individual_persistence.ipynb
         - examples/widgets.ipynb
     - API Reference:
           - ecospat module: ecospat.md

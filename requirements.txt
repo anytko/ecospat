@@ -3,12 +3,14 @@ folium
 geopandas
 geopy
 ipyleaflet
+IPython
 ipywidgets
 leafmap
 localtileserver
 mapclassify
 matplotlib
 numpy
+pandas
 pydeck
 pygbif
 pytest

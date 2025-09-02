@@ -1,0 +1,32 @@
+/* Navbar background and styling */
+.v-application .primary {
+    background-color: rgb(22,56,60) !important;
+    border-color: rgb(22,56,60) !important;
+
+}
+
+/* Navbar text color */
+.v-toolbar__title,
+.v-toolbar .v-btn {
+    color: #ffffff !important;
+}
+
+/* Hide the original title text */
+.v-toolbar__title {
+    visibility: hidden;
+    position: relative;
+}
+
+/* Insert fixed navbar text */
+.v-toolbar__title::after {
+    content: "Ecospat" !important;
+    visibility: visible;
+    display: block; /* make it fill the container */
+    width: 100%;
+    text-align: left; /* or center if you want */
+    font-size: 2rem; /* adjust to match original */
+    font-weight: bold;
+    color: #ffffff;
+}
+
+

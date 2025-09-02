@@ -10,10 +10,47 @@ from sklearn.cluster import DBSCAN
 from shapely.geometry import MultiPoint, Point, Polygon
 from .references_data import REFERENCES
 from shapely.geometry import box
-from ipyleaflet import SplitMapControl, TileLayer, basemaps
+from ipyleaflet import TileLayer
+import pydeck as pdk
+import tempfile
+import webbrowser
+import os
+import json
+from ipyleaflet import Map, TileLayer, GeoJSON
+import ipywidgets as widgets
+import requests
+from rasterio import MemoryFile
+from rasterstats import zonal_stats
+from datetime import datetime
+import rasterio
+from rasterio.features import rasterize
+from rasterio.transform import from_bounds
+import matplotlib.pyplot as plt
+from scipy.ndimage import distance_transform_edt
 
 
 def merge_touching_groups(gdf, buffer_distance=0):
+    """
+    Merges polygons in a GeoDataFrame that touch or intersect into fully connected groups.
+
+    This function:
+        - Optionally applies a small buffer to geometries to ensure touching polygons
+          are detected.
+        - Find all polygons connected to other polygons.
+        - Merges geometries in each connected group using `unary_union`.
+
+    Args:
+        gdf (GeoDataFrame): Input GeoDataFrame containing polygon geometries and attributes.
+        buffer_distance (float, optional): Distance (in projection units) to buffer
+            geometries for merging. Defaults to 0 (no buffering).
+
+    Returns:
+        GeoDataFrame: New GeoDataFrame with:
+            - Merged geometries of all touching/intersecting polygons.
+            - Numeric attributes summed across merged polygons.
+            - Non-numeric attributes taken from the first polygon in each group.
+            - CRS preserved from the input (reprojected to EPSG:3395 if necessary).
+    """
     # Suppress specific warnings
     warnings.filterwarnings("ignore", category=RuntimeWarning)
 
@@ -105,18 +142,34 @@ def merge_touching_groups(gdf, buffer_distance=0):
 
 def classify_range_edges(gdf, largest_polygons):
     """
-    Classifies polygons into leading (poleward), core, and trailing (equatorward)
-    edges within each cluster based on distance from the centroid of the largest polygon within each cluster.
-    Includes longitudinal relict detection.
+    Classifies polygons within clusters into leading, core, trailing, and relict edges based on spatial position relative to the centroid
+    of the largest polygon in each cluster. Includes longitudinal and latitudinal
+    relict detection.
 
-    Parameters:
-        gdf (GeoDataFrame): A GeoDataFrame with 'geometry' and 'cluster' columns.
+    The function:
+        - Ensures the input GeoDataFrame is projected to EPSG:3395 for distance calculations.
+        - Computes centroids, latitudes, longitudes, and areas for all polygons.
+        - Determines the centroid of the largest polygon in each cluster.
+        - Assigns each polygon a category based on latitude and longitude differences
+          relative to the cluster centroid, using thresholds that can vary with cluster
+          size.
+        - Detects potential relict polygons based on latitude and longitude deviations.
+
+    Args:
+        gdf (GeoDataFrame): Input GeoDataFrame containing 'geometry' and 'cluster' columns.
+        largest_polygons (list of GeoDataFrame): List containing the largest polygons per
+            cluster with an 'AREA' column for threshold calculations.
 
     Returns:
-        GeoDataFrame: The original GeoDataFrame with a new 'category' column.
+        GeoDataFrame: The original GeoDataFrame augmented with a 'category' column
+        indicating the polygon's position relative to the cluster:
+            - "leading" (poleward)
+            - "trailing" (equatorward)
+            - "core" (central)
+            - "relict (0.01 latitude)" or "relict (longitude)" (outlier positions)
     """
 
-    # Ensure CRS is in EPSG:3395 (meters)
+    # Ensure CRS is in EPSG:3395
     if gdf.crs is None or gdf.crs.to_epsg() != 3395:
         gdf = gdf.to_crs(epsg=3395)
 
@@ -124,7 +177,7 @@ def classify_range_edges(gdf, largest_polygons):
     gdf["centroid"] = gdf.geometry.centroid
     gdf["latitude"] = gdf["centroid"].y
     gdf["longitude"] = gdf["centroid"].x
-    gdf["area"] = gdf.geometry.area  # Compute area
+    gdf["area"] = gdf.geometry.area
 
     # Find the centroid of the largest polygon within each cluster
     def find_largest_polygon_centroid(sub_gdf):
@@ -149,17 +202,17 @@ def classify_range_edges(gdf, largest_polygons):
 
         # Define long_value based on area size
         if largest_polygon_area > 100:
-            long_value = 0.5  # for very large polygons, allow 10% longitude diff
+            long_value = 0.5
         # elif largest_polygon_area > 200:
         # long_value = 1
         else:
-            long_value = 0.05  # very small polygons, strict 1% longitude diff
+            long_value = 0.05
 
         # Then calculate thresholds
         lat_threshold_01 = 0.1 * cluster_lat
         lat_threshold_05 = 0.05 * cluster_lat
         lat_threshold_02 = 0.02 * cluster_lat
-        lon_threshold_01 = long_value * abs(cluster_lon)  # 5% of longitude
+        lon_threshold_01 = long_value * abs(cluster_lon)
 
         def classify(row):
             lat_diff = row["latitude"] - cluster_lat
@@ -199,12 +252,21 @@ def classify_range_edges(gdf, largest_polygons):
     return gdf
 
 
-import geopandas as gpd
-import numpy as np
-from scipy.spatial.distance import cdist
-
-
 def update_polygon_categories(largest_polygons, classified_polygons):
+    """
+    Updates categories of polygons that overlap with island-state polygons by
+    assigning them the category of the closest 'largest' polygon.
+
+    Args:
+        largest_polygons (GeoDataFrame or GeoSeries): Polygons representing the largest
+            clusters, with a 'category' column.
+        classified_polygons (GeoDataFrame or GeoSeries): Polygons with initial categories
+            that may need updating if they overlap island-state polygons.
+
+    Returns:
+        geopandas.GeoDataFrame: Updated classified polygons with corrected 'category'
+        values for polygons overlapping island states. CRS is EPSG:4326.
+    """
     island_states_url = "https://raw.githubusercontent.com/anytko/biospat_large_files/main/island_states.geojson"
 
     # Load island states data
@@ -277,7 +339,22 @@ def update_polygon_categories(largest_polygons, classified_polygons):
 
 
 def assign_polygon_clusters(polygon_gdf):
+    """
+    Assigns cluster IDs to polygons based on size, spatial proximity, and exclusion of island-state polygons.
 
+    The function identifies the largest polygons that do not intersect or touch
+    island-state polygons as initial cluster seeds. Remaining polygons are then
+    assigned to clusters based on proximity to these largest polygons.
+
+    Args:
+        polygon_gdf (geopandas.GeoDataFrame): A GeoDataFrame containing polygon geometries
+            and an 'AREA' column representing the size of each polygon.
+
+    Returns:
+        tuple: A tuple containing:
+            - geopandas.GeoDataFrame: The original GeoDataFrame with an added 'cluster' column.
+            - list: A list of GeoSeries representing the largest polygons used as cluster seeds.
+    """
     island_states_url = "https://raw.githubusercontent.com/anytko/biospat_large_files/main/island_states.geojson"
 
     # Read the GeoJSON from the URL
@@ -316,15 +393,11 @@ def assign_polygon_clusters(polygon_gdf):
 
         # Set the polygon threshold dynamically based on the area difference
         if area_difference > 600:
-            polygon_threshold = (
-                0.2  # Use a smaller threshold (1% of the largest polygon's area)
-            )
+            polygon_threshold = 0.2
         elif area_difference > 200:
             polygon_threshold = 0.005
         else:
-            polygon_threshold = (
-                0.2  # Use a larger threshold (20% of the largest polygon's area)
-            )
+            polygon_threshold = 0.2
 
         # Check if the polygon's area is greater than or equal to the threshold
         if polygon["AREA"] >= polygon_threshold * largest_polygons[0]["AREA"]:
@@ -334,7 +407,7 @@ def assign_polygon_clusters(polygon_gdf):
                 island_states_gdf.intersects(polygon.geometry).any()
                 or island_states_gdf.touches(polygon.geometry).any()
             ):
-                continue  # Skip the polygon if it intersects or touches an island-state polygon
+                continue
 
             # Calculate the distance between the polygon's centroid and all existing centroids in largest_centroids
             distances = []
@@ -351,9 +424,7 @@ def assign_polygon_clusters(polygon_gdf):
                 # Add to num_largest polygons if it's not within proximity and meets the area condition
                 largest_polygons.append(polygon)
                 largest_centroids.append(polygon.geometry.centroid)
-                clusters.append(
-                    len(largest_polygons) - 1
-                )  # Assign a new cluster for the new largest polygon
+                clusters.append(len(largest_polygons) - 1)
         else:
             pass
 
@@ -366,7 +437,7 @@ def assign_polygon_clusters(polygon_gdf):
             polygon.geometry.equals(largest_polygon.geometry)
             for largest_polygon in largest_polygons
         ):
-            continue  # Skip, as the num_largest polygons already have their clusters
+            continue
 
         # Find the closest centroid in largest_centroids
         closest_centroid_idx = None
@@ -376,7 +447,7 @@ def assign_polygon_clusters(polygon_gdf):
             lat_diff = abs(polygon.geometry.centroid.y - centroid.y)
             lon_diff = abs(polygon.geometry.centroid.x - centroid.x)
 
-            distance = np.sqrt(lat_diff**2 + lon_diff**2)  # Euclidean distance
+            distance = np.sqrt(lat_diff**2 + lon_diff**2)
             if distance < min_distance:
                 min_distance = distance
                 closest_centroid_idx = j
@@ -464,17 +535,17 @@ def fetch_gbif_data(species_name, limit=2000):
     - list[dict]: A list of occurrence records (as dictionaries) containing GBIF data.
     """
     all_data = []
-    offset = 0  # Initialize the offset to 0
-    page_limit = 300  # GBIF API maximum limit per request
+    offset = 0
+    page_limit = 300
 
     while len(all_data) < limit:
         # Fetch the data for the current page
         data = occurrences.search(
             scientificName=species_name,
             hasGeospatialIssue=False,
-            limit=page_limit,  # Fetch up to 300 records per request
-            offset=offset,  # Adjust offset for pagination
-            hasCoordinate=True,  # Only include records with coordinates
+            limit=page_limit,
+            offset=offset,
+            hasCoordinate=True,
         )
 
         # Add the fetched data to the list
@@ -485,7 +556,7 @@ def fetch_gbif_data(species_name, limit=2000):
             break
 
         # Otherwise, increment the offset for the next page of results
-        offset += page_limit  # Increase by 300 each time since that's the max page size
+        offset += page_limit
 
     # Trim the list to exactly the new_limit size if needed
     all_data = all_data[:limit]
@@ -538,9 +609,6 @@ def convert_to_gdf(euc_data):
 
     gdf = gpd.GeoDataFrame(df, geometry="geometry", crs="EPSG:4326")
     return gdf
-
-
-# I think go with stand alone functions for now (but keeping GBIF_map class as is for now)
 
 
 def make_dbscan_polygons_with_points_from_gdf(
@@ -653,8 +721,19 @@ def make_dbscan_polygons_with_points_from_gdf(
 
 def get_start_year_from_species(species_name):
     """
-    Converts species name to 8-letter key and looks up the start year in REFERENCES.
-    If the key is not found, returns 'NA'.
+    Retrieves the start year associated with a species from the REFERENCES dictionary.
+
+    The function converts a species name into an 8-character key by taking the first
+    four letters of the genus and the first four letters of the species epithet.
+    It then looks up this key in the REFERENCES dictionary. If the key is not found
+    or the species name is incomplete, 'NA' is returned.
+
+    Args:
+        species_name (str): The scientific name of the species in the format 'Genus species'.
+
+    Returns:
+        str: The start year associated with the species if found in REFERENCES,
+             otherwise 'NA'.
     """
     parts = species_name.strip().lower().split()
     if len(parts) >= 2:
@@ -673,7 +752,7 @@ def prune_by_year(df, start_year=1971, end_year=2025):
     - end_year: int, end of the year range (default 2025)
 
     Returns:
-    - pruned DataFrame
+    - pruned DataFrame only with rows in the specified year range
     """
     if "year" not in df.columns:
         raise ValueError("DataFrame must have a 'year' column.")
@@ -683,7 +762,33 @@ def prune_by_year(df, start_year=1971, end_year=2025):
 
 
 def assign_polygon_clusters_gbif(polygon_gdf):
+    """
+    Assigns polygons in a GeoDataFrame to clusters based on size, proximity,
+    and geographic isolation, while ignoring polygons that intersect or touch
+    predefined island states. Also identifies the largest polygon in each cluster.
 
+    The function simplifies geometries, calculates polygon areas,
+    and iteratively assigns clusters using centroid distances.
+    Polygons with similar centroids within thresholds are grouped together.
+
+    Args:
+        polygon_gdf (GeoDataFrame): Input GeoDataFrame containing polygon geometries
+            in a geographic CRS (EPSG:4326). Must contain at least the 'geometry' column.
+
+    Returns:
+        tuple: A tuple containing:
+            - GeoDataFrame: The input polygons with an additional 'cluster' column
+              indicating the assigned cluster ID for each polygon.
+            - list: A list of GeoSeries representing the largest polygon from each cluster.
+
+    Notes:
+        - Polygons intersecting or touching islands (from a predefined GeoJSON) are ignored
+          when determining largest polygons.
+        - Clustering is based on centroid proximity, with a threshold of 5 degrees for
+          latitude and longitude differences.
+        - Areas are calculated in square kilometers after transforming to EPSG:3395.
+        - The returned GeoDataFrame is transformed back to EPSG:4326.
+    """
     island_states_url = "https://raw.githubusercontent.com/anytko/biospat_large_files/main/island_states.geojson"
 
     island_states_gdf = gpd.read_file(island_states_url)
@@ -699,7 +804,7 @@ def assign_polygon_clusters_gbif(polygon_gdf):
     if range_test.crs.is_geographic:
         range_test = range_test.to_crs(epsg=3395)
 
-    range_test["AREA"] = range_test.geometry.area / 1e6  # Calculate area first
+    range_test["AREA"] = range_test.geometry.area / 1e6
     range_test = range_test.sort_values(by="AREA", ascending=False)
 
     largest_polygons = []
@@ -720,7 +825,7 @@ def assign_polygon_clusters_gbif(polygon_gdf):
         polygon = range_test.iloc[i]
         area_difference = abs(largest_polygons[0]["AREA"] - polygon["AREA"])
 
-        polygon_threshold = 0.5  # Default threshold
+        polygon_threshold = 0.5
 
         # if area_difference > 10000:
         # polygon_threshold = 0.2
@@ -790,15 +895,31 @@ def assign_polygon_clusters_gbif(polygon_gdf):
 
 def classify_range_edges_gbif(df, largest_polygons):
     """
-    Classifies polygons into leading (poleward), core, and trailing (equatorward)
-    edges within each cluster based on distance from the centroid of the largest polygon within each cluster.
-    Includes longitudinal relict detection.
+    Classifies polygons in a GeoDataFrame into range edge categories
+    (leading, core, trailing, and relict) within each cluster based on
+    distance from the centroid of the largest polygon in that cluster.
+    The function considers both latitudinal and longitudinal relict populations.
 
-    Parameters:
-        df (GeoDataFrame): A GeoDataFrame with columns 'geometry' and 'cluster', and potentially repeated geometries.
+
+    Args:
+        df (GeoDataFrame): Input GeoDataFrame containing at minimum the columns:
+            - 'geometry': Polygon geometries representing occurrences or clusters.
+            - 'cluster': Identifier for the cluster each geometry belongs to.
+        largest_polygons (list of dict): List of dictionaries containing the
+            largest polygon per cluster, where each dictionary has an 'AREA' key
+            used for threshold adjustments.
 
     Returns:
-        GeoDataFrame: The original GeoDataFrame with a new 'category' column merged in.
+        GeoDataFrame: A copy of the input GeoDataFrame with a new column:
+            - 'category': Edge classification for each polygon, which can be one of:
+                'leading (0.99)', 'leading (0.95)', 'leading (0.9)',
+                'core', 'trailing (0.05)', 'trailing (0.1)',
+                'relict (0.01 latitude)', 'relict (longitude)'.
+
+    Notes:
+        - Relict polygons are identified based on exceeding specified latitudinal
+          or longitudinal thresholds relative to the largest polygon centroid.
+        - The original GeoDataFrame's CRS is preserved in the returned result.
     """
     # Add unique ID for reliable merging
     df_original = df.copy().reset_index(drop=False).rename(columns={"index": "geom_id"})
@@ -895,7 +1016,6 @@ def update_polygon_categories_gbif(largest_polygons_gdf, classified_polygons_gdf
     Parameters:
         largest_polygons_gdf (GeoDataFrame): GeoDataFrame of largest polygons with 'geometry' and 'category'.
         classified_polygons_gdf (GeoDataFrame): Output from classify_range_edges_gbif with 'geom_id' and 'category'.
-        island_states_gdf (GeoDataFrame): GeoDataFrame of island state geometries.
 
     Returns:
         GeoDataFrame: classified_polygons_gdf with updated 'category' values for overlapping polygons.
@@ -915,7 +1035,7 @@ def update_polygon_categories_gbif(largest_polygons_gdf, classified_polygons_gdf
         largest_polygons_gdf = gpd.GeoDataFrame(
             largest_polygons_gdf,
             geometry="geometry",
-            crs=crs,  # or whatever CRS you're using
+            crs=crs,
         )
 
     largest_polygons_gdf = largest_polygons_gdf.to_crs(crs)
@@ -971,6 +1091,22 @@ def update_polygon_categories_gbif(largest_polygons_gdf, classified_polygons_gdf
 
 
 def merge_and_remap_polygons(gdf, buffer_distance=0):
+    """
+    Merges touching or intersecting polygons in a GeoDataFrame and remaps the merged geometry
+    back to the original rows. Optionally applies a buffer to polygons before merging.
+
+    Args:
+        gdf (GeoDataFrame): Input GeoDataFrame with columns ['geometry', 'point_geometry', ...].
+        buffer_distance (float, optional): Distance to buffer polygons before merging (in meters).
+            Defaults to 0 (no buffer).
+
+    Returns:
+        GeoDataFrame: A GeoDataFrame where intersecting or touching polygons have been merged,
+        with the same number of rows as the input and CRS set to EPSG:4326.
+
+    Notes:
+        This function preserves point geometries and ensures the result is in WGS84 (EPSG:4326).
+    """
     gdf = gdf.copy()
 
     # Ensure CRS is projected for buffering and spatial operations
@@ -1127,9 +1263,6 @@ def update_polygon_categories_gbif_test(largest_polygons_gdf, classified_polygon
     return updated_classified_polygons
 
 
-import geopandas as gpd
-
-
 def remove_lakes_and_plot_gbif(polygons_gdf):
     """
     Removes lake polygons from range polygons and retains all rows in the original data,
@@ -1191,16 +1324,34 @@ def remove_lakes_and_plot_gbif(polygons_gdf):
     return merged_polygons
 
 
-def clip_polygons_to_continent_gbif(input_gdf):
+def clip_polygons_to_continent_gbif(
+    input_gdf,
+    lat_min=6.6,
+    lat_max=83.3,
+    lon_min=-178.2,
+    lon_max=-49.0,
+):
     """
-    Clips the polygon geometry associated with each point to the North American continent.
-    Preserves one row per original point.
+    Clips polygon geometries to a bounding box while preserving one row per original point.
 
-    Parameters:
-    - input_gdf: GeoDataFrame with columns ['point_geometry', 'year', 'geometry'].
+    This function:
+    1. Ensures geometries are valid.
+    2. Assigns unique IDs to shared polygons.
+    3. Clips polygons to continental land areas.
+    4. Clips again to a bounding box (default: North America).
+    5. Dissolves polygon fragments back into single geometries.
+    6. Merges the clipped polygons back to the original GeoDataFrame.
+
+    Args:
+        input_gdf (geopandas.GeoDataFrame): Input GeoDataFrame containing at least a 'geometry' column.
+        lat_min (float, optional): Minimum latitude of bounding box. Default is 6.6.
+        lat_max (float, optional): Maximum latitude of bounding box. Default is 83.3.
+        lon_min (float, optional): Minimum longitude of bounding box. Default is -178.2.
+        lon_max (float, optional): Maximum longitude of bounding box. Default is -49.0.
 
     Returns:
-    - GeoDataFrame with same number of rows but clipped geometries.
+        geopandas.GeoDataFrame: A GeoDataFrame with the same number of rows as the input,
+        where polygon geometries have been clipped to a bounding box.
     """
     from shapely.geometry import box
 
@@ -1229,7 +1380,7 @@ def clip_polygons_to_continent_gbif(input_gdf):
     clipped = gpd.overlay(unique_polygons, continents_gdf, how="intersection")
 
     # Step 3: Clip again to North America bounding box
-    na_bbox = box(-178.2, 6.6, -49.0, 83.3)
+    na_bbox = box(lon_min, lat_min, lon_max, lat_max)
     na_gdf = gpd.GeoDataFrame(geometry=[na_bbox], crs=input_gdf.crs)
     clipped = gpd.overlay(clipped, na_gdf, how="intersection")
 
@@ -1260,6 +1411,33 @@ def clip_polygons_to_continent_gbif(input_gdf):
 
 
 def assign_polygon_clusters_gbif_test(polygon_gdf):
+    """
+    Assigns cluster IDs to polygons based on their size and spatial proximity to core zones of admixture, excluding islands.
+
+    This function:
+      - Simplifies polygon geometries to avoid precision issues.
+      - Generates a unique ID for each polygon using an MD5 hash of its geometry.
+      - Calculates polygon areas in square kilometers.
+      - Identifies the largest polygons as cluster centers or core zones, avoiding polygons on islands.
+      - Assigns other polygons to the nearest cluster based on centroid distance.
+
+    Args:
+        polygon_gdf (GeoDataFrame): A GeoDataFrame containing polygon geometries to cluster.
+                                    Must have a 'geometry' column.
+
+    Returns:
+        tuple:
+            - GeoDataFrame: The original GeoDataFrame with two new columns:
+                * "geometry_id": Unique ID for each polygon.
+                * "cluster": Assigned cluster ID.
+                * "AREA": Polygon area in km².
+            - list: A list of the largest polygons used as cluster centers (GeoSeries rows).
+
+    Notes:
+        - Polygons that intersect or touch islands (from a predefined island GeoJSON) are excluded from cluster centers.
+        - Thresholds for selecting large polygons as cluster centers are dynamic based on the area of the largest polygon.
+        - CRS of the returned GeoDataFrame is EPSG:4326.
+    """
     import hashlib
 
     island_states_url = "https://raw.githubusercontent.com/anytko/biospat_large_files/main/island_states.geojson"
@@ -1302,7 +1480,7 @@ def assign_polygon_clusters_gbif_test(polygon_gdf):
     for i in range(1, len(unique_polys)):
         polygon = unique_polys.iloc[i]
         if polygon["geometry_id"] in cluster_ids:
-            continue  # Already clustered
+            continue
 
         # polygon_threshold = 0.3  # Default threshold
 
@@ -1357,14 +1535,28 @@ def assign_polygon_clusters_gbif_test(polygon_gdf):
     return polygon_gdf, largest_polygons
 
 
-from pygbif import occurrences
-import time
-
-
-def fetch_gbif_data_modern(species_name, limit=2000, end_year=2025, start_year=1971):
+def fetch_gbif_data_modern(
+    species_name, limit=2000, end_year=2025, start_year=1971, basisOfRecord=None
+):
     """
-    Fetches modern occurrence data from GBIF for a specified species between given years.
-    Works backward from end_year to start_year until the limit is reached.
+    Fetches modern occurrence records for a species from GBIF between specified years.
+
+    The function works backward from `end_year` to `start_year` until the specified limit is reached.
+
+    Parameters:
+        species_name (str): Scientific name of the species to query.
+        limit (int, optional): Maximum number of occurrence records to retrieve. Default is 2000.
+        end_year (int, optional): The last year to include in the search (inclusive). Default is 2025.
+        start_year (int, optional): The first year to include in the search (inclusive). Default is 1971.
+        basisOfRecord (str, list, or None, optional): Basis of record filter (e.g., "OBSERVATION",
+            "PRESERVED_SPECIMEN"). Default is None (no filtering).
+
+    Returns:
+        list[dict]: A list of GBIF occurrence records (dictionaries) up to the specified limit.
+
+    Notes:
+        - The function stops early if no records are found for 5 consecutive years.
+        - Works backward year by year until the limit is reached or the start_year is passed.
     """
     all_data = []
     page_limit = 300
@@ -1375,16 +1567,21 @@ def fetch_gbif_data_modern(species_name, limit=2000, end_year=2025, start_year=1
         year_data = []
 
         while len(all_data) < limit:
-            response = occurrences.search(
-                scientificName=species_name,
-                hasCoordinate=True,
-                hasGeospatialIssue=False,
-                year=year,
-                limit=page_limit,
-                offset=offset,
-            )
+            search_params = {
+                "scientificName": species_name,
+                "hasCoordinate": True,
+                "hasGeospatialIssue": False,
+                "year": year,
+                "limit": page_limit,
+                "offset": offset,
+            }
 
+            if basisOfRecord is not None:
+                search_params["basisOfRecord"] = basisOfRecord
+
+            response = occurrences.search(**search_params)
             results = response.get("results", [])
+
             if not results:
                 break
 
@@ -1414,28 +1611,49 @@ def fetch_gbif_data_modern(species_name, limit=2000, end_year=2025, start_year=1
     return all_data
 
 
-from pygbif import occurrences
+def fetch_historic_records(species_name, limit=2000, year=1971, basisOfRecord=None):
+    """
+    Fetches historic occurrence records for a species from GBIF, going backward in time
+    from a specified year until a minimum year or until the record limit is reached.
 
+    Parameters:
+        species_name (str): Scientific name of the species to search for.
+        limit (int, optional): Maximum number of records to retrieve. Default is 2000.
+        year (int, optional): Starting year to fetch historic records from. Default is 1971.
+        basisOfRecord (str, list, or None, optional): Basis of record filter for GBIF data
+            (e.g., "PRESERVED_SPECIMEN", "OBSERVATION"). Default is None (no filtering).
 
-def fetch_historic_records(species_name, limit=2000, year=1971):
+    Returns:
+        list[dict]: A list of GBIF occurrence records (dictionaries) up to the specified limit.
+
+    Notes:
+        - The function stops early if no records are found for 5 consecutive years.
+        - Years earlier than 1960 are not queried.
+    """
     all_data = []
     year = year
     page_limit = 300
-    consecutive_empty_years = 0  # stop if multiple years in a row return nothing
+    consecutive_empty_years = 0
 
     while len(all_data) < limit and year >= 1960:
         offset = 0
         year_data = []
         while len(all_data) < limit:
-            response = occurrences.search(
-                scientificName=species_name,
-                hasCoordinate=True,
-                hasGeospatialIssue=False,
-                year=year,
-                limit=page_limit,
-                offset=offset,
-            )
+            search_params = {
+                "scientificName": species_name,
+                "hasCoordinate": True,
+                "hasGeospatialIssue": False,
+                "year": year,
+                "limit": page_limit,
+                "offset": offset,
+            }
+
+            if basisOfRecord is not None:
+                search_params["basisOfRecord"] = basisOfRecord
+
+            response = occurrences.search(**search_params)
             results = response.get("results", [])
+
             if not results:
                 break
             year_data.extend(results)
@@ -1461,7 +1679,7 @@ def fetch_historic_records(species_name, limit=2000, year=1971):
 
 
 def fetch_gbif_data_with_historic(
-    species_name, limit=2000, start_year=1971, end_year=2025
+    species_name, limit=2000, start_year=1971, end_year=2025, basisOfRecord=None
 ):
     """
     Fetches both modern and historic occurrence data from GBIF for a specified species.
@@ -1471,6 +1689,7 @@ def fetch_gbif_data_with_historic(
         limit (int): Max number of records to fetch for each (modern and historic).
         start_year (int): The earliest year for modern data and latest year for historic data.
         end_year (int): The most recent year to fetch from.
+        basisOfRecord (str or list or None, optional): Basis of record filter for GBIF data (e.g., "PRESERVED_SPECIMEN", "OBSERVATION"). Default is None (no filtering).
 
     Returns:
         dict: {
@@ -1483,32 +1702,63 @@ def fetch_gbif_data_with_historic(
         limit=limit,
         start_year=start_year + 1,
         end_year=end_year,
+        basisOfRecord=basisOfRecord,
     )
 
     historic = fetch_historic_records(
         species_name=species_name,
         limit=limit,
-        year=start_year,  # avoid overlap with modern
+        year=start_year,
+        basisOfRecord=basisOfRecord,
     )
 
     return {"modern": modern, "historic": historic}
 
 
 def process_gbif_data_pipeline(
-    gdf, species_name=None, is_modern=True, year_range=None, end_year=2025
+    gdf,
+    species_name=None,
+    is_modern=True,
+    year_range=None,
+    end_year=2025,
+    user_start_year=None,
+    lat_min=6.6,
+    lat_max=83.3,
+    lon_min=-178.2,
+    lon_max=-49.0,
 ):
     """
-    Processes GBIF occurrence data through a series of spatial filtering and classification steps.
+    Processes GBIF occurrence data through a multi-step spatial filtering and classification pipeline.
 
-    Parameters:
-        gdf (GeoDataFrame): Input GBIF occurrence data.
-        species_name (str): Scientific name of the species. Required if year_range is not given.
-        is_modern (bool): Whether the data is modern. If False, the pruning by year is skipped.
-        year_range (tuple or None): Start and end years for pruning (only used for modern data).
-        end_year (int): The end year for pruning modern data, default is 2025.
+    This function takes a GeoDataFrame of species occurrence points and performs the following steps:
+        1. Creates DBSCAN polygons from occurrence points, filtered by global latitude/longitude bounds.
+        2. Optionally prunes polygons by year for modern data.
+        3. Merges and remaps overlapping polygons with a buffer.
+        4. Removes polygons that fall in lakes.
+        5. Clips polygons to specified continental bounds.
+        6. Assigns cluster IDs and identifies the largest polygon.
+        7. Classifies range edges (leading, core, trailing) for downstream analysis.
+
+    Args:
+        gdf (GeoDataFrame): Input GBIF occurrence data containing point geometries.
+        species_name (str, optional): Scientific name of the species. Required if `year_range` is not provided.
+        is_modern (bool, default=True): Whether the data is considered modern. If False, year pruning is skipped.
+        year_range (tuple of int, optional): Tuple of (start_year, end_year) for filtering occurrences. Only used if `is_modern=True`.
+        end_year (int, default=2025): The end year for pruning modern data. Ignored if `year_range` is provided.
+        user_start_year (int, optional): User-specified start year if species-specific start year is unavailable.
+        lat_min (float, default=6.6): Minimum latitude to include in polygon creation and clipping.
+        lat_max (float, default=83.3): Maximum latitude to include in polygon creation and clipping.
+        lon_min (float, default=-178.2): Minimum longitude to include in polygon creation and clipping.
+        lon_max (float, default=-49.0): Maximum longitude to include in polygon creation and clipping.
 
     Returns:
-        GeoDataFrame: Classified polygons.
+        GeoDataFrame: A GeoDataFrame containing classified polygons with cluster IDs, range edges, and other metadata.
+        Each polygon represents a spatially clustered portion of the species range, pruned, merged, and clipped to valid
+        continental areas.
+
+    Raises:
+        ValueError: If `species_name` is not provided and `year_range` is None for modern data.
+        ValueError: If a start year cannot be determined for a species and `user_start_year` is not provided.
     """
 
     if is_modern and year_range is None:
@@ -1517,15 +1767,22 @@ def process_gbif_data_pipeline(
 
         # Get start year from species data if available, otherwise use a default
         start_year = get_start_year_from_species(species_name)
+
         if start_year == "NA":
-            raise ValueError(f"Start year not found for species '{species_name}'.")
-        start_year = int(start_year)
+            if user_start_year is not None:
+                start_year = int(user_start_year)
+            else:
+                raise ValueError(f"Start year not found for species '{species_name}'.")
+        else:
+            start_year = int(start_year)
 
         # Use the provided end_year if available, otherwise default to 2025
         year_range = (start_year, end_year)
 
     # Step 1: Create DBSCAN polygons
-    polys = make_dbscan_polygons_with_points_from_gdf(gdf)
+    polys = make_dbscan_polygons_with_points_from_gdf(
+        gdf, lat_min=lat_min, lon_min=lon_min, lat_max=lat_max, lon_max=lon_max
+    )
 
     # Step 2: Optionally prune by year for modern data
     if is_modern:
@@ -1538,7 +1795,13 @@ def process_gbif_data_pipeline(
     unique_polys_no_lakes = remove_lakes_and_plot_gbif(merged_polygons)
 
     # Step 5: Clip to continents
-    clipped_polys = clip_polygons_to_continent_gbif(unique_polys_no_lakes)
+    clipped_polys = clip_polygons_to_continent_gbif(
+        unique_polys_no_lakes,
+        lat_min=lat_min,
+        lon_min=lon_min,
+        lat_max=lat_max,
+        lon_max=lon_max,
+    )
 
     # Step 6: Assign cluster ID and large polygon
     assigned_poly, large_poly = assign_polygon_clusters_gbif_test(clipped_polys)
@@ -1549,32 +1812,72 @@ def process_gbif_data_pipeline(
     return classified_poly
 
 
-def analyze_species_distribution(species_name, record_limit=100, end_year=2025):
+def analyze_species_distribution(
+    species_name,
+    record_limit=100,
+    end_year=2025,
+    user_start_year=None,
+    lat_min=6.6,
+    lat_max=83.3,
+    lon_min=-178.2,
+    lon_max=-49.0,
+    basisOfRecord=None,
+):
     """
-    Fetches and processes both modern and historic GBIF data for a given species.
+    Fetches, separates, and processes both modern and historic GBIF occurrence data
+    for a given species, producing classified polygons with density estimates.
+
+    This function dynamically determines the start year for modern vs. historic records,
+    converts data to GeoDataFrames, and applies the GBIF processing pipeline.
 
     Parameters:
         species_name (str): Scientific name of the species.
-        record_limit (int): Max number of records to fetch from GBIF.
-        end_year (int): The most recent year to fetch modern data for.
+        record_limit (int, optional): Maximum number of records to fetch from GBIF. Default is 100.
+        end_year (int, optional): Most recent year to fetch modern data for. Default is 2025.
+        user_start_year (int or None, optional): Start year to use if the species' start year
+            cannot be determined internally. Default is None.
+        lat_min (float, optional): Minimum latitude for spatial filtering. Default is 6.6.
+        lat_max (float, optional): Maximum latitude for spatial filtering. Default is 83.3.
+        lon_min (float, optional): Minimum longitude for spatial filtering. Default is -178.2.
+        lon_max (float, optional): Maximum longitude for spatial filtering. Default is -49.0.
+        basisOfRecord (str or list or None, optional): Basis of record filter for GBIF data
+            (e.g., "PRESERVED_SPECIMEN", "OBSERVATION"). Default is None (no filtering).
 
     Returns:
-        Tuple: (classified_modern_polygons, classified_historic_polygons)
+        tuple[GeoDataFrame, GeoDataFrame]:
+            - classified_modern_polygons: Polygons classified from modern records with density info.
+            - classified_historic_polygons: Polygons classified from historic records with density info.
+
+    Raises:
+        ValueError: If the start year cannot be determined for the species and `user_start_year` is not provided.
     """
 
     start_year = get_start_year_from_species(species_name)
+
     if start_year == "NA":
-        raise ValueError(f"Start year not found for species '{species_name}'.")
-    start_year = int(start_year)
+        # If missing, check if the user provided one
+        if user_start_year is not None:
+            start_year = int(user_start_year)
+        else:
+            raise ValueError(
+                f"Start year not found internally for species '{species_name}', "
+                f"and no user start year was provided."
+            )
+    else:
+        start_year = int(start_year)
 
     data = fetch_gbif_data_with_historic(
-        species_name, limit=record_limit, start_year=start_year, end_year=end_year
+        species_name,
+        limit=record_limit,
+        start_year=start_year,
+        end_year=end_year,
+        basisOfRecord=basisOfRecord,
     )
 
     print(f"Modern records (>= {start_year}):", len(data["modern"]))
     print(f"Historic records (< {start_year}):", len(data["historic"]))
 
-    modern_data = data["modern"]  # This is a list of dictionaries
+    modern_data = data["modern"]
     historic_data = data["historic"]
 
     historic_gdf = convert_to_gdf(historic_data)
@@ -1582,10 +1885,25 @@ def analyze_species_distribution(species_name, record_limit=100, end_year=2025):
 
     # Let the pipeline dynamically determine the year range
     classified_modern = process_gbif_data_pipeline(
-        modern_gdf, species_name=species_name, is_modern=True, end_year=end_year
+        modern_gdf,
+        species_name=species_name,
+        is_modern=True,
+        end_year=end_year,
+        user_start_year=user_start_year,
+        lat_min=lat_min,
+        lat_max=lat_max,
+        lon_min=lon_min,
+        lon_max=lon_max,
     )
     classified_historic = process_gbif_data_pipeline(
-        historic_gdf, is_modern=False, end_year=end_year
+        historic_gdf,
+        is_modern=False,
+        end_year=end_year,
+        user_start_year=user_start_year,
+        lat_min=lat_min,
+        lat_max=lat_max,
+        lon_min=lon_min,
+        lon_max=lon_max,
     )
 
     classified_modern = calculate_density(classified_modern)
@@ -1630,7 +1948,9 @@ def collapse_and_calculate_centroids(gdf):
     return gpd.GeoDataFrame(centroids_data, crs=gdf.crs)
 
 
-def calculate_northward_change_rate(hist_gdf, new_gdf, species_name, end_year=2025):
+def calculate_northward_change_rate(
+    hist_gdf, new_gdf, species_name, end_year=2025, user_start_year=None
+):
     """
     Compare centroids within each group/category in two GeoDataFrames and calculate:
     - The northward change in kilometers
@@ -1647,7 +1967,15 @@ def calculate_northward_change_rate(hist_gdf, new_gdf, species_name, end_year=20
     """
 
     # Dynamically get the starting year based on species
-    start_year = int(get_start_year_from_species(species_name))
+    start_year = get_start_year_from_species(species_name)
+
+    if start_year == "NA":
+        if user_start_year is not None:
+            start_year = int(user_start_year)
+        else:
+            raise ValueError(f"Start year not found for species '{species_name}'.")
+    else:
+        start_year = int(start_year)
 
     # Calculate the time difference in years
     years_elapsed = end_year - start_year
@@ -1682,7 +2010,9 @@ def calculate_northward_change_rate(hist_gdf, new_gdf, species_name, end_year=20
     return pd.DataFrame(changes)
 
 
-def analyze_northward_shift(gdf_hist, gdf_new, species_name, end_year=2025):
+def analyze_northward_shift(
+    gdf_hist, gdf_new, species_name, end_year=2025, user_start_year=None
+):
     """
     Wrapper function that collapses categories and computes the rate of northward shift
     in km/year between historical and modern GeoDataFrames.
@@ -1707,6 +2037,7 @@ def analyze_northward_shift(gdf_hist, gdf_new, species_name, end_year=2025):
         new_gdf=new_centroids,
         species_name=species_name,
         end_year=end_year,
+        user_start_year=user_start_year,
     )
 
     return result
@@ -1715,13 +2046,36 @@ def analyze_northward_shift(gdf_hist, gdf_new, species_name, end_year=2025):
 def categorize_species(df):
     """
     Categorizes species into movement groups based on leading, core, and trailing rates.
-    Handles both full (3-edge) and partial (2-edge) data cases.
 
-    Parameters:
-        df (pd.DataFrame): A DataFrame with columns ['species', 'category', 'northward_rate_km_per_year']
+    This function examines northward movement rates (km/year) for different range edges: leading edge, core, and trailing edge. It handles cases where
+    all three edges are present or only two edges are available.
+    Each species is assigned a movement category based on the combination of these rates.
+
+    Categories include:
+        - "positive moving together"
+        - "negative moving together"
+        - "pull apart"
+        - "reabsorption"
+        - "stability"
+        - "likely moving together"
+        - "likely stable"
+        - "likely pull apart"
+        - "likely reabsorption"
+        - "uncategorized"
+
+    Args:
+        df (pd.DataFrame): Input DataFrame containing species movement data. Must include:
+            - 'species' (str): Name of the species
+            - 'category' (str): Edge category, e.g., 'leading', 'core', or 'trailing'
+            - 'northward_rate_km_per_year' (float): Northward movement rate for that edge
 
     Returns:
-        pd.DataFrame: Categorized movement results with leading/core/trailing rates.
+        pd.DataFrame: A DataFrame with one row per species, including:
+            - 'species': Species name
+            - 'leading': Leading edge rate (float or None)
+            - 'core': Core rate (float or None)
+            - 'trailing': Trailing edge rate (float or None)
+            - 'category': Assigned movement category (str)
     """
     categories = []
 
@@ -1749,7 +2103,7 @@ def categorize_species(df):
         # Count how many components are not None
         num_known = sum(x is not None for x in [leading, core, trailing])
 
-        category = "uncategorized"  # default
+        category = "uncategorized"
 
         # ======= Full Data (3 values) =======
         if num_known == 3:
@@ -1798,6 +2152,12 @@ def categorize_species(df):
                 or (leading < -2 and core < -2 and trailing > 2)
             ):
                 category = "reabsorption"
+
+            elif -2 < core < 2 and leading is not None and trailing is not None:
+                if leading > 2 and trailing > 2:
+                    category = "likely moving together"
+                elif leading < -2 and trailing < -2:
+                    category = "likely moving together"
 
         # ======= Partial Data (2 values) =======
         elif num_known == 2:
@@ -1865,11 +2225,11 @@ def summarize_polygons_with_points(df):
         df.groupby("geometry_id")
         .agg(
             {
-                "geometry": "first",  # keep one polygon geometry
-                "category": "first",  # assume category is the same within a polygon
-                "AREA": "first",  # optional: keep AREA of the polygon
-                "cluster": "first",  # optional: keep cluster ID
-                "point_geometry": "count",  # count how many points fall in this polygon
+                "geometry": "first",
+                "category": "first",
+                "AREA": "first",
+                "cluster": "first",
+                "point_geometry": "count",
             }
         )
         .rename(columns={"point_geometry": "n_points"})
@@ -1912,7 +2272,24 @@ def count_points_per_category(df):
 
 
 def prepare_data(df):
-    # Group by polygon
+    """
+    Aggregate point data by polygon and prepare a GeoDataFrame for mapping.
+
+    Args:
+        df (pd.DataFrame or gpd.GeoDataFrame):
+            Input DataFrame containing at least the following columns:
+            - 'geometry_id': Identifier for each polygon
+            - 'geometry': Polygon geometry
+            - 'point_geometry': Point geometry to be counted per polygon
+            - 'category': A categorical column associated with the polygon
+
+    Returns:
+        gpd.GeoDataFrame: Aggregated GeoDataFrame with columns:
+            - 'geometry_id': Polygon identifier
+            - 'geometry': Polygon geometry
+            - 'category': First category value per polygon
+            - 'point_count': Number of points within each polygon
+    """
     grouped = (
         df.groupby("geometry_id")
         .agg({"geometry": "first", "point_geometry": "count", "category": "first"})
@@ -1920,27 +2297,42 @@ def prepare_data(df):
         .reset_index()
     )
     gdf_polygons = gpd.GeoDataFrame(grouped, geometry="geometry")
-    gdf_polygons = gdf_polygons.to_crs("EPSG:4326")  # MapLibre requires lat/lon
+    gdf_polygons = gdf_polygons.to_crs("EPSG:4326")
     return gdf_polygons
 
 
-import pydeck as pdk
-import tempfile
-import webbrowser
-import os
-import json
-import geopandas as gpd
-
-
 def create_interactive_map(dataframe, if_save=False):
-    # --- Split dataframe into polygons and points ---
+    """
+    Create and display an interactive 3D map with polygon outlines and a
+    hexagon elevation layer representing point density.
+
+    The function splits the input DataFrame into polygons and points, converts
+    them to GeoDataFrames, and then visualizes them using PyDeck. The map is displayed in the default web browser
+    and can optionally be saved as an HTML file in the user's Downloads folder.
+
+    Args:
+        dataframe (pd.DataFrame or gpd.GeoDataFrame):
+            A DataFrame containing both polygon and point geometries. Must have
+            a 'geometry' column for polygons and a 'point_geometry' column for points.
+        if_save (bool, optional):
+            If True, the map will be saved as "map.html" in the user's Downloads
+            folder. Defaults to False.
+
+    Returns:
+        None: The function displays the map in a web browser and optionally saves it.
+
+    Notes:
+        - Point densities are visualized using a HexagonLayer with elevation based
+          on the count of points in each hexagon.
+        - Tooltip shows the elevation value (density) when hovering over hexagons.
+        - Temporary HTML file is automatically opened in the default browser.
+        - Saved map overwrites existing "map.html" in Downloads if present.
+    """
     # Keep the polygon geometries
     polygon_gdf = dataframe.drop(
         columns=["point_geometry"]
     )  # Remove point geometry column from polygons
-    polygon_gdf = gpd.GeoDataFrame(
-        polygon_gdf, geometry="geometry"
-    )  # Set 'geometry' as the geometry column
+    polygon_gdf = gpd.GeoDataFrame(polygon_gdf, geometry="geometry")
 
     # Create the point GeoDataFrame, setting 'point_geometry' as the geometry column
     point_gdf = dataframe.copy()
@@ -1958,8 +2350,7 @@ def create_interactive_map(dataframe, if_save=False):
     point_gdf["point_lon"] = point_gdf.geometry.x
     point_gdf["point_lat"] = point_gdf.geometry.y
 
-    # Optional: Add elevation based on some attribute, e.g., year or cluster
-    point_gdf["weight"] = 1  # Can also use year, cluster, etc.
+    point_gdf["weight"] = 1
 
     # --- Define the initial view state for the map ---
     view_state = pdk.ViewState(
@@ -1973,7 +2364,7 @@ def create_interactive_map(dataframe, if_save=False):
     polygon_layer = pdk.Layer(
         "GeoJsonLayer",
         data=polygon_json,
-        get_fill_color="[0, 0, 0, 0]",  # Transparent fill
+        get_fill_color="[0, 0, 0, 0]",
         get_line_color=[120, 120, 120],
         line_width_min_pixels=1,
         pickable=True,
@@ -2030,8 +2421,52 @@ def create_interactive_map(dataframe, if_save=False):
 
 
 def calculate_rate_of_change_first_last(
-    historical_df, modern_df, species_name, custom_end_year=None
+    historical_df, modern_df, species_name, custom_end_year=None, user_start_year=None
 ):
+    """
+    Calculate the rate of change in category percentages for a species between
+    the earliest (historical) and latest (modern) time periods.
+
+    This function collapses detailed categories into broader ones, aligns the
+    historical and modern time periods, calculates percentages of individuals in each category
+    per period, and computes the rate of change over time.
+
+    Args:
+        historical_df (pd.DataFrame):
+            A DataFrame containing historical occurrence records for the species.
+            Must include a "category" column.
+        modern_df (pd.DataFrame):
+            A DataFrame containing modern occurrence records for the species.
+            Must include a "category" column and an "eventDate" column.
+        species_name (str):
+            The species for which the rate of change is calculated.
+        custom_end_year (int, optional):
+            User-specified end year for the modern time period. Defaults to None,
+            in which case the latest year in modern_df or the current year is used.
+        user_start_year (int, optional):
+            User-specified start year if the species start year cannot be determined.
+            Defaults to None.
+
+    Returns:
+        pd.DataFrame: A DataFrame with one row per collapsed category containing:
+            - 'collapsed_category': The broader category name.
+            - 'start_time_period': The time period of the historical data.
+            - 'end_time_period': The time period of the modern data.
+            - 'rate_of_change_first_last': The calculated rate of change in
+              percentage per year between the two periods.
+
+    Raises:
+        ValueError: If the species start year cannot be determined and no
+                    user_start_year is provided.
+
+    Notes:
+        - The function collapses detailed categories using a predefined mapping:
+            "leading (0.99)", "leading (0.95)", "leading (0.9)" → "leading"
+            "trailing (0.1)", "trailing (0.05)" → "trailing"
+            "relict (0.01 latitude)", "relict (longitude)" → "relict"
+        - Percentages are calculated per collapsed category relative to the
+          total count of that category across both periods.
+    """
     from datetime import datetime
     import pandas as pd
 
@@ -2053,7 +2488,17 @@ def calculate_rate_of_change_first_last(
     modern_df["collapsed_category"] = modern_df["category"].replace(category_mapping)
 
     # Get species start year and define start time period
-    start_year = int(get_start_year_from_species(species_name))
+
+    start_year = get_start_year_from_species(species_name)
+
+    if start_year == "NA":
+        if user_start_year is not None:
+            start_year = int(user_start_year)
+        else:
+            raise ValueError(f"Start year not found for species '{species_name}'.")
+    else:
+        start_year = int(start_year)
+
     first_period_start = (start_year // 10) * 10
     first_period_end = start_year
     adjusted_first_period = f"{first_period_start}-{first_period_end}"
@@ -2121,14 +2566,25 @@ def calculate_rate_of_change_first_last(
     return pd.DataFrame(rate_of_change_first_last)
 
 
-from ipyleaflet import Map, TileLayer, GeoJSON
-import ipywidgets as widgets
-
-
 def recreate_layer(layer):
     """
-    Safely recreate a common ipyleaflet layer (e.g., GeoJSON) from its core properties
+    Safely recreate a common ipyleaflet layer from its core properties
     to avoid modifying the original object.
+
+    Args:
+        layer (ipyleaflet.Layer):
+            The map layer to recreate. Supported types include:
+            - GeoJSON: polygon, line, or point data with style and hover style
+            - TileLayer: base map tiles
+
+    Returns:
+        ipyleaflet.Layer:
+            A new instance of the same layer type with identical core properties.
+            Modifications to the returned layer will not affect the original layer.
+
+    Raises:
+        NotImplementedError:
+            If the layer type is not supported by this function.
     """
     if isinstance(layer, GeoJSON):
         return GeoJSON(
@@ -2149,8 +2605,29 @@ def create_opacity_slider_map(
     map1, map2, species_name, center=[40, -100], zoom=4, end_year=2025
 ):
     """
-    Create a new map that overlays map2 on map1 with a year slider,
-    fading opacity between the two. Original maps are unaffected.
+    Create a new interactive map that overlays one map on another with a year slider,
+    adjusting the opacity of the overlay layers between the two maps.
+    The original input maps remain unaffected.
+
+    Args:
+        map1 (ipyleaflet.Map):
+            The base map to display beneath the overlay.
+        map2 (ipyleaflet.Map):
+            The map whose layers will be overlaid on map1 with adjustable opacity.
+        species_name (str):
+            Name of the species, used to determine the starting year for the slider.
+        center (list of float, optional):
+            Latitude and longitude to center the map. Defaults to [40, -100].
+        zoom (int, optional):
+            Initial zoom level for the map. Defaults to 4.
+        end_year (int, optional):
+            Final year for the slider. Defaults to 2025.
+
+    Returns:
+        ipywidgets.VBox:
+            A vertical container holding the new map with overlay layers and the year
+            slider widget. The slider adjusts the opacity of overlay layers from map1
+            and map2 based on the selected year.
     """
     # Initialize new map
     swipe_map = Map(center=center, zoom=zoom)
@@ -2221,7 +2698,7 @@ def create_opacity_slider_map(
                 layer.style = {**layer.style, "opacity": norm, "fillOpacity": norm}
 
     slider.observe(update_opacity, names="value")
-    update_opacity({"new": start_year})  # Initialize
+    update_opacity({"new": start_year})
 
     return widgets.VBox([swipe_map, slider_box])
 
@@ -2282,10 +2759,6 @@ def process_species_historical_range(new_map, species_name):
     return updated_polygon
 
 
-import os
-import datetime
-
-
 def save_results_as_csv(
     northward_rate_df,
     final_result,
@@ -2294,6 +2767,27 @@ def save_results_as_csv(
     category_clim_result,
     species_name,
 ):
+    """
+    Save multiple species-level and category-level analysis results to CSV files.
+
+    The function standardizes category column names, merges relevant dataframes, and saves:
+    1. Species-level range patterns as 'range_pattern.csv'.
+    2. Category-level summaries as 'category_summary.csv'.
+
+    Args:
+    northward_rate_df : pandas.DataFrame
+        DataFrame containing northward movement rates per category.
+    final_result : pandas.DataFrame
+        DataFrame containing overall species-level analysis results.
+    change : pandas.DataFrame
+        DataFrame with change metrics per category.
+    total_clim_result : pandas.DataFrame
+        Species-level climate-related summary statistics.
+    category_clim_result : pandas.DataFrame
+        Category-level climate-related summary statistics.
+    species_name : str
+        Name of the species; used to create the results folder name.
+    """
     # Set up paths
     home_dir = os.path.expanduser("~")
     downloads_path = os.path.join(home_dir, "Downloads")
@@ -2328,11 +2822,17 @@ def save_results_as_csv(
     # Save the merged DataFrame (category_summary.csv)
     merged_df.to_csv(os.path.join(results_folder, "category_summary.csv"), index=False)
 
-    # Optional: print file path
-    # print(f"Results saved in folder: {results_folder}")
-
 
 def save_modern_gbif_csv(classified_modern, species_name):
+    """
+    Save modern GBIF data to a CSV file in the user's Downloads folder.
+
+    Args:
+    classified_modern : pandas.DataFrame or geopandas.GeoDataFrame
+        DataFrame containing modern range polygons for a species.
+    species_name : str
+        Name of the species; used to generate the CSV file name.
+    """
     # Set up paths
     home_dir = os.path.expanduser("~")
     downloads_path = os.path.join(home_dir, "Downloads")
@@ -2345,6 +2845,15 @@ def save_modern_gbif_csv(classified_modern, species_name):
 
 
 def save_historic_gbif_csv(classified_historic, species_name):
+    """
+    Save historic GBIF data to a CSV file in the user's Downloads folder.
+
+    Args:
+    classified_historic : pandas.DataFrame or geopandas.GeoDataFrame
+        DataFrame containing historic range polygons for a species.
+    species_name : str
+        Name of the species; used to generate the CSV file name.
+    """
     # Set up paths
     home_dir = os.path.expanduser("~")
     downloads_path = os.path.join(home_dir, "Downloads")
@@ -2356,21 +2865,61 @@ def save_historic_gbif_csv(classified_historic, species_name):
     classified_historic.to_csv(os.path.join(downloads_path, file_name), index=False)
 
 
-import requests
-import geopandas as gpd
-import pandas as pd
-from rasterio import MemoryFile
-from rasterstats import zonal_stats
+def save_individual_persistence_csv(points, species_name):
+    """
+    Save individual persistence point data to a CSV file in the user's Downloads folder.
+
+    Args:
+    points : pandas.DataFrame or geopandas.GeoDataFrame
+        DataFrame containing individual persistence data for a species. Typically includes columns
+        such as persistence probabilities, raster values, and risk deciles.
+    species_name : str
+        Name of the species; used to generate the CSV file name.
+    """
+    # Set up paths
+    home_dir = os.path.expanduser("~")
+    downloads_path = os.path.join(home_dir, "Downloads")
+
+    # Define the file name
+    file_name = f"{species_name.replace(' ', '_')}_points.csv"
+
+    # Save the DataFrame to CSV in the Downloads folder
+    points.to_csv(os.path.join(downloads_path, file_name), index=False)
 
 
 def extract_raster_means_single_species(gdf, species_name):
     """
-    gdf: GeoDataFrame with polygons (for a single species)
-    species_name: string, the species name to assign to the output
+    Extract species-wide and category-level average raster values for a single species.
+
+    This function computes mean values of environmental rasters (precipitation, temperature, elevation)
+    over the polygons in a GeoDataFrame for a single species. It returns both species-wide averages
+    and averages per category.
+
+    The function also calculates the latitudinal and longitudinal range of the species
+    based on the polygon bounds, and normalizes category labels to a consistent set.
+
+    Args:
+    gdf : geopandas.GeoDataFrame
+        GeoDataFrame containing polygons for a single species. Expected columns:
+        - 'geometry': polygon geometries
+        - 'category' (optional): category label for each polygon (e.g., leading, trailing, relict)
+    species_name : str
+        Name of the species to assign in the output DataFrames.
 
     Returns:
-    - total_df: DataFrame with species-wide averages
-    - category_df: DataFrame with category-level averages
+    total_df : pandas.DataFrame
+        DataFrame containing species-wide averages for each raster variable:
+        - 'species': species name
+        - 'precipitation(mm)': mean precipitation across all polygons
+        - 'temperature(c)': mean temperature across all polygons
+        - 'elevation(m)': mean elevation across all polygons
+        - 'latitudinal_difference': max latitude minus min latitude of species polygons
+        - 'longitudinal_difference': max longitude minus min longitude of species polygons
+    category_df : pandas.DataFrame
+        DataFrame containing category-level averages for each raster variable:
+        - 'species': species name
+        - 'category': standardized category label
+        - 'precipitation(mm)', 'temperature(c)', 'elevation(m)': mean values for polygons in the category
     """
 
     # Hardcoded GitHub raw URLs for rasters
@@ -2413,16 +2962,14 @@ def extract_raster_means_single_species(gdf, species_name):
 
                     # Ensure values are not empty before calculating the mean
                     if values:
-                        row[var_name] = float(
-                            sum(values) / len(values)
-                        )  # Ensure the result is a float
+                        row[var_name] = float(sum(values) / len(values))
                     else:
-                        row[var_name] = None  # If no valid values, assign None
+                        row[var_name] = None
         except Exception as e:
             print(f"Error processing {var_name}: {e}")
             row[var_name] = None
 
-    bounds = gdf.total_bounds  # [minx, miny, maxx, maxy]
+    bounds = gdf.total_bounds
     minx, miny, maxx, maxy = bounds
     row["latitudinal_difference"] = maxy - miny
     row["longitudinal_difference"] = maxx - minx
@@ -2500,6 +3047,23 @@ def extract_raster_means_single_species(gdf, species_name):
 
 
 def calculate_density(df):
+    """
+    Calculate point density per polygon in a GeoDataFrame.
+
+    This function counts the number of points associated with each unique polygon and computes the density as points per square kilometer based on the area each polygon. The result is added as a new 'density' column.
+
+    Args:
+    df : pandas.DataFrame or geopandas.GeoDataFrame
+        Input DataFrame containing:
+        - 'geometry_id': identifier for each polygon
+        - 'AREA': area of the polygon in km²
+        - Other columns are preserved
+
+    Returns:
+    pandas.DataFrame
+        Input DataFrame with an additional column:
+        - 'density': number of points per km² for each polygon
+    """
     # Count number of points per unique polygon (using geometry_id)
     point_counts = df.groupby("geometry_id").size().reset_index(name="point_count")
 
@@ -2517,6 +3081,26 @@ def merge_category_dataframes(northward_rate_df, change):
     """
     Merges three category-level dataframes on the 'category' column and returns the merged result.
     Standardizes 'category' casing to title case before merging.
+
+    Args:
+    northward_rate_df : pandas.DataFrame
+        DataFrame containing northward movement rates for each category. Expected columns:
+        - 'category' or 'Category': category name
+        - 'species' (optional)
+        - 'northward_rate_km_per_year': numeric rate of northward movement
+    change : pandas.DataFrame
+        DataFrame containing change metrics for each category. Expected columns:
+        - 'category' or 'Category': category name
+        - 'species' (optional)
+        - 'Rate of Change': numeric change value
+
+    Returns:
+    pandas.DataFrame
+        Merged DataFrame containing:
+        - 'species': species name (if available)
+        - 'category': standardized category name (title case)
+        - 'northward_rate_km_per_year': numeric northward movement rate
+        - 'Rate of Change': numeric change value
     """
     import pandas as pd
 
@@ -2545,16 +3129,12 @@ def merge_category_dataframes(northward_rate_df, change):
     return merged_df
 
 
-import pandas as pd
-import geopandas as gpd
-
-
 def prepare_gdf_for_rasterization(gdf, df_values):
     """
     Merge polygon-level GeoDataFrame with range-level category values,
     and remove duplicate polygons.
 
-    Parameters:
+    Args:
     - gdf: GeoDataFrame with polygons and category/density
     - df_values: DataFrame with category, northward_rate_km_per_year, Rate of Change
 
@@ -2594,7 +3174,7 @@ def rasterize_multiband_gdf_match(
     """
     Rasterizes multiple value columns of a GeoDataFrame into a multiband raster with a specified resolution.
 
-    Parameters:
+    Args:
     - gdf: GeoDataFrame with polygon geometries and numeric value_columns
     - value_columns: list of column names to rasterize into bands
     - bounds: bounding box (minx, miny, maxx, maxy). If None, computed from gdf.
@@ -2605,20 +3185,16 @@ def rasterize_multiband_gdf_match(
     - affine transform
     - bounds used for rasterization
     """
-    import numpy as np
-    import rasterio
-    from rasterio.features import rasterize
-    from rasterio.transform import from_bounds
 
     # Calculate bounds if not given
     if bounds is None:
-        bounds = gdf.total_bounds  # (minx, miny, maxx, maxy)
+        bounds = gdf.total_bounds
 
     minx, miny, maxx, maxy = bounds
 
     # Calculate the width and height of the raster
-    width = int((maxx - minx) / resolution)  # number of cells in the x-direction
-    height = int((maxy - miny) / resolution)  # number of cells in the y-direction
+    width = int((maxx - minx) / resolution)
+    height = int((maxy - miny) / resolution)
 
     # Create the transform based on bounds and resolution
     transform = from_bounds(minx, miny, maxx, maxy, width, height)
@@ -2636,7 +3212,7 @@ def rasterize_multiband_gdf_match(
         )
         bands.append(raster)
 
-    stacked = np.stack(bands, axis=0)  # shape: (bands, height, width)
+    stacked = np.stack(bands, axis=0)
     return stacked, transform, (minx, miny, maxx, maxy)
 
 
@@ -2645,7 +3221,7 @@ def rasterize_multiband_gdf_world(gdf, value_columns, resolution=0.1666667):
     Rasterizes multiple value columns of a GeoDataFrame into a multiband raster with a specified resolution
     covering the entire world.
 
-    Parameters:
+    Args:
     - gdf: GeoDataFrame with polygon geometries and numeric value_columns
     - value_columns: list of column names to rasterize into bands
     - resolution: The desired resolution of the raster in degrees (default is 10 minutes = 0.1666667 degrees).
@@ -2654,17 +3230,13 @@ def rasterize_multiband_gdf_world(gdf, value_columns, resolution=0.1666667):
     - 3D numpy array (bands, height, width)
     - affine transform
     """
-    import numpy as np
-    import rasterio
-    from rasterio.features import rasterize
-    from rasterio.transform import from_bounds
 
     # Define the bounds of the entire world
     minx, miny, maxx, maxy = -180, -90, 180, 90
 
     # Calculate the width and height of the raster based on the resolution
-    width = int((maxx - minx) / resolution)  # number of cells in the x-direction
-    height = int((maxy - miny) / resolution)  # number of cells in the y-direction
+    width = int((maxx - minx) / resolution)
+    height = int((maxy - miny) / resolution)
 
     # Create the transform based on the world bounds and new resolution
     transform = from_bounds(minx, miny, maxx, maxy, width, height)
@@ -2685,16 +3257,45 @@ def rasterize_multiband_gdf_world(gdf, value_columns, resolution=0.1666667):
         )
         bands.append(raster)
 
-    stacked = np.stack(bands, axis=0)  # shape: (bands, height, width)
+    stacked = np.stack(bands, axis=0)
     return stacked, transform, (minx, miny, maxx, maxy)
 
 
-import matplotlib.pyplot as plt
-import numpy as np
-from scipy.ndimage import distance_transform_edt
+def compute_propagule_pressure_range(stacked_raster, D=0.3, S=10.0, scale_factors=None):
+    """
+    Compute propagule pressure across a rasterized landscape, incorporating distance decay, directional
+    movement, and edge/category effects.
 
+    This function estimates the influence of nearby occupied cells on each raster cell, accounting for:
+    - Distance to the nearest occupied cell (exponential decay with rate D)
+    - Directional movement based on northward or southward rates
+    - Local density contributions (self-pressure)
+    - Edge dynamics and category-specific scaling
 
-def compute_propagule_pressure_range(stacked_raster, D=0.3, S=10.0, show_plot=True):
+    Args:
+        stacked_raster : tuple of np.ndarray
+            Input raster stack with at least four elements:
+            - density array: abundance or occupancy of the species
+            - northward_rate: northward movement rate per year (km/y)
+            - edge_change_rate: rate of edge expansion or contraction
+            - category_raw: integer-coded categories (e.g., core, leading, trailing, relict)
+        D : float, default=0.3
+            Exponential decay parameter controlling how propagule influence decreases with distance.
+        S : float, default=10.0
+            Scaling factor for directional and edge-based adjustments to propagule pressure.
+        scale_factors : dict or None, optional
+            Category-specific multipliers for propagule pressure. Defaults to:
+                {1: 1.5,  # Core
+                2: 1.2,  # Leading
+                3: 0.8,  # Trailing
+                4: 1.0}  # Relict
+
+    Returns:
+        np.ndarray
+            Raster array of the same shape as the input density array, representing the
+            adjusted propagule pressure at each cell, incorporating distance, directional,
+            and category/edge effects.
+    """
     # Extract input data
     density = stacked_raster[0]
     northward_rate = stacked_raster[1]  # in km/y
@@ -2713,13 +3314,10 @@ def compute_propagule_pressure_range(stacked_raster, D=0.3, S=10.0, show_plot=Tr
 
     # Gather source values
     nearest_y = indices[0]  # y-coordinate of nearest occupied cell
-    current_y = np.indices(density.shape)[0]  # Current y-coordinates for each cell
+    current_y = np.indices(density.shape)[0]
     delta_y = (
         current_y - nearest_y
     )  # Distance from each cell to the nearest occupied cell
-
-    # Debug: Check delta_y values for correct calculation
-    # print(f"Delta Y (Calculated): {delta_y}")
 
     # Initialize direction modifier to 1
     direction_modifier = np.ones_like(northward_rate, dtype="float32")
@@ -2787,12 +3385,13 @@ def compute_propagule_pressure_range(stacked_raster, D=0.3, S=10.0, show_plot=Tr
     pressure_directional = pressure * direction_modifier
 
     # Apply category-based scaling
-    scale_factors = {
-        1: 1.5,  # Core
-        2: 1.2,  # Leading
-        3: 0.8,  # Trailing
-        4: 1.0,  # Relict
-    }
+    if scale_factors is None:
+        scale_factors = {
+            1: 1.5,  # Core
+            2: 1.2,  # Leading
+            3: 0.8,  # Trailing
+            4: 1.0,  # Relict
+        }
     scaling = np.ones_like(category, dtype="float32")
     for cat, factor in scale_factors.items():
         scaling[category == cat] = factor
@@ -2867,7 +3466,7 @@ def full_propagule_pressure_pipeline(
         4. Rasterize to show and save versions.
         5. Compute propagule pressure for both rasters.
 
-    Parameters:
+    Args:
         classified_modern (GeoDataFrame): GeoDataFrame with spatial features and categories.
         northward_rate_df (DataFrame): Contains northward movement rate per point or cell.
         change (DataFrame): Contains rate of change per point or cell.
@@ -2894,10 +3493,10 @@ def full_propagule_pressure_pipeline(
         "Rate of Change",
         "category_int",
     ]
-    raster_show, transform, show_bounds = rasterize_multiband_gdf_match(
+    raster_show, gdf_transform, show_bounds = rasterize_multiband_gdf_match(
         preped_gdf_new, value_columns, resolution=resolution
     )
-    raster_save, transform, save_bounds = rasterize_multiband_gdf_world(
+    raster_save, world_transform, save_bounds = rasterize_multiband_gdf_world(
         preped_gdf_new, value_columns, resolution=resolution
     )
 
@@ -2905,19 +3504,21 @@ def full_propagule_pressure_pipeline(
     pressure_show = compute_propagule_pressure_range(raster_show)
     pressure_save = compute_propagule_pressure_range(raster_save)
 
-    return pressure_show, pressure_save, show_bounds, save_bounds
-
-
-import os
-import rasterio
-from rasterio.transform import from_bounds
+    return (
+        pressure_show,
+        pressure_save,
+        show_bounds,
+        save_bounds,
+        gdf_transform,
+        world_transform,
+    )
 
 
 def save_raster_to_downloads_range(array, bounds, species):
     """
     Saves a NumPy raster array as a GeoTIFF to the user's Downloads folder.
 
-    Parameters:
+    Args:
         array (ndarray): The raster data to save.
         bounds (tuple): Bounding box in the format (minx, miny, maxx, maxy).
         species (str): The species name to use in the output filename.
@@ -2962,7 +3563,7 @@ def save_raster_to_downloads_global(array, bounds, species):
     """
     Saves a NumPy raster array as a GeoTIFF to the user's Downloads folder.
 
-    Parameters:
+    Args:
         array (ndarray): The raster data to save.
         bounds (tuple): Bounding box in the format (minx, miny, maxx, maxy).
         species (str): The species name to use in the output filename.
@@ -3001,3 +3602,223 @@ def save_raster_to_downloads_global(array, bounds, species):
     except Exception as e:
         print(f"Error saving raster: {e}")
         return None
+
+
+def compute_individual_persistence(
+    points_gdf, raster_stack_arrays, propagule_array, baseline_death=0.1, transform=None
+):
+    """
+    Compute 1- and 5-year persistence probabilities for point locations based on environmental and demographic factors.
+
+    Persistence is influenced by local density, abundance changes, propagule pressure, northward movement,
+    and edge effects relative to category centroids.
+
+    Args:
+    points_gdf : geopandas.GeoDataFrame
+        Point locations with columns 'category', 'collapsed_category', 'geometry', 'point_geometry', and 'geometry_id'.
+    raster_stack_arrays : tuple of np.ndarray
+        Raster arrays representing environmental or demographic variables in the order:
+        (density, northward movement, abundance change, edge indicator).
+    propagule_array : np.ndarray
+        Raster array representing propagule pressure.
+    baseline_death : float, default=0.1
+        Baseline probability of death in one year, used to compute persistence probabilities.
+    transform : affine.Affine or None, optional
+        Affine transform for converting geographic coordinates to raster indices. If None, coordinates
+        are interpreted as direct array indices.
+
+    Returns:
+    geopandas.GeoDataFrame
+        GeoDataFrame containing:
+        - point_id: unique index of each point
+        - P_1y, P_5y: 1-year and 5-year persistence probabilities
+        - density_vals, northward_vals, abundance_change_vals, edge_vals, propagule_vals: raster values sampled at each point
+        - risk_decile: decile ranking of 5-year persistence risk (higher = more at risk)
+        - baseline_death: baseline death probability used
+        - P_1y_vs_baseline, P_5y_vs_baseline: comparison of persistence vs baseline ("higher", "lower", or "baseline (spatial outlier)")
+        - north_south_of_category_centroid: direction relative to category centroid
+        - point_geometry, geometry, geometry_id: original point geometries
+    """
+
+    density, northward, abundance_change, edge = raster_stack_arrays
+    n_rows, n_cols = density.shape
+
+    # Compute category centroids
+    category_centroids = (
+        points_gdf.groupby("category")["geometry"]
+        .apply(lambda polys: np.mean([poly.centroid.y for poly in polys]))
+        .to_dict()
+    )
+
+    # Determine if each point is north or south of its category's centroid
+    north_south = []
+    for idx, row in points_gdf.iterrows():
+        centroid_y = category_centroids[row["category"]]
+        if row.point_geometry.y > centroid_y:
+            north_south.append("north")
+        else:
+            north_south.append("south")
+
+    points_gdf = points_gdf.copy()
+    points_gdf["edge_vals"] = points_gdf["collapsed_category"]
+
+    # Function to map coordinates to array indices
+    def coords_to_index(x, y, transform):
+        col, row = ~transform * (x, y)
+        return int(round(row)), int(round(col))
+
+    # Convert points to array indices
+    indices = []
+    for pt in points_gdf.point_geometry:
+        if transform is not None:
+            row, col = coords_to_index(pt.x, pt.y, transform)
+        else:
+            row, col = int(round(pt.y)), int(round(pt.x))
+        row = np.clip(row, 0, n_rows - 1)
+        col = np.clip(col, 0, n_cols - 1)
+        indices.append((row, col))
+
+    # Sample raster values
+    density_vals = np.array([density[y, x] for y, x in indices])
+    northward_vals = np.array([northward[y, x] for y, x in indices])
+    abundance_change_vals = np.array([abundance_change[y, x] for y, x in indices])
+    propagule_vals = np.array([propagule_array[y, x] for y, x in indices])
+    edge_vals = points_gdf["edge_vals"].to_numpy()
+
+    # Replace NaNs with 0
+    density_vals = np.nan_to_num(density_vals, nan=0.0)
+    northward_vals = np.nan_to_num(northward_vals, nan=0.0)
+    abundance_change_vals = np.nan_to_num(abundance_change_vals, nan=0.0)
+    # edge_vals = np.nan_to_num(edge_vals, nan=0.0)
+    propagule_vals = np.nan_to_num(propagule_vals, nan=0.0)
+
+    effects_list = []
+
+    if density_vals is not None:
+        effects_list.append(density_vals)
+    if abundance_change_vals is not None:
+        effects_list.append(abundance_change_vals)
+    if propagule_vals is not None:
+        # compute propagule effect as before
+        lower_quartile = np.percentile(propagule_vals, 25)
+        upper_half = np.percentile(propagule_vals, 50)
+        propagule_effect = np.zeros_like(propagule_vals)
+        propagule_effect[propagule_vals >= upper_half] = 1.0
+        propagule_effect[propagule_vals <= lower_quartile] = -1.0
+        propagule_effect *= propagule_vals
+        effects_list.append(propagule_effect)
+    if north_south is not None and northward_vals is not None:
+        north_south_array = np.array(north_south)
+        northward_effect = np.where(
+            ((north_south_array == "north") & (northward_vals >= 0))
+            | ((north_south_array == "south") & (northward_vals <= 0)),
+            np.abs(northward_vals),
+            -np.abs(northward_vals),
+        )
+        effects_list.append(northward_effect)
+
+    # Sum all available effects
+    if effects_list:
+        total_effect = sum(effects_list)
+        # Normalize so total_effect stays < 1
+        total_effect = total_effect / (1 + np.abs(total_effect))
+    else:
+        total_effect = np.zeros_like(propagule_vals)  # or baseline if no data at all
+
+    # Apply edge effect
+    edge_scale_factors = {
+        0: 1.0,
+        "core": 1.05,
+        "leading": 1.02,
+        "trailing": 0.95,
+        "relict": 0.9,
+    }
+    edge_effect = np.array(
+        [edge_scale_factors.get(e, 1.0) for e in points_gdf["edge_vals"]]
+    )
+    total_effect *= edge_effect
+
+    # Modified death probability
+    P_death_mod = baseline_death * (1 - total_effect)
+    P_death_mod = np.clip(P_death_mod, 0, 1)
+
+    # Persistence probabilities
+    P_1y = 1 - P_death_mod
+    P_5y = P_1y**5
+    # Baseline expectations
+    expected_1y = 1 - baseline_death
+    expected_5y = (1 - baseline_death) ** 5
+
+    # Compare with baseline
+    all_nan_or_zero_mask = (
+        (density_vals == 0)
+        & (northward_vals == 0)
+        & (abundance_change_vals == 0)
+        & (edge_vals == 0)
+        & (propagule_vals == 0)
+    )
+
+    P_1y_vs_baseline = np.full_like(P_1y, "", dtype=object)
+    P_5y_vs_baseline = np.full_like(P_5y, "", dtype=object)
+    P_1y_vs_baseline[all_nan_or_zero_mask] = "baseline (spatial outlier)"
+    P_5y_vs_baseline[all_nan_or_zero_mask] = "baseline (spatial outlier)"
+    mask_valid = ~all_nan_or_zero_mask
+    P_1y_vs_baseline[mask_valid] = np.where(
+        P_1y[mask_valid] > expected_1y, "higher", "lower"
+    )
+    P_5y_vs_baseline[mask_valid] = np.where(
+        P_5y[mask_valid] > expected_5y, "higher", "lower"
+    )
+
+    # Risk decile
+    risk_decile = 11 - (pd.qcut(P_5y, 10, labels=False, duplicates="drop") + 1)
+
+    # Compile results
+    results_gdf = gpd.GeoDataFrame(
+        {
+            "point_id": np.arange(len(points_gdf)),
+            "P_1y": P_1y,
+            "P_5y": P_5y,
+            "density_vals": density_vals,
+            "northward_vals": northward_vals,
+            "abundance_change_vals": abundance_change_vals,
+            "edge_vals": edge_vals,
+            "propagule_vals": propagule_vals,
+            "risk_decile": risk_decile,
+            "baseline_death": baseline_death,
+            "P_1y_vs_baseline": P_1y_vs_baseline,
+            "P_5y_vs_baseline": P_5y_vs_baseline,
+            "north_south_of_category_centroid": north_south,
+            "point_geometry": points_gdf["point_geometry"].values,
+            "geometry": points_gdf["geometry"].values,
+            "geometry_id": points_gdf["geometry_id"].values,
+        },
+        geometry=points_gdf["geometry"].values,
+        crs=points_gdf.crs,
+    )
+
+    return results_gdf
+
+
+def summarize_polygons_for_point_plot(df):
+    """
+    Summarizes number of points per unique polygon (geometry_id), retaining one row per polygon.
+
+    Args:
+        df (pd.DataFrame): A DataFrame where each row represents a point with associated polygon metadata.
+
+    Returns:
+        gpd.GeoDataFrame: A summarized GeoDataFrame with one row per unique polygon and geometry set.
+    """
+
+    # Group by geometry_id and aggregate
+    summary = (
+        df.groupby("geometry_id")
+        .agg({"geometry": "first", "edge_vals": "first", "point_geometry": "count"})
+        .rename(columns={"point_geometry": "n_points"})
+        .reset_index()
+    )
+
+    summary_gdf = gpd.GeoDataFrame(summary, geometry="geometry")
+
+    return summary_gdf
