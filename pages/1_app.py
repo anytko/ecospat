@@ -1129,9 +1129,7 @@ from pathlib import Path
 def Page():
     return VBox(
         [
-            solara.Style(
-                Path("/Users/alivianytko/Desktop/ecospat/solara/assets/custom.css")
-            ),
+            solara.Style(Path("solara/assets/custom.css")),
             HTML(
                 tag="div",
                 style="""

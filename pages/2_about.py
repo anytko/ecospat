@@ -7,7 +7,7 @@ import pandas as pd
 
 @solara.component
 def Page():
-    solara.Style(Path("/Users/alivianytko/Desktop/ecospat/solara/assets/custom.css"))
+    solara.Style(Path("solara/assets/custom.css"))
 
     with solara.Column(align="center", gap="1rem"):
         # Title (centered, bold)
