@@ -598,14 +598,15 @@ def HistoricFallbackMap(
     csv_bytes = csv_buffer.getvalue().encode()
 
     # Return layout with download button under map
+    species_name_clean = str(species_name).strip("'\"")
     return solara.Column(
         [
-            solara.Markdown(f"## {species_name} Historical Range Map"),
+            solara.Markdown(f"## {species_name_clean} Historical Range Map"),
             info_box,
             map_widget,
             solara.FileDownload(
                 data=csv_bytes,
-                filename=f"{species_name}_historical_range.csv",
+                filename=f"{species_name_clean}_historical_range.csv",
                 label="Download Historical Range CSV",
             ),
         ]

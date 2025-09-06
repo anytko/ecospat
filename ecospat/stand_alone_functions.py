@@ -4726,11 +4726,11 @@ def categorize_species_south(df):
                 if -2 <= core <= 2 and -2 <= trailing <= 2:
                     category = "likely stable"
                 elif core > 2 and trailing > 2:
-                    category = "likely poleward expansion together"
-                elif core < -2 and trailing < -2:
                     category = "likely contracting together"
+                elif core < -2 and trailing < -2:
+                    category = "likely poleward expansion together"
                 elif core > 2 and trailing < -2:
-                    category = "likely pull apart"
+                    category = "likely reabsorption"
                 elif core < -2 and trailing > 2:
                     category = "likely pull apart"
                 elif -2 <= core <= 2 and trailing > 2:
