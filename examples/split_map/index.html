@@ -613,12 +613,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../widgets/" class="md-nav__link">
+      <a href="../widgets.ipynb" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Widgets
+    None
     
   </span>
   
@@ -1310,16 +1310,18 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ecospat.foliummap</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ecospat_foliummap</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Uncomment below to run in Google Collab</span>
+<span class="c1"># pip install ecospat</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-1">import ecospat.foliummap as ecospat_foliummap</div>
+<div class="clipboard-copy-txt" id="cell-1"># Uncomment below to run in Google Collab
+# pip install ecospat</div>
 </div>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -1337,194 +1339,9 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">split_map_base</span> <span class="o">=</span> <span class="n">ecospat_foliummap</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-<span class="n">split_map_base</span><span class="o">.</span><span class="n">add_split_map</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="s2">"Esri.WorldImagery"</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="s2">"cartodbpositron"</span><span class="p">)</span>
-<span class="n">split_map_base</span><span class="o">.</span><span class="n">add_layer_control</span><span class="p">()</span>
-<span class="n">split_map_base</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ecospat.foliummap</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ecospat_foliummap</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2">split_map_base = ecospat_foliummap.Map(center=[40, -100], zoom=4)
-split_map_base.add_split_map(left="Esri.WorldImagery", right="cartodbpositron")
-split_map_base.add_layer_control()
-split_map_base</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[2]:</div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
-<div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -&gt; Trust Notebook</span><iframe allowfullscreen="" mozallowfullscreen="" srcdoc='&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-    
-    &lt;meta http-equiv="content-type" content="text/html; charset=UTF-8" /&gt;
-    &lt;script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"&gt;&lt;/script&gt;
-    &lt;script src="https://code.jquery.com/jquery-3.7.1.min.js"&gt;&lt;/script&gt;
-    &lt;script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"&gt;&lt;/script&gt;
-    &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"&gt;&lt;/script&gt;
-    &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/&gt;
-    &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/&gt;
-    &lt;link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/&gt;
-    &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/&gt;
-    &lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/&gt;
-    &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/&gt;
-    
-            &lt;meta name="viewport" content="width=device-width,
-                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /&gt;
-            &lt;style&gt;
-                #map_5aeaf6222dd5373b6188467ddc0e5ec9 {
-                    position: relative;
-                    width: 100.0%;
-                    height: 100.0%;
-                    left: 0.0%;
-                    top: 0.0%;
-                }
-                .leaflet-container { font-size: 1rem; }
-            &lt;/style&gt;
-
-            &lt;style&gt;html, body {
-                width: 100%;
-                height: 100%;
-                margin: 0;
-                padding: 0;
-            }
-            &lt;/style&gt;
-
-            &lt;style&gt;#map {
-                position:absolute;
-                top:0;
-                bottom:0;
-                right:0;
-                left:0;
-                }
-            &lt;/style&gt;
-
-            &lt;script&gt;
-                L_NO_TOUCH = false;
-                L_DISABLE_3D = false;
-            &lt;/script&gt;
-
-        
-    &lt;script src="https://cdn.jsdelivr.net/gh/digidem/leaflet-side-by-side@2.0.0/leaflet-side-by-side.min.js"&gt;&lt;/script&gt;
-&lt;/head&gt;
-&lt;body&gt;
-    
-    
-            &lt;div class="folium-map" id="map_5aeaf6222dd5373b6188467ddc0e5ec9" &gt;&lt;/div&gt;
-        
-&lt;/body&gt;
-&lt;script&gt;
-    
-    
-            var map_5aeaf6222dd5373b6188467ddc0e5ec9 = L.map(
-                "map_5aeaf6222dd5373b6188467ddc0e5ec9",
-                {
-                    center: [40.0, -100.0],
-                    crs: L.CRS.EPSG3857,
-                    ...{
-  "zoom": 4,
-  "zoomControl": true,
-  "preferCanvas": false,
-}
-
-                }
-            );
-
-            
-
-        
-    
-            var tile_layer_b55d2ac583929978477025e494056ad3 = L.tileLayer(
-                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                {
-  "minZoom": 0,
-  "maxZoom": 19,
-  "maxNativeZoom": 19,
-  "noWrap": false,
-  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
-  "subdomains": "abc",
-  "detectRetina": false,
-  "tms": false,
-  "opacity": 1,
-}
-
-            );
-        
-    
-            tile_layer_b55d2ac583929978477025e494056ad3.addTo(map_5aeaf6222dd5373b6188467ddc0e5ec9);
-        
-    
-            var tile_layer_ec898007f7ea60646f72fdd9412768c1 = L.tileLayer(
-                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-                {
-  "minZoom": 0,
-  "maxZoom": 18,
-  "maxNativeZoom": 18,
-  "noWrap": false,
-  "attribution": "Tiles \u0026copy; Esri \u0026mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
-  "subdomains": "abc",
-  "detectRetina": false,
-  "tms": false,
-  "opacity": 1,
-}
-
-            );
-        
-    
-            tile_layer_ec898007f7ea60646f72fdd9412768c1.addTo(map_5aeaf6222dd5373b6188467ddc0e5ec9);
-        
-    
-            var tile_layer_be4d8dcd4521fcafb1f38202d315fc34 = L.tileLayer(
-                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-                {
-  "minZoom": 0,
-  "maxZoom": 20,
-  "maxNativeZoom": 20,
-  "noWrap": false,
-  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
-  "subdomains": "abcd",
-  "detectRetina": false,
-  "tms": false,
-  "opacity": 1,
-}
-
-            );
-        
-    
-            tile_layer_be4d8dcd4521fcafb1f38202d315fc34.addTo(map_5aeaf6222dd5373b6188467ddc0e5ec9);
-        
-    
-            var side_by_side_layers_756d75f6d3ced696e2085b18244db5c2 = L.control.sideBySide(
-                tile_layer_ec898007f7ea60646f72fdd9412768c1, tile_layer_be4d8dcd4521fcafb1f38202d315fc34
-            ).addTo(map_5aeaf6222dd5373b6188467ddc0e5ec9);
-        
-    
-            var layer_control_4bfd240c324cfe03081fbd22e446ffd3_layers = {
-                base_layers : {
-                    "openstreetmap" : tile_layer_b55d2ac583929978477025e494056ad3,
-                },
-                overlays :  {
-                    "esriworldimagery" : tile_layer_ec898007f7ea60646f72fdd9412768c1,
-                    "cartodbpositron" : tile_layer_be4d8dcd4521fcafb1f38202d315fc34,
-                },
-            };
-            let layer_control_4bfd240c324cfe03081fbd22e446ffd3 = L.control.layers(
-                layer_control_4bfd240c324cfe03081fbd22e446ffd3_layers.base_layers,
-                layer_control_4bfd240c324cfe03081fbd22e446ffd3_layers.overlays,
-                {
-  "position": "topright",
-  "collapsed": true,
-  "autoZIndex": true,
-}
-            ).addTo(map_5aeaf6222dd5373b6188467ddc0e5ec9);
-
-        
-&lt;/script&gt;
-&lt;/html&gt;' style="position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;" webkitallowfullscreen=""></iframe></div></div>
+<div class="clipboard-copy-txt" id="cell-2">import ecospat.foliummap as ecospat_foliummap</div>
 </div>
 </div>
 </div>
@@ -1549,25 +1366,15 @@ split_map_base</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">split_map_r_b</span> <span class="o">=</span> <span class="n">ecospat_foliummap</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">8.3793</span><span class="p">,</span> <span class="o">-</span><span class="mf">74.5357</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
-<span class="n">split_map_r_b</span><span class="o">.</span><span class="n">add_split_map</span><span class="p">(</span>
-    <span class="n">left</span><span class="o">=</span><span class="s2">"https://raw.githubusercontent.com/opengeos/data/main/landsat/2020.tif"</span><span class="p">,</span>
-    <span class="n">right</span><span class="o">=</span><span class="s2">"OpenTopoMap"</span><span class="p">,</span>
-    <span class="n">colormap_left</span><span class="o">=</span><span class="s2">"viridis"</span><span class="p">,</span>
-    <span class="n">opacity_left</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">split_map_r_b</span><span class="o">.</span><span class="n">add_layer_control</span><span class="p">()</span>
-<span class="n">split_map_r_b</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">split_map_base</span> <span class="o">=</span> <span class="n">ecospat_foliummap</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">split_map_base</span><span class="o">.</span><span class="n">add_split_map</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="s2">"Esri.WorldImagery"</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="s2">"cartodbpositron"</span><span class="p">)</span>
+<span class="n">split_map_base</span><span class="o">.</span><span class="n">add_layer_control</span><span class="p">()</span>
+<span class="n">split_map_base</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3">split_map_r_b = ecospat_foliummap.Map(center=[-8.3793, -74.5357], zoom=8)
-split_map_r_b.add_split_map(
-    left="https://raw.githubusercontent.com/opengeos/data/main/landsat/2020.tif",
-    right="OpenTopoMap",
-    colormap_left="viridis",
-    opacity_left=0.7,
-)
-split_map_r_b.add_layer_control()
-split_map_r_b</div>
+<div class="clipboard-copy-txt" id="cell-3">split_map_base = ecospat_foliummap.Map(center=[40, -100], zoom=4)
+split_map_base.add_split_map(left="Esri.WorldImagery", right="cartodbpositron")
+split_map_base.add_layer_control()
+split_map_base</div>
 </div>
 </div>
 </div>
@@ -1576,13 +1383,6 @@ split_map_r_b</div>
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
-<pre>WARNING:CPLE_AppDefined in vsicurl?url=https%3A%2F%2Fraw.githubusercontent.com%2Fopengeos%2Fdata%2Fmain%2Flandsat%2F2020.tif&amp;use_head=no&amp;list_dir=no: TIFFReadDirectory:Sum of Photometric type-related color channels and ExtraSamples doesn't match SamplesPerPixel. Defining non-color channels as ExtraSamples.
-</pre>
-</div>
-</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
@@ -1605,7 +1405,7 @@ split_map_r_b</div>
             &lt;meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /&gt;
             &lt;style&gt;
-                #map_cb366a34f5379254a3ebb7f7f460de60 {
+                #map_6176ce4acf843ed33145718176361a8c {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -1643,19 +1443,19 @@ split_map_r_b</div>
 &lt;body&gt;
     
     
-            &lt;div class="folium-map" id="map_cb366a34f5379254a3ebb7f7f460de60" &gt;&lt;/div&gt;
+            &lt;div class="folium-map" id="map_6176ce4acf843ed33145718176361a8c" &gt;&lt;/div&gt;
         
 &lt;/body&gt;
 &lt;script&gt;
     
     
-            var map_cb366a34f5379254a3ebb7f7f460de60 = L.map(
-                "map_cb366a34f5379254a3ebb7f7f460de60",
+            var map_6176ce4acf843ed33145718176361a8c = L.map(
+                "map_6176ce4acf843ed33145718176361a8c",
                 {
-                    center: [-8.3793, -74.5357],
+                    center: [40.0, -100.0],
                     crs: L.CRS.EPSG3857,
                     ...{
-  "zoom": 8,
+  "zoom": 4,
   "zoomControl": true,
   "preferCanvas": false,
 }
@@ -1667,7 +1467,7 @@ split_map_r_b</div>
 
         
     
-            var tile_layer_ff579da11300439e212b35a87ad38cbd = L.tileLayer(
+            var tile_layer_f2816554e9b5d61281853818b3fcafea = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -1684,38 +1484,17 @@ split_map_r_b</div>
             );
         
     
-            tile_layer_ff579da11300439e212b35a87ad38cbd.addTo(map_cb366a34f5379254a3ebb7f7f460de60);
+            tile_layer_f2816554e9b5d61281853818b3fcafea.addTo(map_6176ce4acf843ed33145718176361a8c);
         
     
-            var tile_layer_992738027cb44f67913b3749ef0fdcbb = L.tileLayer(
-                "http://127.0.0.1:41903/api/tiles/{z}/{x}/{y}.png?\u0026filename=%2Fvsicurl%3Furl%3Dhttps%253A%252F%252Fraw.githubusercontent.com%252Fopengeos%252Fdata%252Fmain%252Flandsat%252F2020.tif%26use_head%3Dno%26list_dir%3Dno\u0026colormap=viridis",
+            var tile_layer_4bf24a44f03fb1237c67ef1875149b35 = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
                 {
   "minZoom": 0,
   "maxZoom": 18,
   "maxNativeZoom": 18,
   "noWrap": false,
-  "attribution": "Raster file served by \u003ca href=\u0027https://github.com/banesullivan/localtileserver\u0027 target=\u0027_blank\u0027\u003elocaltileserver\u003c/a\u003e.",
-  "subdomains": "abc",
-  "detectRetina": false,
-  "tms": false,
-  "opacity": 0.7,
-  "bounds": [[-8.586906, -74.722494], [-8.282108, -74.158981]],
-}
-
-            );
-        
-    
-            tile_layer_992738027cb44f67913b3749ef0fdcbb.addTo(map_cb366a34f5379254a3ebb7f7f460de60);
-        
-    
-            var tile_layer_9b7a3d686db20ac6f9f80d9febe5ad74 = L.tileLayer(
-                "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
-                {
-  "minZoom": 0,
-  "maxZoom": 17,
-  "maxNativeZoom": 17,
-  "noWrap": false,
-  "attribution": "Map data: \u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors, \u003ca href=\"http://viewfinderpanoramas.org\"\u003eSRTM\u003c/a\u003e | Map style: \u0026copy; \u003ca href=\"https://opentopomap.org\"\u003eOpenTopoMap\u003c/a\u003e (\u003ca href=\"https://creativecommons.org/licenses/by-sa/3.0/\"\u003eCC-BY-SA\u003c/a\u003e)",
+  "attribution": "Tiles \u0026copy; Esri \u0026mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community",
   "subdomains": "abc",
   "detectRetina": false,
   "tms": false,
@@ -1725,32 +1504,52 @@ split_map_r_b</div>
             );
         
     
-            tile_layer_9b7a3d686db20ac6f9f80d9febe5ad74.addTo(map_cb366a34f5379254a3ebb7f7f460de60);
+            tile_layer_4bf24a44f03fb1237c67ef1875149b35.addTo(map_6176ce4acf843ed33145718176361a8c);
         
     
-            var side_by_side_layers_efed3212bff52dd1d784e990d3c4cd42 = L.control.sideBySide(
-                tile_layer_992738027cb44f67913b3749ef0fdcbb, tile_layer_9b7a3d686db20ac6f9f80d9febe5ad74
-            ).addTo(map_cb366a34f5379254a3ebb7f7f460de60);
+            var tile_layer_c114249559a6b8d3eb54cfa5adae95d4 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
         
     
-            var layer_control_5965e972fcc1826c4c41ea62420ea225_layers = {
+            tile_layer_c114249559a6b8d3eb54cfa5adae95d4.addTo(map_6176ce4acf843ed33145718176361a8c);
+        
+    
+            var side_by_side_layers_2faeaee2dbb5bc61936a7cfa20702206 = L.control.sideBySide(
+                tile_layer_4bf24a44f03fb1237c67ef1875149b35, tile_layer_c114249559a6b8d3eb54cfa5adae95d4
+            ).addTo(map_6176ce4acf843ed33145718176361a8c);
+        
+    
+            var layer_control_30ecc089883277ac319202f7abadefe7_layers = {
                 base_layers : {
-                    "openstreetmap" : tile_layer_ff579da11300439e212b35a87ad38cbd,
-                    "Left Raster" : tile_layer_992738027cb44f67913b3749ef0fdcbb,
+                    "openstreetmap" : tile_layer_f2816554e9b5d61281853818b3fcafea,
                 },
                 overlays :  {
-                    "opentopomap" : tile_layer_9b7a3d686db20ac6f9f80d9febe5ad74,
+                    "esriworldimagery" : tile_layer_4bf24a44f03fb1237c67ef1875149b35,
+                    "cartodbpositron" : tile_layer_c114249559a6b8d3eb54cfa5adae95d4,
                 },
             };
-            let layer_control_5965e972fcc1826c4c41ea62420ea225 = L.control.layers(
-                layer_control_5965e972fcc1826c4c41ea62420ea225_layers.base_layers,
-                layer_control_5965e972fcc1826c4c41ea62420ea225_layers.overlays,
+            let layer_control_30ecc089883277ac319202f7abadefe7 = L.control.layers(
+                layer_control_30ecc089883277ac319202f7abadefe7_layers.base_layers,
+                layer_control_30ecc089883277ac319202f7abadefe7_layers.overlays,
                 {
   "position": "topright",
   "collapsed": true,
   "autoZIndex": true,
 }
-            ).addTo(map_cb366a34f5379254a3ebb7f7f460de60);
+            ).addTo(map_6176ce4acf843ed33145718176361a8c);
 
         
 &lt;/script&gt;
@@ -1779,29 +1578,25 @@ split_map_r_b</div>
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">split_map_raster</span> <span class="o">=</span> <span class="n">ecospat_foliummap</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">8.3793</span><span class="p">,</span> <span class="o">-</span><span class="mf">74.5357</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="n">split_map_raster</span><span class="o">.</span><span class="n">add_split_map</span><span class="p">(</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">split_map_r_b</span> <span class="o">=</span> <span class="n">ecospat_foliummap</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">8.3793</span><span class="p">,</span> <span class="o">-</span><span class="mf">74.5357</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">split_map_r_b</span><span class="o">.</span><span class="n">add_split_map</span><span class="p">(</span>
     <span class="n">left</span><span class="o">=</span><span class="s2">"https://raw.githubusercontent.com/opengeos/data/main/landsat/2020.tif"</span><span class="p">,</span>
-    <span class="n">right</span><span class="o">=</span><span class="s2">"https://raw.githubusercontent.com/opengeos/data/main/landsat/2020.tif"</span><span class="p">,</span>
+    <span class="n">right</span><span class="o">=</span><span class="s2">"OpenTopoMap"</span><span class="p">,</span>
     <span class="n">colormap_left</span><span class="o">=</span><span class="s2">"viridis"</span><span class="p">,</span>
-    <span class="n">colormap_right</span><span class="o">=</span><span class="s2">"magma"</span><span class="p">,</span>
-    <span class="n">opacity_left</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
-    <span class="n">opacity_right</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">opacity_left</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">split_map_raster</span><span class="o">.</span><span class="n">add_layer_control</span><span class="p">()</span>
-<span class="n">split_map_raster</span>
+<span class="n">split_map_r_b</span><span class="o">.</span><span class="n">add_layer_control</span><span class="p">()</span>
+<span class="n">split_map_r_b</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4">split_map_raster = ecospat_foliummap.Map(center=[-8.3793, -74.5357], zoom=10)
-split_map_raster.add_split_map(
+<div class="clipboard-copy-txt" id="cell-4">split_map_r_b = ecospat_foliummap.Map(center=[-8.3793, -74.5357], zoom=8)
+split_map_r_b.add_split_map(
     left="https://raw.githubusercontent.com/opengeos/data/main/landsat/2020.tif",
-    right="https://raw.githubusercontent.com/opengeos/data/main/landsat/2020.tif",
+    right="OpenTopoMap",
     colormap_left="viridis",
-    colormap_right="magma",
-    opacity_left=0.9,
-    opacity_right=0.5,
+    opacity_left=0.7,
 )
-split_map_raster.add_layer_control()
-split_map_raster</div>
+split_map_r_b.add_layer_control()
+split_map_r_b</div>
 </div>
 </div>
 </div>
@@ -1810,6 +1605,13 @@ split_map_raster</div>
 <div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr" tabindex="0">
+<pre>WARNING:CPLE_AppDefined in vsicurl?url=https%3A%2F%2Fraw.githubusercontent.com%2Fopengeos%2Fdata%2Fmain%2Flandsat%2F2020.tif&amp;use_head=no&amp;list_dir=no: TIFFReadDirectory:Sum of Photometric type-related color channels and ExtraSamples doesn't match SamplesPerPixel. Defining non-color channels as ExtraSamples.
+</pre>
+</div>
+</div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
@@ -1832,7 +1634,7 @@ split_map_raster</div>
             &lt;meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /&gt;
             &lt;style&gt;
-                #map_54e3febb5fedb9963672d37e25c60386 {
+                #map_66f21a86a405f38c41c36db487a15c2a {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -1870,19 +1672,19 @@ split_map_raster</div>
 &lt;body&gt;
     
     
-            &lt;div class="folium-map" id="map_54e3febb5fedb9963672d37e25c60386" &gt;&lt;/div&gt;
+            &lt;div class="folium-map" id="map_66f21a86a405f38c41c36db487a15c2a" &gt;&lt;/div&gt;
         
 &lt;/body&gt;
 &lt;script&gt;
     
     
-            var map_54e3febb5fedb9963672d37e25c60386 = L.map(
-                "map_54e3febb5fedb9963672d37e25c60386",
+            var map_66f21a86a405f38c41c36db487a15c2a = L.map(
+                "map_66f21a86a405f38c41c36db487a15c2a",
                 {
                     center: [-8.3793, -74.5357],
                     crs: L.CRS.EPSG3857,
                     ...{
-  "zoom": 10,
+  "zoom": 8,
   "zoomControl": true,
   "preferCanvas": false,
 }
@@ -1894,7 +1696,7 @@ split_map_raster</div>
 
         
     
-            var tile_layer_213ff8affad520f4640ad70e17d9bf3d = L.tileLayer(
+            var tile_layer_7a6fc5c58185613c3cc8c7e1abd3c06c = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -1911,11 +1713,238 @@ split_map_raster</div>
             );
         
     
-            tile_layer_213ff8affad520f4640ad70e17d9bf3d.addTo(map_54e3febb5fedb9963672d37e25c60386);
+            tile_layer_7a6fc5c58185613c3cc8c7e1abd3c06c.addTo(map_66f21a86a405f38c41c36db487a15c2a);
         
     
-            var tile_layer_8350212fc41d645593adfb23e76e62f2 = L.tileLayer(
-                "http://127.0.0.1:41903/api/tiles/{z}/{x}/{y}.png?\u0026filename=%2Fvsicurl%3Furl%3Dhttps%253A%252F%252Fraw.githubusercontent.com%252Fopengeos%252Fdata%252Fmain%252Flandsat%252F2020.tif%26use_head%3Dno%26list_dir%3Dno\u0026colormap=viridis",
+            var tile_layer_5d036af5696041531920af5603985826 = L.tileLayer(
+                "http://127.0.0.1:33775/api/tiles/{z}/{x}/{y}.png?\u0026filename=%2Fvsicurl%3Furl%3Dhttps%253A%252F%252Fraw.githubusercontent.com%252Fopengeos%252Fdata%252Fmain%252Flandsat%252F2020.tif%26use_head%3Dno%26list_dir%3Dno\u0026colormap=viridis",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Raster file served by \u003ca href=\u0027https://github.com/banesullivan/localtileserver\u0027 target=\u0027_blank\u0027\u003elocaltileserver\u003c/a\u003e.",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 0.7,
+  "bounds": [[-8.586906, -74.722494], [-8.282108, -74.158981]],
+}
+
+            );
+        
+    
+            tile_layer_5d036af5696041531920af5603985826.addTo(map_66f21a86a405f38c41c36db487a15c2a);
+        
+    
+            var tile_layer_70a2618ea22bc389623b93f35ad4eb8a = L.tileLayer(
+                "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 17,
+  "maxNativeZoom": 17,
+  "noWrap": false,
+  "attribution": "Map data: \u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors, \u003ca href=\"http://viewfinderpanoramas.org\"\u003eSRTM\u003c/a\u003e | Map style: \u0026copy; \u003ca href=\"https://opentopomap.org\"\u003eOpenTopoMap\u003c/a\u003e (\u003ca href=\"https://creativecommons.org/licenses/by-sa/3.0/\"\u003eCC-BY-SA\u003c/a\u003e)",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_70a2618ea22bc389623b93f35ad4eb8a.addTo(map_66f21a86a405f38c41c36db487a15c2a);
+        
+    
+            var side_by_side_layers_9068d3e8962822acd500e0d026499aa1 = L.control.sideBySide(
+                tile_layer_5d036af5696041531920af5603985826, tile_layer_70a2618ea22bc389623b93f35ad4eb8a
+            ).addTo(map_66f21a86a405f38c41c36db487a15c2a);
+        
+    
+            var layer_control_cc934bd6f767371cc11b4451864f62b1_layers = {
+                base_layers : {
+                    "openstreetmap" : tile_layer_7a6fc5c58185613c3cc8c7e1abd3c06c,
+                    "Left Raster" : tile_layer_5d036af5696041531920af5603985826,
+                },
+                overlays :  {
+                    "opentopomap" : tile_layer_70a2618ea22bc389623b93f35ad4eb8a,
+                },
+            };
+            let layer_control_cc934bd6f767371cc11b4451864f62b1 = L.control.layers(
+                layer_control_cc934bd6f767371cc11b4451864f62b1_layers.base_layers,
+                layer_control_cc934bd6f767371cc11b4451864f62b1_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_66f21a86a405f38c41c36db487a15c2a);
+
+        
+&lt;/script&gt;
+&lt;/html&gt;' style="position:absolute;width:100%;height:100%;left:0;top:0;border:none !important;" webkitallowfullscreen=""></iframe></div></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-5">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">split_map_raster</span> <span class="o">=</span> <span class="n">ecospat_foliummap</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">center</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">8.3793</span><span class="p">,</span> <span class="o">-</span><span class="mf">74.5357</span><span class="p">],</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">split_map_raster</span><span class="o">.</span><span class="n">add_split_map</span><span class="p">(</span>
+    <span class="n">left</span><span class="o">=</span><span class="s2">"https://raw.githubusercontent.com/opengeos/data/main/landsat/2020.tif"</span><span class="p">,</span>
+    <span class="n">right</span><span class="o">=</span><span class="s2">"https://raw.githubusercontent.com/opengeos/data/main/landsat/2020.tif"</span><span class="p">,</span>
+    <span class="n">colormap_left</span><span class="o">=</span><span class="s2">"viridis"</span><span class="p">,</span>
+    <span class="n">colormap_right</span><span class="o">=</span><span class="s2">"magma"</span><span class="p">,</span>
+    <span class="n">opacity_left</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
+    <span class="n">opacity_right</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">split_map_raster</span><span class="o">.</span><span class="n">add_layer_control</span><span class="p">()</span>
+<span class="n">split_map_raster</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-5">split_map_raster = ecospat_foliummap.Map(center=[-8.3793, -74.5357], zoom=10)
+split_map_raster.add_split_map(
+    left="https://raw.githubusercontent.com/opengeos/data/main/landsat/2020.tif",
+    right="https://raw.githubusercontent.com/opengeos/data/main/landsat/2020.tif",
+    colormap_left="viridis",
+    colormap_right="magma",
+    opacity_left=0.9,
+    opacity_right=0.5,
+)
+split_map_raster.add_layer_control()
+split_map_raster</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child jp-OutputArea-executeResult">
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
+<div style="width:100%;"><div style="position:relative;width:100%;height:0;padding-bottom:60%;"><span style="color:#565656">Make this Notebook Trusted to load map: File -&gt; Trust Notebook</span><iframe allowfullscreen="" mozallowfullscreen="" srcdoc='&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    
+    &lt;meta http-equiv="content-type" content="text/html; charset=UTF-8" /&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"&gt;&lt;/script&gt;
+    &lt;script src="https://code.jquery.com/jquery-3.7.1.min.js"&gt;&lt;/script&gt;
+    &lt;script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"&gt;&lt;/script&gt;
+    &lt;script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"&gt;&lt;/script&gt;
+    &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/&gt;
+    &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/&gt;
+    &lt;link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/&gt;
+    &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/&gt;
+    &lt;link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/&gt;
+    &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/&gt;
+    
+            &lt;meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /&gt;
+            &lt;style&gt;
+                #map_6c9e07fce654ac5b3f7fcda7db262e80 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            &lt;/style&gt;
+
+            &lt;style&gt;html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            &lt;/style&gt;
+
+            &lt;style&gt;#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            &lt;/style&gt;
+
+            &lt;script&gt;
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            &lt;/script&gt;
+
+        
+    &lt;script src="https://cdn.jsdelivr.net/gh/digidem/leaflet-side-by-side@2.0.0/leaflet-side-by-side.min.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    
+    
+            &lt;div class="folium-map" id="map_6c9e07fce654ac5b3f7fcda7db262e80" &gt;&lt;/div&gt;
+        
+&lt;/body&gt;
+&lt;script&gt;
+    
+    
+            var map_6c9e07fce654ac5b3f7fcda7db262e80 = L.map(
+                "map_6c9e07fce654ac5b3f7fcda7db262e80",
+                {
+                    center: [-8.3793, -74.5357],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_0a38045e1029877f80b07f77ad00e469 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_0a38045e1029877f80b07f77ad00e469.addTo(map_6c9e07fce654ac5b3f7fcda7db262e80);
+        
+    
+            var tile_layer_d31397819223986c38f78508fdec543e = L.tileLayer(
+                "http://127.0.0.1:33775/api/tiles/{z}/{x}/{y}.png?\u0026filename=%2Fvsicurl%3Furl%3Dhttps%253A%252F%252Fraw.githubusercontent.com%252Fopengeos%252Fdata%252Fmain%252Flandsat%252F2020.tif%26use_head%3Dno%26list_dir%3Dno\u0026colormap=viridis",
                 {
   "minZoom": 0,
   "maxZoom": 18,
@@ -1932,11 +1961,11 @@ split_map_raster</div>
             );
         
     
-            tile_layer_8350212fc41d645593adfb23e76e62f2.addTo(map_54e3febb5fedb9963672d37e25c60386);
+            tile_layer_d31397819223986c38f78508fdec543e.addTo(map_6c9e07fce654ac5b3f7fcda7db262e80);
         
     
-            var tile_layer_eb297cb0a0e1c0490481266ec714f78a = L.tileLayer(
-                "http://127.0.0.1:41903/api/tiles/{z}/{x}/{y}.png?\u0026filename=%2Fvsicurl%3Furl%3Dhttps%253A%252F%252Fraw.githubusercontent.com%252Fopengeos%252Fdata%252Fmain%252Flandsat%252F2020.tif%26use_head%3Dno%26list_dir%3Dno\u0026colormap=magma",
+            var tile_layer_c9f038a15781cdd637148e57d3b916b8 = L.tileLayer(
+                "http://127.0.0.1:33775/api/tiles/{z}/{x}/{y}.png?\u0026filename=%2Fvsicurl%3Furl%3Dhttps%253A%252F%252Fraw.githubusercontent.com%252Fopengeos%252Fdata%252Fmain%252Flandsat%252F2020.tif%26use_head%3Dno%26list_dir%3Dno\u0026colormap=magma",
                 {
   "minZoom": 0,
   "maxZoom": 18,
@@ -1953,32 +1982,32 @@ split_map_raster</div>
             );
         
     
-            tile_layer_eb297cb0a0e1c0490481266ec714f78a.addTo(map_54e3febb5fedb9963672d37e25c60386);
+            tile_layer_c9f038a15781cdd637148e57d3b916b8.addTo(map_6c9e07fce654ac5b3f7fcda7db262e80);
         
     
-            var side_by_side_layers_705d17d273a3b91e8e998ffefcc74390 = L.control.sideBySide(
-                tile_layer_8350212fc41d645593adfb23e76e62f2, tile_layer_eb297cb0a0e1c0490481266ec714f78a
-            ).addTo(map_54e3febb5fedb9963672d37e25c60386);
+            var side_by_side_layers_86314cbe917371547df4ce6820143303 = L.control.sideBySide(
+                tile_layer_d31397819223986c38f78508fdec543e, tile_layer_c9f038a15781cdd637148e57d3b916b8
+            ).addTo(map_6c9e07fce654ac5b3f7fcda7db262e80);
         
     
-            var layer_control_5d007d855c3d00285aa7e2111142ac77_layers = {
+            var layer_control_8a6296637859ae99c4d382de658777c3_layers = {
                 base_layers : {
-                    "openstreetmap" : tile_layer_213ff8affad520f4640ad70e17d9bf3d,
-                    "Left Raster" : tile_layer_8350212fc41d645593adfb23e76e62f2,
-                    "Right Raster" : tile_layer_eb297cb0a0e1c0490481266ec714f78a,
+                    "openstreetmap" : tile_layer_0a38045e1029877f80b07f77ad00e469,
+                    "Left Raster" : tile_layer_d31397819223986c38f78508fdec543e,
+                    "Right Raster" : tile_layer_c9f038a15781cdd637148e57d3b916b8,
                 },
                 overlays :  {
                 },
             };
-            let layer_control_5d007d855c3d00285aa7e2111142ac77 = L.control.layers(
-                layer_control_5d007d855c3d00285aa7e2111142ac77_layers.base_layers,
-                layer_control_5d007d855c3d00285aa7e2111142ac77_layers.overlays,
+            let layer_control_8a6296637859ae99c4d382de658777c3 = L.control.layers(
+                layer_control_8a6296637859ae99c4d382de658777c3_layers.base_layers,
+                layer_control_8a6296637859ae99c4d382de658777c3_layers.overlays,
                 {
   "position": "topright",
   "collapsed": true,
   "autoZIndex": true,
 }
-            ).addTo(map_54e3febb5fedb9963672d37e25c60386);
+            ).addTo(map_6c9e07fce654ac5b3f7fcda7db262e80);
 
         
 &lt;/script&gt;
@@ -1992,7 +2021,7 @@ split_map_raster</div>
 </div> <!-- jp-Notebook -->
 </div> <!-- jupyter-wrapper -->
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"b0cb076cefbd47cda5e90951c10b2110": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "cbdc08d1b0f4452fb6fa1d4997b69c41": {"model_name": "ForceLoadModel", "model_module": "jupyter-vue", "model_module_version": "^1.11.2", "state": {"_dom_classes": [], "_model_module": "jupyter-vue", "_model_module_version": "^1.11.2", "_model_name": "ForceLoadModel", "_view_count": null, "_view_module": null, "_view_module_version": "", "_view_name": null, "layout": "IPY_MODEL_b0cb076cefbd47cda5e90951c10b2110", "tabbable": null, "tooltip": null}}, "f3d056a2ef714234958866e687b86f0e": {"model_name": "ThemeModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeModel", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "dark": null, "dark_effective": null}}, "127e7d5f20984b31b6e415384d478fa9": {"model_name": "ThemeColorsModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeColorsModel", "_theme_name": "light", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "accent": "#82B1FF", "anchor": null, "error": "#FF5252", "info": "#2196F3", "primary": "#1976D2", "secondary": "#424242", "success": "#4CAF50", "warning": "#FB8C00"}}, "c0dcb43687f847f395200f43ffea4596": {"model_name": "ThemeColorsModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeColorsModel", "_theme_name": "dark", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "accent": "#FF4081", "anchor": null, "error": "#FF5252", "info": "#2196F3", "primary": "#2196F3", "secondary": "#424242", "success": "#4CAF50", "warning": "#FB8C00"}}}, "version_major": 2, "version_minor": 0}
+{"state": {"5643849c85564bd19af98d46982f7d51": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "226a8e6e35784ed099fe6a790925b113": {"model_name": "ForceLoadModel", "model_module": "jupyter-vue", "model_module_version": "^1.11.2", "state": {"_dom_classes": [], "_model_module": "jupyter-vue", "_model_module_version": "^1.11.2", "_model_name": "ForceLoadModel", "_view_count": null, "_view_module": null, "_view_module_version": "", "_view_name": null, "layout": "IPY_MODEL_5643849c85564bd19af98d46982f7d51", "tabbable": null, "tooltip": null}}, "7c69fc69e74b44669d91d9825132d1fc": {"model_name": "ThemeModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeModel", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "dark": null, "dark_effective": null}}, "8befaf879199462c8f38288eca80b0bf": {"model_name": "ThemeColorsModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeColorsModel", "_theme_name": "light", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "accent": "#82B1FF", "anchor": null, "error": "#FF5252", "info": "#2196F3", "primary": "#1976D2", "secondary": "#424242", "success": "#4CAF50", "warning": "#FB8C00"}}, "cc5d0527edf64a4697b03cf258abbba3": {"model_name": "ThemeColorsModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeColorsModel", "_theme_name": "dark", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "accent": "#FF4081", "anchor": null, "error": "#FF5252", "info": "#2196F3", "primary": "#2196F3", "secondary": "#424242", "success": "#4CAF50", "warning": "#FB8C00"}}}, "version_major": 2, "version_minor": 0}
 </script>
 
         <style>
@@ -2021,7 +2050,7 @@ split_map_raster</div>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="April 30, 2025 01:18:06 UTC"><span class="timeago" datetime="2025-04-30T01:18:06+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="April 30, 2025 01:18:06 UTC">2025-04-30</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="September 6, 2025 15:00:44 UTC"><span class="timeago" datetime="2025-09-06T15:00:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 6, 2025 15:00:44 UTC">2025-09-06</span>
   </span>
 
     

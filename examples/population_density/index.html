@@ -719,12 +719,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../widgets/" class="md-nav__link">
+      <a href="../widgets.ipynb" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Widgets
+    None
     
   </span>
   
@@ -1462,17 +1462,6 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </div>
 </div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="steps-to-visualizing-population-density-and-calculating-change-in-relative-population-density-by-range-edge-though-time">Steps to visualizing population density and calculating change in relative population density by range edge though time.<a class="anchor-link" href="#steps-to-visualizing-population-density-and-calculating-change-in-relative-population-density-by-range-edge-though-time">¶</a></h2>
-</div>
-</div>
-</div>
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
 <div class="jp-Cell-inputWrapper" tabindex="0">
@@ -1492,6 +1481,46 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </clipboard-copy>
 </div>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Uncomment below to run in Google Collab</span>
+<span class="c1"># pip install ecospat</span>
+</pre></div>
+<div class="clipboard-copy-txt" id="cell-1"># Uncomment below to run in Google Collab
+# pip install ecospat</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="steps-to-visualizing-population-density-and-calculating-change-in-relative-population-density-by-range-edge-though-time">Steps to visualizing population density and calculating change in relative population density by range edge though time.<a class="anchor-link" href="#steps-to-visualizing-population-density-and-calculating-change-in-relative-population-density-by-range-edge-though-time">¶</a></h2>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="CodeMirror cm-s-jupyter">
+<div class="zeroclipboard-container">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-2">
+<div>
+<span class="notice" hidden="">Copied!</span>
+<svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
+<path d="M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 010 1.5h-1.5a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-1.5a.75.75 0 011.5 0v1.5A1.75 1.75 0 019.25 16h-7.5A1.75 1.75 0 010 14.25v-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+<path d="M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0114.25 11h-7.5A1.75 1.75 0 015 9.25v-7.5zm1.75-.25a.25.25 0 00-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 00.25-.25v-7.5a.25.25 0 00-.25-.25h-7.5z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+</clipboard-copy>
+</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ecospat.ecospat</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ecospat_full</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">ecospat.stand_alone_functions</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">process_species_historical_range</span><span class="p">,</span>
@@ -1500,7 +1529,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
     <span class="n">create_interactive_map</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-1">import ecospat.ecospat as ecospat_full
+<div class="clipboard-copy-txt" id="cell-2">import ecospat.ecospat as ecospat_full
 from ecospat.stand_alone_functions import (
     process_species_historical_range,
     analyze_species_distribution,
@@ -1529,10 +1558,10 @@ from ecospat.stand_alone_functions import (
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-2">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-3">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -1543,12 +1572,12 @@ from ecospat.stand_alone_functions import (
 </clipboard-copy>
 </div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="n">classified_modern</span><span class="p">,</span> <span class="n">classified_historic</span> <span class="o">=</span> <span class="n">analyze_species_distribution</span><span class="p">(</span>
-    <span class="s2">"Populus angustifolia"</span><span class="p">,</span> <span class="n">record_limit</span><span class="o">=</span><span class="mi">1000</span>
+    <span class="s2">"Populus angustifolia"</span><span class="p">,</span> <span class="n">record_limit</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">continent</span><span class="o">=</span><span class="s2">"north_america"</span>
 <span class="p">)</span>
 <span class="n">classified_modern</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-2">classified_modern, classified_historic = analyze_species_distribution(
-    "Populus angustifolia", record_limit=1000
+<div class="clipboard-copy-txt" id="cell-3">classified_modern, classified_historic = analyze_species_distribution(
+    "Populus angustifolia", record_limit=1000, continent="north_america"
 )
 classified_modern.head()</div>
 </div>
@@ -1568,7 +1597,7 @@ Historic records (&lt; 1976): 254
 </div>
 </div>
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[2]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
 <div>
 <style scoped="">
@@ -1696,10 +1725,10 @@ Historic records (&lt; 1976): 254
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-3">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-4">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -1714,7 +1743,7 @@ Historic records (&lt; 1976): 254
 <span class="p">)</span>
 <span class="n">pop_change</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-3">pop_change = calculate_rate_of_change_first_last(
+<div class="clipboard-copy-txt" id="cell-4">pop_change = calculate_rate_of_change_first_last(
     classified_historic, classified_modern, "Populus angustifolia", custom_end_year=2025
 )
 pop_change</div>
@@ -1727,7 +1756,7 @@ pop_change</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
 <div>
 <style scoped="">
@@ -1796,10 +1825,10 @@ pop_change</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-4">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-5">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -1824,7 +1853,7 @@ pop_change</div>
 <span class="n">pop_change</span><span class="p">[</span><span class="s2">"Category"</span><span class="p">]</span> <span class="o">=</span> <span class="n">pop_change</span><span class="p">[</span><span class="s2">"Category"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
 <span class="n">pop_change</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4"># Making the df more self-explanatory
+<div class="clipboard-copy-txt" id="cell-5"># Making the df more self-explanatory
 
 pop_change = pop_change.rename(
     columns={
@@ -1847,7 +1876,7 @@ pop_change</div>
 </div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
-<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
+<div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html" tabindex="0">
 <div>
 <style scoped="">
@@ -1927,10 +1956,10 @@ pop_change</div>
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div><div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="CodeMirror cm-s-jupyter">
 <div class="zeroclipboard-container">
-<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-5">
+<clipboard-copy ,="" aria-label="Copy to Clipboard" for="cell-6">
 <div>
 <span class="notice" hidden="">Copied!</span>
 <svg aria-hidden="true" class="clipboard-copy-icon" data-view-component="true" height="20" version="1.1" viewbox="0 0 16 16" width="20">
@@ -1943,7 +1972,7 @@ pop_change</div>
 <div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Running this code will open a popup in a browser displaying the map. Set if_save = True if you want to save the map to your local device</span>
 <span class="n">create_interactive_map</span><span class="p">(</span><span class="n">classified_modern</span><span class="p">,</span> <span class="n">if_save</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-5"># Running this code will open a popup in a browser displaying the map. Set if_save = True if you want to save the map to your local device
+<div class="clipboard-copy-txt" id="cell-6"># Running this code will open a popup in a browser displaying the map. Set if_save = True if you want to save the map to your local device
 create_interactive_map(classified_modern, if_save=False)</div>
 </div>
 </div>
@@ -1954,7 +1983,7 @@ create_interactive_map(classified_modern, if_save=False)</div>
 </div> <!-- jp-Notebook -->
 </div> <!-- jupyter-wrapper -->
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"7d08a2c708e04204be3134bdef3cf9de": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "04c0ddd93c0f4645986e32ec91f8d29c": {"model_name": "ForceLoadModel", "model_module": "jupyter-vue", "model_module_version": "^1.11.2", "state": {"_dom_classes": [], "_model_module": "jupyter-vue", "_model_module_version": "^1.11.2", "_model_name": "ForceLoadModel", "_view_count": null, "_view_module": null, "_view_module_version": "", "_view_name": null, "layout": "IPY_MODEL_7d08a2c708e04204be3134bdef3cf9de", "tabbable": null, "tooltip": null}}, "4ef255e9cc78498f9cba3c267cdf56d9": {"model_name": "ThemeModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeModel", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "dark": null, "dark_effective": null}}, "bab0f5da540542f09cafd5c74e759cc0": {"model_name": "ThemeColorsModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeColorsModel", "_theme_name": "light", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "accent": "#82B1FF", "anchor": null, "error": "#FF5252", "info": "#2196F3", "primary": "#1976D2", "secondary": "#424242", "success": "#4CAF50", "warning": "#FB8C00"}}, "6c3b7ebcac3e43e78fe21b140e2c6a41": {"model_name": "ThemeColorsModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeColorsModel", "_theme_name": "dark", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "accent": "#FF4081", "anchor": null, "error": "#FF5252", "info": "#2196F3", "primary": "#2196F3", "secondary": "#424242", "success": "#4CAF50", "warning": "#FB8C00"}}, "36d4ec479438423d9b587021766cacb0": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "51495643d23542febc24e521d2f56b43": {"model_name": "JupyterTransportModel", "model_module": "@deck.gl\/jupyter-widget", "model_module_version": "~9.0.*", "state": {"_dom_classes": [], "_model_module": "@deck.gl\/jupyter-widget", "_model_module_version": "~9.0.*", "_model_name": "JupyterTransportModel", "_view_count": null, "_view_module": "@deck.gl\/jupyter-widget", "_view_module_version": "~9.0.*", "_view_name": "JupyterTransportView", "carto_key": "", "configuration": null, "custom_libraries": null, "data_buffer": null, "google_maps_key": "", "height": 500, "json_input": "", "layout": "IPY_MODEL_36d4ec479438423d9b587021766cacb0", "mapbox_key": "", "tabbable": null, "tooltip": true, "width": "100%"}}, "597e172920854cc685f5871cb3eca66f": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "b9376dad9bdf4c948ee4c33ac5fd3d15": {"model_name": "JupyterTransportModel", "model_module": "@deck.gl\/jupyter-widget", "model_module_version": "~9.0.*", "state": {"_dom_classes": [], "_model_module": "@deck.gl\/jupyter-widget", "_model_module_version": "~9.0.*", "_model_name": "JupyterTransportModel", "_view_count": null, "_view_module": "@deck.gl\/jupyter-widget", "_view_module_version": "~9.0.*", "_view_name": "JupyterTransportView", "carto_key": null, "configuration": null, "custom_libraries": [], "data_buffer": null, "google_maps_key": null, "height": 500, "json_input": "", "layout": "IPY_MODEL_597e172920854cc685f5871cb3eca66f", "mapbox_key": null, "tabbable": null, "tooltip": {"text": "Height (density): {elevationValue}"}, "width": "100%"}}, "7e6064afde0a48c9a00bfa3a00e8d988": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "e4f638c7df054ca8b266348030526e98": {"model_name": "JupyterTransportModel", "model_module": "@deck.gl\/jupyter-widget", "model_module_version": "~9.0.*", "state": {"_dom_classes": [], "_model_module": "@deck.gl\/jupyter-widget", "_model_module_version": "~9.0.*", "_model_name": "JupyterTransportModel", "_view_count": null, "_view_module": "@deck.gl\/jupyter-widget", "_view_module_version": "~9.0.*", "_view_name": "JupyterTransportView", "carto_key": "", "configuration": null, "custom_libraries": null, "data_buffer": null, "google_maps_key": "", "height": 500, "json_input": "", "layout": "IPY_MODEL_7e6064afde0a48c9a00bfa3a00e8d988", "mapbox_key": "", "tabbable": null, "tooltip": true, "width": "100%"}}, "134aed38c55a4cb1b10ee712b17b39dc": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "e9f2b8a5487248e59fd3b340d1d0bffd": {"model_name": "JupyterTransportModel", "model_module": "@deck.gl\/jupyter-widget", "model_module_version": "~9.0.*", "state": {"_dom_classes": [], "_model_module": "@deck.gl\/jupyter-widget", "_model_module_version": "~9.0.*", "_model_name": "JupyterTransportModel", "_view_count": null, "_view_module": "@deck.gl\/jupyter-widget", "_view_module_version": "~9.0.*", "_view_name": "JupyterTransportView", "carto_key": "", "configuration": null, "custom_libraries": null, "data_buffer": null, "google_maps_key": "", "height": 500, "json_input": "", "layout": "IPY_MODEL_134aed38c55a4cb1b10ee712b17b39dc", "mapbox_key": "", "tabbable": null, "tooltip": true, "width": "100%"}}, "883b423bca3b4bc3a26c3dbac7eea002": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "c6c8beeab2104cfab9ef0e0fdb10a810": {"model_name": "JupyterTransportModel", "model_module": "@deck.gl\/jupyter-widget", "model_module_version": "~9.0.*", "state": {"_dom_classes": [], "_model_module": "@deck.gl\/jupyter-widget", "_model_module_version": "~9.0.*", "_model_name": "JupyterTransportModel", "_view_count": null, "_view_module": "@deck.gl\/jupyter-widget", "_view_module_version": "~9.0.*", "_view_name": "JupyterTransportView", "carto_key": "", "configuration": null, "custom_libraries": null, "data_buffer": null, "google_maps_key": "", "height": 500, "json_input": "", "layout": "IPY_MODEL_883b423bca3b4bc3a26c3dbac7eea002", "mapbox_key": "", "tabbable": null, "tooltip": true, "width": "100%"}}}, "version_major": 2, "version_minor": 0}
+{"state": {"8039b7092a794d6ba40d76cfb4e7ee0d": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "8115788da1794b7e82eddfe958fff8ea": {"model_name": "ForceLoadModel", "model_module": "jupyter-vue", "model_module_version": "^1.11.2", "state": {"_dom_classes": [], "_model_module": "jupyter-vue", "_model_module_version": "^1.11.2", "_model_name": "ForceLoadModel", "_view_count": null, "_view_module": null, "_view_module_version": "", "_view_name": null, "layout": "IPY_MODEL_8039b7092a794d6ba40d76cfb4e7ee0d", "tabbable": null, "tooltip": null}}, "e7270b70c2384e8885636a82e61cf2a0": {"model_name": "ThemeModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeModel", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "dark": null, "dark_effective": null}}, "25c15dffe98241ea8d8f17081226ab0f": {"model_name": "ThemeColorsModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeColorsModel", "_theme_name": "light", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "accent": "#82B1FF", "anchor": null, "error": "#FF5252", "info": "#2196F3", "primary": "#1976D2", "secondary": "#424242", "success": "#4CAF50", "warning": "#FB8C00"}}, "0a7e4d0095744b21824ff323e4ee82d9": {"model_name": "ThemeColorsModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeColorsModel", "_theme_name": "dark", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "accent": "#FF4081", "anchor": null, "error": "#FF5252", "info": "#2196F3", "primary": "#2196F3", "secondary": "#424242", "success": "#4CAF50", "warning": "#FB8C00"}}, "8ebb0db0d5614cbf88f98f95ccadfce8": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "49d8f1eda58a4b599b6171fdf56093f0": {"model_name": "JupyterTransportModel", "model_module": "@deck.gl\/jupyter-widget", "model_module_version": "~9.0.*", "state": {"_dom_classes": [], "_model_module": "@deck.gl\/jupyter-widget", "_model_module_version": "~9.0.*", "_model_name": "JupyterTransportModel", "_view_count": null, "_view_module": "@deck.gl\/jupyter-widget", "_view_module_version": "~9.0.*", "_view_name": "JupyterTransportView", "carto_key": "", "configuration": null, "custom_libraries": null, "data_buffer": null, "google_maps_key": "", "height": 500, "json_input": "", "layout": "IPY_MODEL_8ebb0db0d5614cbf88f98f95ccadfce8", "mapbox_key": "", "tabbable": null, "tooltip": true, "width": "100%"}}, "2524c2799971490fab96662ad25699e0": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "ed10ea0a0433420a85885b13d8fb23f0": {"model_name": "JupyterTransportModel", "model_module": "@deck.gl\/jupyter-widget", "model_module_version": "~9.0.*", "state": {"_dom_classes": [], "_model_module": "@deck.gl\/jupyter-widget", "_model_module_version": "~9.0.*", "_model_name": "JupyterTransportModel", "_view_count": null, "_view_module": "@deck.gl\/jupyter-widget", "_view_module_version": "~9.0.*", "_view_name": "JupyterTransportView", "carto_key": null, "configuration": null, "custom_libraries": [], "data_buffer": null, "google_maps_key": null, "height": 500, "json_input": "", "layout": "IPY_MODEL_2524c2799971490fab96662ad25699e0", "mapbox_key": null, "tabbable": null, "tooltip": {"text": "Height (density): {elevationValue}"}, "width": "100%"}}, "5ef0085384334b9f88a914d5327b792d": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "783597b978b4440f86c87ae198cf04ec": {"model_name": "JupyterTransportModel", "model_module": "@deck.gl\/jupyter-widget", "model_module_version": "~9.0.*", "state": {"_dom_classes": [], "_model_module": "@deck.gl\/jupyter-widget", "_model_module_version": "~9.0.*", "_model_name": "JupyterTransportModel", "_view_count": null, "_view_module": "@deck.gl\/jupyter-widget", "_view_module_version": "~9.0.*", "_view_name": "JupyterTransportView", "carto_key": "", "configuration": null, "custom_libraries": null, "data_buffer": null, "google_maps_key": "", "height": 500, "json_input": "", "layout": "IPY_MODEL_5ef0085384334b9f88a914d5327b792d", "mapbox_key": "", "tabbable": null, "tooltip": true, "width": "100%"}}, "0f045ae141e74f36beaabb2b9e44f8c9": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "c3d7ac70897b4963ac1c16bb45913aec": {"model_name": "JupyterTransportModel", "model_module": "@deck.gl\/jupyter-widget", "model_module_version": "~9.0.*", "state": {"_dom_classes": [], "_model_module": "@deck.gl\/jupyter-widget", "_model_module_version": "~9.0.*", "_model_name": "JupyterTransportModel", "_view_count": null, "_view_module": "@deck.gl\/jupyter-widget", "_view_module_version": "~9.0.*", "_view_name": "JupyterTransportView", "carto_key": "", "configuration": null, "custom_libraries": null, "data_buffer": null, "google_maps_key": "", "height": 500, "json_input": "", "layout": "IPY_MODEL_0f045ae141e74f36beaabb2b9e44f8c9", "mapbox_key": "", "tabbable": null, "tooltip": true, "width": "100%"}}, "65583e5b60704e1ab33c498fd085a1ab": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "80d060abe7fe4ec18d0c7ba551158df8": {"model_name": "JupyterTransportModel", "model_module": "@deck.gl\/jupyter-widget", "model_module_version": "~9.0.*", "state": {"_dom_classes": [], "_model_module": "@deck.gl\/jupyter-widget", "_model_module_version": "~9.0.*", "_model_name": "JupyterTransportModel", "_view_count": null, "_view_module": "@deck.gl\/jupyter-widget", "_view_module_version": "~9.0.*", "_view_name": "JupyterTransportView", "carto_key": "", "configuration": null, "custom_libraries": null, "data_buffer": null, "google_maps_key": "", "height": 500, "json_input": "", "layout": "IPY_MODEL_65583e5b60704e1ab33c498fd085a1ab", "mapbox_key": "", "tabbable": null, "tooltip": true, "width": "100%"}}}, "version_major": 2, "version_minor": 0}
 </script>
 
         <style>
@@ -1983,7 +2012,7 @@ create_interactive_map(classified_modern, if_save=False)</div>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="May 13, 2025 21:56:25 UTC"><span class="timeago" datetime="2025-05-13T21:56:25+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="May 13, 2025 21:56:25 UTC">2025-05-13</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="September 6, 2025 15:00:44 UTC"><span class="timeago" datetime="2025-09-06T15:00:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 6, 2025 15:00:44 UTC">2025-09-06</span>
   </span>
 
     
