@@ -21,6 +21,57 @@ lat_min = solara.reactive(6.6)
 lat_max = solara.reactive(83.3)
 lon_min = solara.reactive(-178.2)
 lon_max = solara.reactive(-49.0)
+bounding_boxes = {
+    "north_america": {"lat_min": 15, "lat_max": 72, "lon_min": -170, "lon_max": -50},
+    "europe": {"lat_min": 35, "lat_max": 72, "lon_min": -10, "lon_max": 40},
+    "asia": {"lat_min": 5, "lat_max": 80, "lon_min": 60, "lon_max": 150},
+    # South America split at equator
+    "central_north_south_america": {
+        "lat_min": 0,
+        "lat_max": 15,
+        "lon_min": -80,
+        "lon_max": -35,
+    },
+    "central_south_south_america": {
+        "lat_min": -55,
+        "lat_max": 0,
+        "lon_min": -80,
+        "lon_max": -35,
+    },
+    # Africa split at equator
+    "north_africa": {"lat_min": 0, "lat_max": 37, "lon_min": -20, "lon_max": 50},
+    "central_south_africa": {
+        "lat_min": -35,
+        "lat_max": 0,
+        "lon_min": -20,
+        "lon_max": 50,
+    },
+    "oceania": {"lat_min": -50, "lat_max": 0, "lon_min": 110, "lon_max": 180},
+}
+
+bounding_labels = {
+    "asia": "Asia",
+    "europe": "Europe",
+    "central_north_south_america": "Central & Northern South America",
+    "central_south_africa": "Central & Southern Africa",
+    "central_south_south_america": "Central & Southern South America",
+    "north_africa": "North Africa",
+    "north_america": "North America",
+    "oceania": "Oceania",
+}
+
+selected_region = solara.reactive("north_america")
+
+map_settings = {
+    "north_america": {"center": (43.5, -110), "zoom": 3},
+    "europe": {"center": (53.5, 15), "zoom": 4},
+    "asia": {"center": (42.5, 105), "zoom": 3},
+    "central_north_south_america": {"center": (7.5, -57.5), "zoom": 4},
+    "central_south_south_america": {"center": (-27.5, -57.5), "zoom": 4},
+    "north_africa": {"center": (18.5, 15), "zoom": 4},
+    "central_south_africa": {"center": (-17.5, 15), "zoom": 4},
+    "oceania": {"center": (-25, 145), "zoom": 3},
+}
 
 
 basis_options = [
@@ -45,9 +96,19 @@ filter_mode = solara.Reactive("Simple Filters")
 def Sidebar():
     def on_search():
         # Trigger search
+
+        bbox = bounding_boxes[selected_region.value]
+
+        # store values in the reactive states you already have
+        lat_min.set(bbox["lat_min"])
+        lat_max.set(bbox["lat_max"])
+        lon_min.set(bbox["lon_min"])
+        lon_max.set(bbox["lon_max"])
+
         search_clicked.set(not search_clicked.value)
         print("Search button clicked!")  # confirm click
         print(f"Species name: {species_name.value}")
+        print(f"Bounding box: {bbox}")
 
     children = [
         solara.Markdown("## Filters"),
@@ -76,19 +137,29 @@ def Sidebar():
     gbif_children = []
     if filter_mode.value in ["Simple Filters", "All Filters"]:
         gbif_children.append(solara.InputInt("GBIF Limit", value=gbif_limit))
+
+        # Bounding box select should also appear in both modes
+        gbif_children.append(solara.Markdown("### Bounding Box"))
+        gbif_children.append(
+            solara.Select(
+                label="Region",
+                value=bounding_labels[selected_region.value],  # use the label here
+                values=list(bounding_labels.values()),
+                on_value=lambda v: selected_region.set(
+                    next(k for k, label in bounding_labels.items() if label == v)
+                ),
+            ),
+        )
+        gbif_children.append(
+            solara.InputText(
+                "Start Year (required for global species)",
+                value=user_start_year,
+            )
+        )
     if filter_mode.value == "All Filters":
         gbif_children.extend(
             [
-                solara.InputText(
-                    "Start Year (only required for global species)",
-                    value=user_start_year,
-                ),
                 solara.InputText("End Date", value=end_date),
-                solara.Markdown("### Bounding Box"),
-                solara.InputText("Latitudinal Minimum", value=lat_min),
-                solara.InputText("Latitudinal Maximum", value=lat_max),
-                solara.InputText("Longitudinal Minimum", value=lon_min),
-                solara.InputText("Longitudinal Maximum", value=lon_max),
                 solara.Markdown("**Basis of Record**"),
                 solara.Column(
                     [
@@ -201,7 +272,9 @@ from shapely.geometry import Point, Polygon
 
 
 @solara.component
-def HistoricalRangeMap(species_name: str, hist_range):
+def HistoricalRangeMap(
+    species_name: str, hist_range, region_key: str = "north_america"
+):
     if not species_name:
         return solara.Text("Enter a species name and press search.")
 
@@ -420,7 +493,9 @@ import pandas as pd
 from ecospat.stand_alone_functions import summarize_polygons_with_points
 
 
-def HistoricFallbackMap(classified_historic: pd.DataFrame):
+def HistoricFallbackMap(
+    classified_historic: pd.DataFrame, region_key: str = "north_america"
+):
     """Render a fallback map using GeoJSON from the historic classified data."""
     if classified_historic.empty:
         return solara.Text("No historic data available.")
@@ -451,10 +526,21 @@ def HistoricFallbackMap(classified_historic: pd.DataFrame):
 
     geojson_layer.on_hover(on_hover)
 
+    map_settings = {
+        "north_america": {"center": (43.5, -110), "zoom": 3},
+        "europe": {"center": (53.5, 15), "zoom": 4},
+        "asia": {"center": (42.5, 105), "zoom": 3},
+        "central_north_south_america": {"center": (7.5, -57.5), "zoom": 5},
+        "central_south_south_america": {"center": (-27.5, -57.5), "zoom": 4},
+        "north_africa": {"center": (18.5, 15), "zoom": 4},
+        "central_south_africa": {"center": (-17.5, 15), "zoom": 4},
+        "oceania": {"center": (-25, 145), "zoom": 3},
+    }
+
     # Map widget
     map_widget = ipyleaflet.Map(
-        center=(0, 0),
-        zoom=2,
+        center=map_settings.get(region_key, {"center": (0, 0)})["center"],
+        zoom=map_settings.get(region_key, {"zoom": 2})["zoom"],
         scroll_wheel_zoom=True,
         layers=[
             ipyleaflet.TileLayer(
@@ -526,7 +612,7 @@ def HistoricFallbackMap(classified_historic: pd.DataFrame):
     )
 
 
-def ModernMap(classified_modern: pd.DataFrame):
+def ModernMap(classified_modern: pd.DataFrame, region_key: str = "north_america"):
     """Render a fallback map using GeoJSON from the modern classified data."""
     if classified_modern.empty:
         return solara.Text("No modern data available.")
@@ -557,10 +643,21 @@ def ModernMap(classified_modern: pd.DataFrame):
 
     geojson_layer.on_hover(on_hover)
 
+    map_settings = {
+        "north_america": {"center": (43.5, -110), "zoom": 3},
+        "europe": {"center": (53.5, 15), "zoom": 4},
+        "asia": {"center": (42.5, 105), "zoom": 3},
+        "central_north_south_america": {"center": (7.5, -57.5), "zoom": 5},
+        "central_south_south_america": {"center": (-27.5, -57.5), "zoom": 4},
+        "north_africa": {"center": (18.5, 15), "zoom": 4},
+        "central_south_africa": {"center": (-17.5, 15), "zoom": 4},
+        "oceania": {"center": (-25, 145), "zoom": 3},
+    }
+
     # Map widget
     map_widget = ipyleaflet.Map(
-        center=(0, 0),
-        zoom=2,
+        center=map_settings.get(region_key, {"center": (0, 0)})["center"],
+        zoom=map_settings.get(region_key, {"zoom": 2})["zoom"],
         scroll_wheel_zoom=True,
         layers=[
             ipyleaflet.TileLayer(
@@ -960,6 +1057,8 @@ from ecospat.stand_alone_functions import (
     compute_individual_persistence,
     rasterize_multiband_gdf_world,
     summarize_polygons_for_point_plot,
+    analyze_species_distribution_south,
+    categorize_species_south,
 )
 
 
@@ -982,26 +1081,47 @@ def MainContent():
             )
 
             # --- Heavy computation happens here ---
-            classified_modern, classified_historic = analyze_species_distribution(
-                species_name=species_to_load,
-                record_limit=gbif_limit.value,
-                end_year=datetime.fromisoformat(end_date.value).year,
-                user_start_year=user_start_year.value,
-                lat_min=float(lat_min.value),
-                lat_max=float(lat_max.value),
-                lon_min=float(lon_min.value),
-                lon_max=float(lon_max.value),
-                basisOfRecord=selected_basis.value if selected_basis.value else None,
-            )
+            if selected_region.value in [
+                "north_america",
+                "europe",
+                "asia",
+                "central_north_south_america",
+                "north_africa",
+            ]:
+                classified_modern, classified_historic = analyze_species_distribution(
+                    species_name=species_to_load,
+                    record_limit=gbif_limit.value,
+                    end_year=datetime.fromisoformat(end_date.value).year,
+                    user_start_year=user_start_year.value,
+                    basisOfRecord=(
+                        selected_basis.value if selected_basis.value else None
+                    ),
+                    continent=selected_region.value,
+                )
+            else:  # South
+                classified_modern, classified_historic = (
+                    analyze_species_distribution_south(
+                        species_name=species_to_load,
+                        record_limit=gbif_limit.value,
+                        end_year=datetime.fromisoformat(end_date.value).year,
+                        user_start_year=user_start_year.value,
+                        basisOfRecord=(
+                            selected_basis.value if selected_basis.value else None
+                        ),
+                        continent=selected_region.value,
+                    )
+                )
 
             if hist_range is not None:
                 historic_component = HistoricalRangeMap(species_to_load, hist_range)
                 historic_gdf = hist_range.copy()
             else:
-                historic_component = HistoricFallbackMap(classified_historic)
+                historic_component = HistoricFallbackMap(
+                    classified_historic, selected_region.value
+                )
                 historic_gdf = classified_historic.copy()
 
-            modern_component = ModernMap(classified_modern)
+            modern_component = ModernMap(classified_modern, selected_region.value)
 
             northward_rate = analyze_northward_shift(
                 gdf_hist=historic_gdf,
@@ -1021,7 +1141,18 @@ def MainContent():
 
             print(north_copy)
 
-            range_cat = categorize_species(northward_rate)
+            if selected_region.value in [
+                "north_america",
+                "europe",
+                "asia",
+                "central_north_south_america",
+                "north_africa",
+            ]:
+                range_cat = categorize_species(northward_rate)
+            else:
+                range_cat = categorize_species_south(northward_rate)
+
+            # range_cat = categorize_species(northward_rate)
 
             pop_change = calculate_rate_of_change_first_last(
                 classified_historic,
@@ -1118,7 +1249,7 @@ def MainContent():
         return results
     else:
         return solara.Markdown(
-            "🔍 Enter a species name and click 'Search' to view the map."
+            "🔍 Enter a species name and click 'Search' to generate data and range maps."
         )
 
 

@@ -18,6 +18,7 @@
 
 </div>
 
+-   Web Application: <https://huggingface.co/spaces/anytko/ecospat>
 -   GitHub Repo: <https://github.com/anytko/ecospat>
 -   Documentation: <https://anytko.github.io/ecospat>
 -   PyPI: <https://pypi.org/project/ecospat/>

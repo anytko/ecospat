@@ -522,7 +522,7 @@ def process_gbif_csv(
 # Generate a smaller gbif df - not recommended but an option
 
 
-def fetch_gbif_data(species_name, limit=2000):
+def fetch_gbif_data(species_name, limit=2000, continent=None):
     """
     Fetches occurrence data from GBIF for a specified species, returning up to a specified limit.
 
@@ -546,6 +546,7 @@ def fetch_gbif_data(species_name, limit=2000):
             limit=page_limit,
             offset=offset,
             hasCoordinate=True,
+            continent=continent,
         )
 
         # Add the fetched data to the list
@@ -893,33 +894,38 @@ def assign_polygon_clusters_gbif(polygon_gdf):
     return range_test, largest_polygons
 
 
-def classify_range_edges_gbif(df, largest_polygons):
+def classify_range_edges_gbif(df, largest_polygons, continent="north_america"):
     """
-    Classifies polygons in a GeoDataFrame into range edge categories
-    (leading, core, trailing, and relict) within each cluster based on
-    distance from the centroid of the largest polygon in that cluster.
-    The function considers both latitudinal and longitudinal relict populations.
+    Classify polygons in a GeoDataFrame into range-edge categories
+    (leading, core, trailing, relict) within each cluster, based on
+    centroid distances relative to the largest polygon in that cluster.
 
+    The classification considers both latitudinal shifts (poleward vs. equatorward)
+    and longitudinal deviations (relict populations), with thresholds scaled
+    by region-specific parameters and polygon area.
 
     Args:
-        df (GeoDataFrame): Input GeoDataFrame containing at minimum the columns:
-            - 'geometry': Polygon geometries representing occurrences or clusters.
-            - 'cluster': Identifier for the cluster each geometry belongs to.
-        largest_polygons (list of dict): List of dictionaries containing the
-            largest polygon per cluster, where each dictionary has an 'AREA' key
-            used for threshold adjustments.
+        df (GeoDataFrame): Input GeoDataFrame containing at minimum:
+            - 'geometry': Polygon geometries (species range fragments).
+            - 'cluster': Cluster identifier for grouping polygons.
+        largest_polygons (list of dict): Largest polygon(s) per cluster, where
+            each dictionary must contain an 'AREA' key. Used to adjust
+            longitudinal thresholds.
+        continent (str, default="north_america"): Region keyword that selects
+            threshold scaling values. Supported values:
+            - "north_america"
+            - "europe"
+            - "asia"
+            - "north_africa"
+            - "central_north_south_america"
 
     Returns:
-        GeoDataFrame: A copy of the input GeoDataFrame with a new column:
-            - 'category': Edge classification for each polygon, which can be one of:
-                'leading (0.99)', 'leading (0.95)', 'leading (0.9)',
-                'core', 'trailing (0.05)', 'trailing (0.1)',
-                'relict (0.01 latitude)', 'relict (longitude)'.
-
-    Notes:
-        - Relict polygons are identified based on exceeding specified latitudinal
-          or longitudinal thresholds relative to the largest polygon centroid.
-        - The original GeoDataFrame's CRS is preserved in the returned result.
+        GeoDataFrame: Copy of the input with a new column:
+            - 'category': Assigned edge classification, one of:
+                * "leading (0.99)", "leading (0.95)", "leading (0.9)"
+                * "core"
+                * "trailing (0.05)", "trailing (0.1)"
+                * "relict (0.01 latitude)", "relict (longitude)"
     """
     # Add unique ID for reliable merging
     df_original = df.copy().reset_index(drop=False).rename(columns={"index": "geom_id"})
@@ -958,14 +964,57 @@ def classify_range_edges_gbif(df, largest_polygons):
         cluster_lat = cluster_centroid.y
         cluster_lon = cluster_centroid.x
 
-        largest_polygon_area = largest_polygons[0]["AREA"]
-        if largest_polygon_area > 150000:
-            long_value = 0.2
-        elif largest_polygon_area > 100000:
-            long_value = 0.15
+        north_america_dict = {
+            "large": 0.2,  # area > 150000
+            "medium": 0.15,  # area > 100000
+            "small": 0.1,  # area <= 100000
+        }
+
+        europe_dict = {
+            "large": 1,  # slightly different values
+            "medium": 0.9,
+            "small": 0.8,
+        }
+
+        asia_dict = {
+            "large": 0.08,  # slightly different values
+            "medium": 0.08,
+            "small": 0.05,
+        }
+
+        north_africa_dict = {
+            "large": 10,  # area > 150000
+            "medium": 10,  # area > 100000
+            "small": 10,  # area <= 100000
+        }
+
+        central_south_america_dict = {
+            "large": 0.2,  # area > 150000
+            "medium": 0.15,  # area > 100000
+            "small": 0.1,  # area <= 100000
+        }
+
+        # Function to get long_value from dictionary
+        def get_long_value(area, continent_dict):
+            if area > 150000:
+                return continent_dict["large"]
+            elif area > 100000:
+                return continent_dict["medium"]
+            else:
+                return continent_dict["small"]
+
+        if continent == "europe":
+            long_value = get_long_value(largest_polygons[0]["AREA"], europe_dict)
+        elif continent == "north_america":
+            long_value = get_long_value(largest_polygons[0]["AREA"], north_america_dict)
+        elif continent == "north_africa":
+            long_value = get_long_value(largest_polygons[0]["AREA"], north_africa_dict)
+        elif continent == "central_north_south_america":
+            long_value = get_long_value(
+                largest_polygons[0]["AREA"], central_south_america_dict
+            )
         else:
-            long_value = 0.1
-        # long_value = 0.15
+            long_value = get_long_value(largest_polygons[0]["AREA"], asia_dict)
 
         lat_threshold_01 = 0.1 * cluster_lat
         lat_threshold_05 = 0.05 * cluster_lat
@@ -1274,6 +1323,11 @@ def remove_lakes_and_plot_gbif(polygons_gdf):
     Returns:
     - Updated GeoDataFrame with lakes removed from intersecting polygons.
     """
+
+    polygons_gdf = polygons_gdf[
+        polygons_gdf.geom_type.isin(["Polygon", "MultiPolygon"])
+    ]
+
     # Load lakes GeoDataFrame
     lakes_url = "https://raw.githubusercontent.com/anytko/biospat_large_files/main/lakes_na.geojson"
     lakes_gdf = gpd.read_file(lakes_url)
@@ -1536,7 +1590,12 @@ def assign_polygon_clusters_gbif_test(polygon_gdf):
 
 
 def fetch_gbif_data_modern(
-    species_name, limit=2000, end_year=2025, start_year=1971, basisOfRecord=None
+    species_name,
+    limit=2000,
+    end_year=2025,
+    start_year=1971,
+    basisOfRecord=None,
+    continent=None,
 ):
     """
     Fetches modern occurrence records for a species from GBIF between specified years.
@@ -1574,6 +1633,7 @@ def fetch_gbif_data_modern(
                 "year": year,
                 "limit": page_limit,
                 "offset": offset,
+                "continent": continent,
             }
 
             if basisOfRecord is not None:
@@ -1611,7 +1671,9 @@ def fetch_gbif_data_modern(
     return all_data
 
 
-def fetch_historic_records(species_name, limit=2000, year=1971, basisOfRecord=None):
+def fetch_historic_records(
+    species_name, limit=2000, year=1971, basisOfRecord=None, continent=None
+):
     """
     Fetches historic occurrence records for a species from GBIF, going backward in time
     from a specified year until a minimum year or until the record limit is reached.
@@ -1646,6 +1708,7 @@ def fetch_historic_records(species_name, limit=2000, year=1971, basisOfRecord=No
                 "year": year,
                 "limit": page_limit,
                 "offset": offset,
+                "continent": continent,
             }
 
             if basisOfRecord is not None:
@@ -1679,7 +1742,12 @@ def fetch_historic_records(species_name, limit=2000, year=1971, basisOfRecord=No
 
 
 def fetch_gbif_data_with_historic(
-    species_name, limit=2000, start_year=1971, end_year=2025, basisOfRecord=None
+    species_name,
+    limit=2000,
+    start_year=1971,
+    end_year=2025,
+    basisOfRecord=None,
+    continent=None,
 ):
     """
     Fetches both modern and historic occurrence data from GBIF for a specified species.
@@ -1703,6 +1771,7 @@ def fetch_gbif_data_with_historic(
         start_year=start_year + 1,
         end_year=end_year,
         basisOfRecord=basisOfRecord,
+        continent=continent,
     )
 
     historic = fetch_historic_records(
@@ -1710,6 +1779,7 @@ def fetch_gbif_data_with_historic(
         limit=limit,
         year=start_year,
         basisOfRecord=basisOfRecord,
+        continent=continent,
     )
 
     return {"modern": modern, "historic": historic}
@@ -1722,44 +1792,98 @@ def process_gbif_data_pipeline(
     year_range=None,
     end_year=2025,
     user_start_year=None,
-    lat_min=6.6,
-    lat_max=83.3,
-    lon_min=-178.2,
-    lon_max=-49.0,
+    continent="north_america",
 ):
     """
-    Processes GBIF occurrence data through a multi-step spatial filtering and classification pipeline.
+    Run the GBIF spatial data pipeline for species occurrence records.
 
-    This function takes a GeoDataFrame of species occurrence points and performs the following steps:
-        1. Creates DBSCAN polygons from occurrence points, filtered by global latitude/longitude bounds.
-        2. Optionally prunes polygons by year for modern data.
-        3. Merges and remaps overlapping polygons with a buffer.
-        4. Removes polygons that fall in lakes.
-        5. Clips polygons to specified continental bounds.
-        6. Assigns cluster IDs and identifies the largest polygon.
-        7. Classifies range edges (leading, core, trailing) for downstream analysis.
+    This function takes a GeoDataFrame of GBIF occurrence points and processes
+    them into classified range polygons through a multi-step pipeline:
+
+        1. Cluster occurrence points into polygons using DBSCAN,
+           constrained by latitude/longitude bounds.
+        2. Optionally prune polygons by year (for modern data only).
+        3. Merge and remap overlapping polygons with a buffer.
+        4. Remove polygons that overlap with lakes.
+        5. Clip polygons to the specified continental bounding box.
+        6. Assign cluster IDs and identify the largest polygon per cluster.
+        7. Classify polygons into range-edge categories (leading, core, trailing, relict).
 
     Args:
-        gdf (GeoDataFrame): Input GBIF occurrence data containing point geometries.
-        species_name (str, optional): Scientific name of the species. Required if `year_range` is not provided.
-        is_modern (bool, default=True): Whether the data is considered modern. If False, year pruning is skipped.
-        year_range (tuple of int, optional): Tuple of (start_year, end_year) for filtering occurrences. Only used if `is_modern=True`.
-        end_year (int, default=2025): The end year for pruning modern data. Ignored if `year_range` is provided.
-        user_start_year (int, optional): User-specified start year if species-specific start year is unavailable.
-        lat_min (float, default=6.6): Minimum latitude to include in polygon creation and clipping.
-        lat_max (float, default=83.3): Maximum latitude to include in polygon creation and clipping.
-        lon_min (float, default=-178.2): Minimum longitude to include in polygon creation and clipping.
-        lon_max (float, default=-49.0): Maximum longitude to include in polygon creation and clipping.
+        gdf (GeoDataFrame): GBIF occurrence data containing point geometries.
+        species_name (str, optional): Scientific name of the species.
+            Required if `year_range` is not provided for modern data.
+        is_modern (bool, default=True): If True, filters occurrences by year range.
+            If False, skips year-based pruning (for historical data).
+        year_range (tuple[int, int], optional): (start_year, end_year) for filtering.
+            If None and `is_modern=True`, the start year will be inferred from species data
+            or `user_start_year`.
+        end_year (int, default=2025): End year for modern pruning if `year_range` not provided.
+        user_start_year (int, optional): Override start year if species-specific start year
+            is unavailable.
+        continent (str, default="north_america"): Region keyword passed to
+            `classify_range_edges_gbif` to control edge classification thresholds.
+            Supported values:
+            - "north_america"
+            - "europe"
+            - "asia"
+            - "north_africa"
+            - "central_north_south_america"
 
     Returns:
-        GeoDataFrame: A GeoDataFrame containing classified polygons with cluster IDs, range edges, and other metadata.
-        Each polygon represents a spatially clustered portion of the species range, pruned, merged, and clipped to valid
-        continental areas.
+        GeoDataFrame: Polygons representing clustered species ranges with metadata:
+            - 'cluster': Cluster ID
+            - 'category': Edge classification ("leading", "core", "trailing", "relict")
+            - geometry: Polygon geometries after clustering, merging, clipping, and filtering.
 
     Raises:
-        ValueError: If `species_name` is not provided and `year_range` is None for modern data.
-        ValueError: If a start year cannot be determined for a species and `user_start_year` is not provided.
+        ValueError: If `species_name` is missing when `year_range` is None and `is_modern=True`.
+        ValueError: If a start year cannot be determined and `user_start_year` is not provided.
     """
+    bounding_boxes = {
+        "north_america": {
+            "lat_min": 15,
+            "lat_max": 72,
+            "lon_min": -170,
+            "lon_max": -50,
+        },
+        "europe": {"lat_min": 35, "lat_max": 72, "lon_min": -10, "lon_max": 40},
+        "asia": {"lat_min": 5, "lat_max": 80, "lon_min": 60, "lon_max": 150},
+        # South America split at equator
+        "central_north_south_america": {
+            "lat_min": 0,
+            "lat_max": 15,
+            "lon_min": -80,
+            "lon_max": -35,
+        },
+        "central_south_south_america": {
+            "lat_min": -55,
+            "lat_max": 0,
+            "lon_min": -80,
+            "lon_max": -35,
+        },
+        # Africa split at equator
+        "north_africa": {"lat_min": 0, "lat_max": 37, "lon_min": -20, "lon_max": 50},
+        "central_south_africa": {
+            "lat_min": -35,
+            "lat_max": 0,
+            "lon_min": -20,
+            "lon_max": 50,
+        },
+        "oceania": {"lat_min": -50, "lat_max": 0, "lon_min": 110, "lon_max": 180},
+    }
+
+    if continent not in bounding_boxes:
+        raise ValueError(
+            f"Continent '{continent}' not recognized. Available: {list(bounding_boxes.keys())}"
+        )
+
+    bounds = bounding_boxes[continent]
+
+    lat_min = bounds["lat_min"]
+    lat_max = bounds["lat_max"]
+    lon_min = bounds["lon_min"]
+    lon_max = bounds["lon_max"]
 
     if is_modern and year_range is None:
         if species_name is None:
@@ -1807,7 +1931,7 @@ def process_gbif_data_pipeline(
     assigned_poly, large_poly = assign_polygon_clusters_gbif_test(clipped_polys)
 
     # Step 7: Classify edges
-    classified_poly = classify_range_edges_gbif(assigned_poly, large_poly)
+    classified_poly = classify_range_edges_gbif(assigned_poly, large_poly, continent)
 
     return classified_poly
 
@@ -1817,40 +1941,83 @@ def analyze_species_distribution(
     record_limit=100,
     end_year=2025,
     user_start_year=None,
-    lat_min=6.6,
-    lat_max=83.3,
-    lon_min=-178.2,
-    lon_max=-49.0,
     basisOfRecord=None,
+    continent="north_america",
 ):
     """
-    Fetches, separates, and processes both modern and historic GBIF occurrence data
-    for a given species, producing classified polygons with density estimates.
+    Fetches and processes modern and historic GBIF occurrence data for a given species,
+    producing classified polygons with density estimates.
 
-    This function dynamically determines the start year for modern vs. historic records,
-    converts data to GeoDataFrames, and applies the GBIF processing pipeline.
+    The function:
+        1. Determines the start year that separates modern vs. historic records
+           (using internal lookups or a user-provided fallback).
+        2. Fetches GBIF occurrence data with optional basisOfRecord filtering.
+        3. Converts raw records into GeoDataFrames for spatial processing.
+        4. Runs the GBIF processing pipeline to create, merge, prune, and classify polygons.
+        5. Computes density estimates for both modern and historic polygons.
 
-    Parameters:
-        species_name (str): Scientific name of the species.
-        record_limit (int, optional): Maximum number of records to fetch from GBIF. Default is 100.
-        end_year (int, optional): Most recent year to fetch modern data for. Default is 2025.
-        user_start_year (int or None, optional): Start year to use if the species' start year
-            cannot be determined internally. Default is None.
-        lat_min (float, optional): Minimum latitude for spatial filtering. Default is 6.6.
-        lat_max (float, optional): Maximum latitude for spatial filtering. Default is 83.3.
-        lon_min (float, optional): Minimum longitude for spatial filtering. Default is -178.2.
-        lon_max (float, optional): Maximum longitude for spatial filtering. Default is -49.0.
-        basisOfRecord (str or list or None, optional): Basis of record filter for GBIF data
-            (e.g., "PRESERVED_SPECIMEN", "OBSERVATION"). Default is None (no filtering).
+    Args:
+        species_name (str): Scientific name of the species to analyze.
+        record_limit (int, default=100): Maximum number of occurrence records to fetch from GBIF.
+        end_year (int, default=2025): Most recent year for modern data. Used if no explicit year range is provided.
+        user_start_year (int, optional): Fallback start year if the species-specific year cannot be determined.
+        basisOfRecord (str or list, optional): GBIF basisOfRecord filter (e.g., "OBSERVATION", "PRESERVED_SPECIMEN").
+            If None, no filter is applied.
+        continent (str, default="north_america"): Continent filter used for clipping polygons.
 
     Returns:
-        tuple[GeoDataFrame, GeoDataFrame]:
-            - classified_modern_polygons: Polygons classified from modern records with density info.
-            - classified_historic_polygons: Polygons classified from historic records with density info.
+        tuple:
+            classified_modern (GeoDataFrame): Classified polygons from modern records, including density estimates.
+            classified_historic (GeoDataFrame): Classified polygons from historic records, including density estimates.
 
     Raises:
-        ValueError: If the start year cannot be determined for the species and `user_start_year` is not provided.
+        ValueError: If the start year cannot be determined internally and `user_start_year` is not provided.
     """
+
+    bounding_boxes = {
+        "north_america": {
+            "lat_min": 15,
+            "lat_max": 72,
+            "lon_min": -170,
+            "lon_max": -50,
+        },
+        "europe": {"lat_min": 35, "lat_max": 72, "lon_min": -10, "lon_max": 40},
+        "asia": {"lat_min": 5, "lat_max": 80, "lon_min": 60, "lon_max": 150},
+        # South America split at equator
+        "central_north_south_america": {
+            "lat_min": 0,
+            "lat_max": 15,
+            "lon_min": -80,
+            "lon_max": -35,
+        },
+        "central_south_south_america": {
+            "lat_min": -55,
+            "lat_max": 0,
+            "lon_min": -80,
+            "lon_max": -35,
+        },
+        # Africa split at equator
+        "north_africa": {"lat_min": 0, "lat_max": 37, "lon_min": -20, "lon_max": 50},
+        "central_south_africa": {
+            "lat_min": -35,
+            "lat_max": 0,
+            "lon_min": -20,
+            "lon_max": 50,
+        },
+        "oceania": {"lat_min": -50, "lat_max": 0, "lon_min": 110, "lon_max": 180},
+    }
+
+    if continent not in bounding_boxes:
+        raise ValueError(
+            f"Continent '{continent}' not recognized. Available: {list(bounding_boxes.keys())}"
+        )
+
+    bounds = bounding_boxes[continent]
+
+    lat_min = bounds["lat_min"]
+    lat_max = bounds["lat_max"]
+    lon_min = bounds["lon_min"]
+    lon_max = bounds["lon_max"]
 
     start_year = get_start_year_from_species(species_name)
 
@@ -1866,12 +2033,20 @@ def analyze_species_distribution(
     else:
         start_year = int(start_year)
 
+    if continent == "central_north_south_america":
+        continent_call = "south_america"
+    elif continent == "north_africa":
+        continent_call = "africa"
+    else:
+        continent_call = continent
+
     data = fetch_gbif_data_with_historic(
         species_name,
         limit=record_limit,
         start_year=start_year,
         end_year=end_year,
         basisOfRecord=basisOfRecord,
+        continent=continent_call,
     )
 
     print(f"Modern records (>= {start_year}):", len(data["modern"]))
@@ -1890,20 +2065,14 @@ def analyze_species_distribution(
         is_modern=True,
         end_year=end_year,
         user_start_year=user_start_year,
-        lat_min=lat_min,
-        lat_max=lat_max,
-        lon_min=lon_min,
-        lon_max=lon_max,
+        continent=continent,
     )
     classified_historic = process_gbif_data_pipeline(
         historic_gdf,
         is_modern=False,
         end_year=end_year,
         user_start_year=user_start_year,
-        lat_min=lat_min,
-        lat_max=lat_max,
-        lon_min=lon_min,
-        lon_max=lon_max,
+        continent=continent,
     )
 
     classified_modern = calculate_density(classified_modern)
@@ -2028,6 +2197,8 @@ def analyze_northward_shift(
     """
 
     # Step 1: Collapse and calculate centroids
+    gdf_hist = gdf_hist.copy()
+    gdf_new = gdf_new.copy()
     hist_centroids = collapse_and_calculate_centroids(gdf_hist)
     new_centroids = collapse_and_calculate_centroids(gdf_new)
 
@@ -2052,8 +2223,8 @@ def categorize_species(df):
     Each species is assigned a movement category based on the combination of these rates.
 
     Categories include:
-        - "positive moving together"
-        - "negative moving together"
+        - "poleward expansion together"
+        - "contracting together"
         - "pull apart"
         - "reabsorption"
         - "stability"
@@ -2100,6 +2271,10 @@ def categorize_species(df):
         core = core[0] if len(core) > 0 else None
         trailing = trailing[0] if len(trailing) > 0 else None
 
+        leading = float(leading) if leading is not None else None
+        core = float(core) if core is not None else None
+        trailing = float(trailing) if trailing is not None else None
+
         # Count how many components are not None
         num_known = sum(x is not None for x in [leading, core, trailing])
 
@@ -2108,9 +2283,9 @@ def categorize_species(df):
         # ======= Full Data (3 values) =======
         if num_known == 3:
             if leading > 2 and core > 2 and trailing > 2:
-                category = "positive moving together"
+                category = "poleward expansion together"
             elif leading < -2 and core < -2 and trailing < -2:
-                category = "negative moving together"
+                category = "contracting together"
 
             elif (leading > 2 and trailing < -2) or (trailing > 2 and leading < -2):
                 category = "pull apart"
@@ -2155,9 +2330,9 @@ def categorize_species(df):
 
             elif -2 < core < 2 and leading is not None and trailing is not None:
                 if leading > 2 and trailing > 2:
-                    category = "likely moving together"
+                    category = "likely poleward expansion together"
                 elif leading < -2 and trailing < -2:
-                    category = "likely moving together"
+                    category = "likely contracting together"
 
         # ======= Partial Data (2 values) =======
         elif num_known == 2:
@@ -2166,9 +2341,9 @@ def categorize_species(df):
                 if -2 <= leading <= 2 and -2 <= core <= 2:
                     category = "likely stable"
                 elif leading > 2 and core > 2:
-                    category = "likely positive moving together"
+                    category = "likely poleward expansion together"
                 elif leading < -2 and core < -2:
-                    category = "likely negative moving together"
+                    category = "likely contracting together"
                 elif leading > 2 and core < -2:
                     category = "likely pull apart"
                 elif leading > 2 and -2 <= core <= 2:
@@ -2177,15 +2352,23 @@ def categorize_species(df):
                     category = "likely reabsorption"
                 elif leading < -2 and core > 2:
                     category = "likely reabsorption"
+                elif core > 2 and -2 <= leading <= 2:
+                    category = "likely reabsorption"
+                elif core < -2 and -2 <= leading <= 2:
+                    category = "likely pull apart"
+                elif -2 <= core <= 2 and leading > 2:
+                    category = "likely pull apart"
+                elif -2 <= core <= 2 and leading < -2:
+                    category = "likely reabsorption"
 
             # Only core and trailing
             elif core is not None and trailing is not None:
                 if -2 <= core <= 2 and -2 <= trailing <= 2:
                     category = "likely stable"
                 elif core > 2 and trailing > 2:
-                    category = "likely moving together"
+                    category = "likely poleward expansion together"
                 elif core < -2 and trailing < -2:
-                    category = "likely moving together"
+                    category = "likely contracting together"
                 elif -2 <= core <= 2 and trailing < -2:
                     category = "likely pull apart"
                 elif core > 2 and trailing < -2:
@@ -2193,6 +2376,10 @@ def categorize_species(df):
                 elif -2 <= core <= 2 and trailing > 2:
                     category = "likely reabsorption"
                 elif core < -2 and trailing > 2:
+                    category = "likely reabsorption"
+                elif core > 2 and -2 <= trailing <= 2:
+                    category = "likely pull apart"
+                elif core < -2 and -2 <= trailing <= 2:
                     category = "likely reabsorption"
 
         # ======= Final Append =======
@@ -3822,3 +4009,677 @@ def summarize_polygons_for_point_plot(df):
     summary_gdf = gpd.GeoDataFrame(summary, geometry="geometry")
 
     return summary_gdf
+
+
+def classify_range_edges_gbif_south(df, largest_polygons, continent="oceania"):
+    """
+    Classifies species range polygons into edge categories for the Southern Hemisphere.
+
+    This is the Southern Hemisphere counterpart to `classify_range_edges_gbif`.
+    It classifies polygons within clusters into ecological range-edge categories
+    (leading, core, trailing, and relict) based on their centroid’s distance from
+    the centroid of the largest polygon in the same cluster. In this hemisphere,
+    **leading edges are further south** and **trailing edges are further north**.
+    Relict thresholds for both latitude and longitude are adjusted accordingly.
+
+    The classification accounts for:
+        * Polygon area (large, medium, small), which determines the scale of
+          longitude thresholds by continent.
+        * Latitudinal thresholds, scaled relative to the cluster centroid.
+        * Hemisphere-specific rules for leading/trailing directionality.
+
+    Args:
+        df (GeoDataFrame):
+            Input polygons with geometry and cluster assignments.
+        largest_polygons (list[dict]):
+            Metadata for the largest polygons in each cluster.
+            Each dict should include an "AREA" key for threshold scaling.
+        continent (str, default="oceania"):
+            Continent-specific calibration for classification thresholds.
+            Supported values:
+                - "oceania"
+                - "central_south_south_america"
+                - "central_south_africa"
+
+    Returns:
+        GeoDataFrame:
+            Original polygons with an additional column ``category`` containing
+            the classification:
+                - "leading (0.99)", "leading (0.95)", "leading (0.9)"
+                - "trailing (0.05)", "trailing (0.1)"
+                - "core"
+                - "relict (longitude)", "relict (0.01 latitude)"
+
+    Raises:
+        ValueError: If the GeoDataFrame does not contain a valid CRS.
+    """
+
+    # Add unique ID for reliable merging
+    df_original = df.copy().reset_index(drop=False).rename(columns={"index": "geom_id"})
+
+    # Subset to unique geometry-cluster pairs with ID
+    unique_geoms = (
+        df_original[["geom_id", "geometry", "cluster"]].drop_duplicates().copy()
+    )
+
+    # Ensure proper CRS
+    if unique_geoms.crs is None or unique_geoms.crs.to_epsg() != 3395:
+        unique_geoms = unique_geoms.set_crs(df.crs).to_crs(epsg=3395)
+
+    # Calculate centroids, lat/lon, area
+    unique_geoms["centroid"] = unique_geoms.geometry.centroid
+    unique_geoms["latitude"] = unique_geoms["centroid"].y
+    unique_geoms["longitude"] = unique_geoms["centroid"].x
+    unique_geoms["area"] = unique_geoms.geometry.area
+
+    # Get centroid of largest polygon in each cluster
+    def find_largest_polygon_centroid(sub_gdf):
+        largest_polygon = sub_gdf.loc[sub_gdf["area"].idxmax()]
+        return largest_polygon["centroid"]
+
+    cluster_centroids = (
+        unique_geoms.groupby("cluster")
+        .apply(find_largest_polygon_centroid)
+        .reset_index(name="cluster_centroid")
+    )
+
+    unique_geoms = unique_geoms.merge(cluster_centroids, on="cluster", how="left")
+
+    # Classify within clusters
+    def classify_within_cluster(sub_gdf):
+        cluster_centroid = sub_gdf["cluster_centroid"].iloc[0]
+        cluster_lat = cluster_centroid.y
+        cluster_lon = cluster_centroid.x
+
+        oceania_dict = {
+            "large": 0.15,  # area > 150000
+            "medium": 0.1,  # area > 100000
+            "small": 0.05,  # area <= 100000
+        }
+
+        south_america_dict = {
+            "large": 0.15,  # area > 150000
+            "medium": 0.1,  # area > 100000
+            "small": 0.05,  # area <= 100000
+        }
+
+        south_africa_dict = {
+            "large": 0.7,  # area > 150000
+            "medium": 0.6,  # area > 100000
+            "small": 0.5,  # area <= 100000
+        }
+
+        # Function to get long_value from dictionary
+        def get_long_value(area, continent_dict):
+            if area > 150000:
+                return continent_dict["large"]
+            elif area > 100000:
+                return continent_dict["medium"]
+            else:
+                return continent_dict["small"]
+
+        long_value = get_long_value(
+            largest_polygons[0]["AREA"],
+            (
+                oceania_dict
+                if continent == "oceania"
+                else (
+                    south_america_dict
+                    if continent == "central_south_south_america"
+                    else (
+                        south_africa_dict
+                        if continent == "central_south_africa"
+                        else oceania_dict
+                    )
+                )
+            ),  # default to oceania if continent not recognized
+        )
+
+        lat_threshold_01 = 0.1 * abs(cluster_lat)
+        lat_threshold_05 = 0.05 * abs(cluster_lat)
+        lat_threshold_02 = 0.02 * abs(cluster_lat)
+        lon_threshold_01 = long_value * abs(cluster_lon)
+
+        def classify(row):
+            lat_diff = row["latitude"] - cluster_lat
+            lon_diff = row["longitude"] - cluster_lon
+
+            # Check longitude relict first
+            if abs(lon_diff) >= lon_threshold_01:
+                return "relict (longitude)"
+
+            # Then check latitude
+            if lat_diff >= lat_threshold_01:
+                return "relict (0.01 latitude)"
+
+            # Leading = further south (negative lat_diff)
+            if lat_diff <= -lat_threshold_01:
+                return "leading (0.99)"
+            elif lat_diff <= -lat_threshold_05:
+                return "leading (0.95)"
+            elif lat_diff <= -lat_threshold_02:
+                return "leading (0.9)"
+
+            # Trailing = further north (positive lat_diff)
+            elif lat_diff >= lat_threshold_05:
+                return "trailing (0.05)"
+            elif lat_diff >= lat_threshold_02:
+                return "trailing (0.1)"
+
+            else:
+                return "core"
+
+        sub_gdf["category"] = sub_gdf.apply(classify, axis=1)
+        return sub_gdf
+
+    unique_geoms = unique_geoms.groupby("cluster", group_keys=False).apply(
+        classify_within_cluster
+    )
+
+    # Prepare final mapping table and merge
+    category_map = unique_geoms[["geom_id", "category"]]
+    df_final = df_original.merge(category_map, on="geom_id", how="left").drop(
+        columns="geom_id"
+    )
+
+    return df_final
+
+
+def process_gbif_data_pipeline_south(
+    gdf,
+    species_name=None,
+    is_modern=True,
+    year_range=None,
+    end_year=2025,
+    user_start_year=None,
+    continent="oceania",
+):
+    """
+    Processes GBIF occurrence data into classified Southern Hemisphere range polygons.
+
+    This function executes a multi-step spatial filtering and classification pipeline
+    for occurrence data in the Southern Hemisphere. Compared to the northern pipeline,
+    it flips hemisphere logic so that **leading edges are further south** and
+    **trailing edges are further north**, with relict thresholds adjusted accordingly.
+
+    The pipeline includes:
+        1. Creating DBSCAN polygons from occurrence points within global bounds.
+        2. Optionally pruning polygons by year for modern data.
+        3. Merging and remapping overlapping polygons with a buffer distance.
+        4. Removing polygons that fall within lakes.
+        5. Clipping polygons to continent-specific bounds.
+        6. Assigning cluster IDs and identifying the largest polygon in each cluster.
+        7. Classifying polygons into range-edge categories
+           (leading, core, trailing, relict) using Southern Hemisphere rules.
+
+    Args:
+        gdf (GeoDataFrame):
+            Input GBIF occurrence data containing point geometries.
+        species_name (str, optional):
+            Scientific name of the species. Required if `year_range` is not provided.
+        is_modern (bool, default=True):
+            Whether the data should be treated as modern.
+            If False, year pruning is skipped.
+        year_range (tuple[int, int], optional):
+            Explicit (start_year, end_year) for filtering occurrences.
+            Used only if `is_modern=True`.
+        end_year (int, default=2025):
+            End year for pruning modern data. Ignored if `year_range` is provided.
+        user_start_year (int, optional):
+            User-specified start year if species-specific start year
+            cannot be determined internally.
+        continent (str, default="oceania"):
+            Target continent for classification thresholds.
+            Supported values:
+                - "oceania"
+                - "central_south_south_america"
+                - "central_south_africa"
+
+    Returns:
+        GeoDataFrame:
+            A GeoDataFrame of classified polygons with cluster IDs,
+            range-edge categories, and metadata. Each polygon represents a
+            spatially clustered portion of the species' Southern Hemisphere range,
+            pruned, merged, and clipped to valid continental bounds.
+
+    Raises:
+        ValueError:
+            If `species_name` is not provided and `year_range` is None for modern data.
+        ValueError:
+            If a start year cannot be determined for the species and `user_start_year` is not provided.
+    """
+
+    bounding_boxes = {
+        "north_america": {
+            "lat_min": 15,
+            "lat_max": 72,
+            "lon_min": -170,
+            "lon_max": -50,
+        },
+        "europe": {"lat_min": 35, "lat_max": 72, "lon_min": -10, "lon_max": 40},
+        "asia": {"lat_min": 5, "lat_max": 80, "lon_min": 60, "lon_max": 150},
+        # South America split at equator
+        "central_north_south_america": {
+            "lat_min": 0,
+            "lat_max": 15,
+            "lon_min": -80,
+            "lon_max": -35,
+        },
+        "central_south_south_america": {
+            "lat_min": -55,
+            "lat_max": 0,
+            "lon_min": -80,
+            "lon_max": -35,
+        },
+        # Africa split at equator
+        "north_africa": {"lat_min": 0, "lat_max": 37, "lon_min": -20, "lon_max": 50},
+        "central_south_africa": {
+            "lat_min": -35,
+            "lat_max": 0,
+            "lon_min": -20,
+            "lon_max": 50,
+        },
+        "oceania": {"lat_min": -50, "lat_max": 0, "lon_min": 110, "lon_max": 180},
+    }
+
+    if continent not in bounding_boxes:
+        raise ValueError(
+            f"Continent '{continent}' not recognized. Available: {list(bounding_boxes.keys())}"
+        )
+
+    bounds = bounding_boxes[continent]
+
+    lat_min = bounds["lat_min"]
+    lat_max = bounds["lat_max"]
+    lon_min = bounds["lon_min"]
+    lon_max = bounds["lon_max"]
+
+    if is_modern and year_range is None:
+        if species_name is None:
+            raise ValueError("species_name must be provided if year_range is not.")
+
+        # Get start year from species data if available, otherwise use a default
+        start_year = get_start_year_from_species(species_name)
+
+        if start_year == "NA":
+            if user_start_year is not None:
+                start_year = int(user_start_year)
+            else:
+                raise ValueError(f"Start year not found for species '{species_name}'.")
+        else:
+            start_year = int(start_year)
+
+        # Use the provided end_year if available, otherwise default to 2025
+        year_range = (start_year, end_year)
+
+    # Step 1: Create DBSCAN polygons
+    polys = make_dbscan_polygons_with_points_from_gdf(
+        gdf, lat_min=lat_min, lon_min=lon_min, lat_max=lat_max, lon_max=lon_max
+    )
+
+    # Step 2: Optionally prune by year for modern data
+    if is_modern:
+        polys = prune_by_year(polys, *year_range)
+
+    # Step 3: Merge and remap
+    merged_polygons = merge_and_remap_polygons(polys, buffer_distance=100)
+
+    # Step 4: Remove lakes
+    unique_polys_no_lakes = remove_lakes_and_plot_gbif(merged_polygons)
+
+    # Step 5: Clip to continents
+    clipped_polys = clip_polygons_to_continent_gbif(
+        unique_polys_no_lakes,
+        lat_min=lat_min,
+        lon_min=lon_min,
+        lat_max=lat_max,
+        lon_max=lon_max,
+    )
+
+    # Step 6: Assign cluster ID and large polygon
+    assigned_poly, large_poly = assign_polygon_clusters_gbif_test(clipped_polys)
+
+    # Step 7: Classify edges
+    classified_poly = classify_range_edges_gbif_south(
+        assigned_poly, large_poly, continent
+    )
+
+    return classified_poly
+
+
+def analyze_species_distribution_south(
+    species_name,
+    record_limit=100,
+    end_year=2025,
+    user_start_year=None,
+    basisOfRecord=None,
+    continent="oceania",
+):
+    """
+    Fetches and processes GBIF occurrence data for a species in a southern
+    hemisphere context, separating modern and historic records, classifying
+    spatial polygons, and computing density estimates.
+
+    This function determines the species' historic vs. modern cutoff year
+    (with optional user override), applies spatial and temporal filters,
+    converts the data to GeoDataFrames, and runs the GBIF processing pipeline.
+
+    Parameters:
+        species_name (str): Scientific name of the species.
+        record_limit (int, optional): Maximum number of records to fetch from GBIF.
+            Default is 100.
+        end_year (int, optional): Most recent year to include in modern records.
+            Default is 2025.
+        user_start_year (int or None, optional): User-specified cutoff year for
+            separating historic and modern records, used if no internal start
+            year can be determined. Default is None.
+        basisOfRecord (str, list, or None, optional): Basis-of-record filter for GBIF data
+            (e.g., "PRESERVED_SPECIMEN", "OBSERVATION"). Default is None (no filtering).
+        continent (str, optional): Continent identifier used for filtering and
+            processing logic. Default is "oceania".
+
+    Returns:
+        tuple[GeoDataFrame, GeoDataFrame]:
+            - classified_modern: GeoDataFrame of classified modern records with
+              density information.
+            - classified_historic: GeoDataFrame of classified historic records with
+              density information.
+
+    Raises:
+        ValueError: If the species' start year cannot be determined internally
+            and `user_start_year` is not provided.
+    """
+
+    bounding_boxes = {
+        "north_america": {
+            "lat_min": 15,
+            "lat_max": 72,
+            "lon_min": -170,
+            "lon_max": -50,
+        },
+        "europe": {"lat_min": 35, "lat_max": 72, "lon_min": -10, "lon_max": 40},
+        "asia": {"lat_min": 5, "lat_max": 80, "lon_min": 60, "lon_max": 150},
+        # South America split at equator
+        "central_north_south_america": {
+            "lat_min": 0,
+            "lat_max": 15,
+            "lon_min": -80,
+            "lon_max": -35,
+        },
+        "central_south_south_america": {
+            "lat_min": -55,
+            "lat_max": 0,
+            "lon_min": -80,
+            "lon_max": -35,
+        },
+        # Africa split at equator
+        "north_africa": {"lat_min": 0, "lat_max": 37, "lon_min": -20, "lon_max": 50},
+        "central_south_africa": {
+            "lat_min": -35,
+            "lat_max": 0,
+            "lon_min": -20,
+            "lon_max": 50,
+        },
+        "oceania": {"lat_min": -50, "lat_max": 0, "lon_min": 110, "lon_max": 180},
+    }
+
+    if continent not in bounding_boxes:
+        raise ValueError(
+            f"Continent '{continent}' not recognized. Available: {list(bounding_boxes.keys())}"
+        )
+
+    bounds = bounding_boxes[continent]
+
+    lat_min = bounds["lat_min"]
+    lat_max = bounds["lat_max"]
+    lon_min = bounds["lon_min"]
+    lon_max = bounds["lon_max"]
+
+    start_year = get_start_year_from_species(species_name)
+
+    if start_year == "NA":
+        # If missing, check if the user provided one
+        if user_start_year is not None:
+            start_year = int(user_start_year)
+        else:
+            raise ValueError(
+                f"Start year not found internally for species '{species_name}', "
+                f"and no user start year was provided."
+            )
+    else:
+        start_year = int(start_year)
+
+    if continent == "central_south_south_america":
+        continent_call = "south_america"
+    elif continent == "central_south_africa":
+        continent_call = "africa"
+    else:
+        continent_call = continent
+
+    data = fetch_gbif_data_with_historic(
+        species_name,
+        limit=record_limit,
+        start_year=start_year,
+        end_year=end_year,
+        basisOfRecord=basisOfRecord,
+        continent=continent_call,
+    )
+
+    print(f"Modern records (>= {start_year}):", len(data["modern"]))
+    print(f"Historic records (< {start_year}):", len(data["historic"]))
+
+    modern_data = data["modern"]
+    historic_data = data["historic"]
+
+    historic_gdf = convert_to_gdf(historic_data)
+    modern_gdf = convert_to_gdf(modern_data)
+
+    # Let the pipeline dynamically determine the year range
+    classified_modern = process_gbif_data_pipeline_south(
+        modern_gdf,
+        species_name=species_name,
+        is_modern=True,
+        end_year=end_year,
+        user_start_year=user_start_year,
+        continent=continent,
+    )
+    classified_historic = process_gbif_data_pipeline_south(
+        historic_gdf,
+        is_modern=False,
+        end_year=end_year,
+        user_start_year=user_start_year,
+        continent=continent,
+    )
+
+    classified_modern = calculate_density(classified_modern)
+    classified_historic = calculate_density(classified_historic)
+
+    return classified_modern, classified_historic
+
+
+def categorize_species_south(df):
+    """
+    Categorizes species into movement groups based on leading, core, and trailing rates.
+
+    In the southern hemisphere, poleward movement corresponds to **southward** shifts.
+    This function examines movement rates (km/year) for different range edges
+    (leading, core, trailing). It supports cases where all three edges are present
+    or only two edges are available. Each species is assigned a movement category
+    based on the combination of these rates.
+
+    Categories include:
+        - "poleward expansion together"
+        - "contracting together"
+        - "pull apart"
+        - "reabsorption"
+        - "stability"
+        - "likely moving together"
+        - "likely stable"
+        - "likely pull apart"
+        - "likely reabsorption"
+        - "uncategorized"
+
+    Args:
+        df (pd.DataFrame): Input DataFrame containing species movement data. Must include:
+            - 'species' (str): Species name.
+            - 'category' (str): Edge category, e.g., 'leading', 'core', or 'trailing'.
+            - 'northward_rate_km_per_year' (float): Signed movement rate for that edge.
+              Positive values = northward shifts, negative values = southward shifts.
+              In the southern hemisphere, **poleward corresponds to negative values**.
+
+    Returns:
+        pd.DataFrame: A DataFrame with one row per species, including:
+            - 'species': Species name.
+            - 'leading': Leading edge rate (float or None).
+            - 'core': Core rate (float or None).
+            - 'trailing': Trailing edge rate (float or None).
+            - 'category': Assigned movement category (str).
+    """
+    categories = []
+
+    for species_name in df["species"].unique():
+        species_data = df[df["species"] == species_name]
+
+        # Extract available rates
+        leading = species_data.loc[
+            species_data["category"].str.contains("leading", case=False),
+            "northward_rate_km_per_year",
+        ].values
+        core = species_data.loc[
+            species_data["category"].str.contains("core", case=False),
+            "northward_rate_km_per_year",
+        ].values
+        trailing = species_data.loc[
+            species_data["category"].str.contains("trailing", case=False),
+            "northward_rate_km_per_year",
+        ].values
+
+        leading = leading[0] if len(leading) > 0 else None
+        core = core[0] if len(core) > 0 else None
+        trailing = trailing[0] if len(trailing) > 0 else None
+
+        # Count how many components are not None
+        num_known = sum(x is not None for x in [leading, core, trailing])
+
+        category = "uncategorized"
+
+        if num_known == 3:
+            if (
+                leading > 2
+                and core > 2
+                and trailing > 2
+                or (core > 2 and -2 <= leading <= 2 and trailing > 2)
+            ):
+                category = "contracting together"
+            elif (
+                leading < -2
+                and core < -2
+                and trailing < -2
+                or (core < -2 and -2 <= trailing <= 2 and leading < -2)
+            ):
+                category = "poleward expansion together"
+
+            elif trailing > 2 and leading < -2:
+                category = "pull apart"
+            elif (
+                (leading < -2 and core >= -2 and trailing > 2)
+                or core < -2
+                and (leading < -2 or trailing > 2)
+            ):
+                category = "pull apart"
+
+            elif (
+                (core > 2 and (leading > 2 or trailing < -2))
+                or (leading > 2 and trailing < -2)
+                or (core > 2 and (leading <= 0))
+                or (core < -2 and trailing >= 0)
+                or (core < -2 and leading > 2 and -2 <= trailing <= 2)
+            ):
+                category = "reabsorption"
+
+            elif -2 <= core <= 2 and (
+                (-2 <= leading <= 2 and -2 <= trailing <= 2)
+                or (-2 <= leading <= 2)
+                or (-2 <= trailing <= 2)
+            ):
+                category = "stability"
+
+            elif (
+                (leading > 2 and core <= 2 and trailing < -2)
+                or (leading > 2 and core > 2 and trailing < -2)
+                or (leading > 2 and core < -2 and trailing < -2)
+                or (-2 <= leading <= 2 and core < -2 and trailing < -2)
+                or (leading > 2 and core > 2 and -2 <= trailing <= 2)
+            ):
+                category = "reabsorption"
+
+            elif (
+                (leading < -2 and core >= -2 and trailing > 2)
+                or (leading <= 2 and core > 2)
+                or (core < -2 and trailing <= 2)
+                or (leading < -2 and core > 2 and trailing > 2)
+                or (leading < -2 and core < -2 and trailing > 2)
+            ):
+                category = "pull apart"
+
+            elif -2 < core < 2 and leading is not None and trailing is not None:
+                if leading > 2 and trailing > 2:
+                    category = "likely contracting together"
+                elif leading < -2 and trailing < -2:
+                    category = "likely poleward expansion together"
+
+        elif num_known == 2:
+            # Only leading and core
+            if leading is not None and core is not None:
+                if -2 <= leading <= 2 and -2 <= core <= 2:
+                    category = "likely stable"
+                elif leading > 2 and core > 2:
+                    category = "likely contracting together"
+                elif leading < -2 and core < -2:
+                    category = "likely poleward expansion together"
+                elif leading > 2 and core < -2:
+                    category = "likely reabsorption"
+                elif leading < -2 and core > 2:
+                    category = "likely pull apart"
+                elif leading > 2 and -2 <= core <= 2:
+                    category = "likely reabsorption"
+                elif leading < -2 and -2 <= core <= 2:
+                    category = "likely pull apart"
+                elif -2 <= leading <= 2 and core > 2:
+                    category = "likely contracting together"
+                elif -2 <= leading <= 2 and core < -2:
+                    category = "likely poleward expansion together"
+
+            # Only core and trailing
+            elif core is not None and trailing is not None:
+                if -2 <= core <= 2 and -2 <= trailing <= 2:
+                    category = "likely stable"
+                elif core > 2 and trailing > 2:
+                    category = "likely poleward expansion together"
+                elif core < -2 and trailing < -2:
+                    category = "likely contracting together"
+                elif core > 2 and trailing < -2:
+                    category = "likely pull apart"
+                elif core < -2 and trailing > 2:
+                    category = "likely pull apart"
+                elif -2 <= core <= 2 and trailing > 2:
+                    category = "likely pull apart"
+                elif -2 <= core <= 2 and trailing < -2:
+                    category = "likely reabsorption"
+                elif core > 2 and -2 <= trailing <= 2:
+                    category = "likely reabsorption"
+                elif core < -2 and -2 <= trailing <= 2:
+                    category = "likely pull apart"
+
+        # ======= Final Append =======
+        categories.append(
+            {
+                "species": species_name,
+                "leading": leading,
+                "core": core,
+                "trailing": trailing,
+                "category": category,
+            }
+        )
+
+    return pd.DataFrame(categories)

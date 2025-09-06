@@ -28,12 +28,17 @@ def Page():
         )
 
         solara.Markdown(
-            "####Hampe & Petit (2005) first introduced a conceptual model characterizing differences in populations and their dynamics based on latitudinal range.",
+            '####Hampe & Petit (<a href="https://onlinelibrary.wiley.com/doi/10.1111/j.1461-0248.2005.00739.x" target="_blank">2005</a>) first introduced a conceptual model characterizing differences in populations and their dynamics based on latitudinal range.',
             style={"text-align": "center"},
         )
 
         solara.Markdown(
-            "To explore how to categorize these range edges using _ecospat_,checkout [how-to](/how-to)."
+            'This model has since been built upon by Woolbright et al. (<a href="https://www.sciencedirect.com/science/article/abs/pii/S0169534714001062" target="_blank">2014</a>) to incorporate eco-evolutionary dynamics important to the interaction structure of communities.'
+            # style={"text-align": "center"},
+        )
+
+        solara.Markdown(
+            "####To explore how to categorize these range edges using _ecospat_,checkout [how-to](/how-to)."
         )
 
         solara.Markdown("## Range Edges")
@@ -48,25 +53,25 @@ def Page():
         )
 
         solara.Markdown(
-            "### However, species ranges are expanding and contracting rapidly under climate change."
+            "### However, species ranges are differentially expanding and contracting rapidly in the Global North and South under climate change."
         )
 
         solara.Markdown(
-            "Range movement dynamics also affect variation important to determining persistence and conservation. For example, northward movement, following climate envelopes favors the persistence of leading edge populations, while leading edges are threatened under stable conditions."
+            "Range movement dynamics also affect variation important to determining persistence and conservation. For example, poleward movement, following climate envelopes favors the persistence of leading edge populations, while leading edges are more threatened under stable conditions."
         )
 
         # Right column: fake table made with rows in a Grid
         ImageWithToggleMarkdown()
 
         solara.Markdown(
-            "### Many populations are moving northward; however, not all range edges are moving in the same way."
+            "### Many populations are expanding poleward; however, not all range edges are moving in the same way."
         )
         solara.Markdown(
             """
             Range edges can:
 
-            - Expand northward together (positive moving together)
-            - Contract southward together (negative moving together)
+            - Expand poleward together
+            - Contract equatorward together
             - Pull apart (leading edge expanding and trailing edge contracting)
             - Reabsorb (leading and trailing edges moving back into core zone of admixture)
             - Stabilize
@@ -81,7 +86,7 @@ def Page():
         )
 
         solara.Markdown(
-            "High leading edge abundance facilitates northward movement, while evenly distributed individuals contribute towards range stability."
+            "High leading edge abundance facilitates poleward movement, while evenly distributed individuals contribute towards range stability."
         )
         ImageWithToggleMarkdownPopulation()
 
@@ -92,19 +97,26 @@ def Page():
         2. range movement patterns
         3. population dynamics within and across range edges
 
-        we can better understand how species have responded to past climate change and infer their potential for persistence at individual, population, community, and ecosystem levels. For instance, populations across a species’ range may gain or lose relative importance for maintaining ecosystem services and functions depending on their abundance and the persistence of their individuals. If a keystone species is characterized by a pulling-apart range dynamic, declining core populations, and edge populations with low propagule pressure and reduced individual persistence, the ecosystem that depends on it may start to disassemble in a systematic way. Such individual to ecosystem-level consequences are not revealed by examining any single variable in isolation (e.g., range dynamics, population dynamics, etc).
+        we can better understand how species have responded to past climate change and infer their potential for persistence at individual, population, community, and ecosystem levels. For instance, populations across a species’ range may gain or lose relative importance for maintaining ecosystem services and functions depending on their abundance and the persistence of their individuals. If a keystone species is characterized by a pull-apart range dynamic, declining core populations, edge populations with low propagule pressure, and reduced individual persistence, the ecosystem that depends on it may start to disassemble in a systematic way. Such individual to ecosystem-level consequences are not revealed by examining any single variable in isolation (e.g., range dynamics, population dynamics, etc).
 
-        Until recently, these insights were largely unattainable due to limitations of scale and data availability. However, occurrence data spanning both small and large spatial and temporal scales makes this possible.
+        Until recently, these insights were largely unattainable due to limitations of scale and data availability. Historically, southward range shifts in species from the Global South have been underrepresented, and tools to analyze these dynamics lag behind those developed for northern species.
+
+        However, global occurrence data spanning both small and large spatial and temporal scales makes this possible.
         """
         )
 
         solara.Markdown(
-            "### _ecospat_ uses GBIF historical and modern data to identify range and population dynamics through time"
+            "## _ecospat_ uses GBIF historical and modern data to identify range and population dynamics through time"
         )
 
         map_hist_image = "images/historic_map.jpg"
         map_mod_image = "images/modern_map.jpg"
 
+        with solara.Row(justify="start"):
+            solara.Markdown(
+                "### North America",
+                style={"text-align": "left"},
+            )
         with solara.Row(gap="2rem", justify="center"):
             # Left image with caption
             with solara.Column():
@@ -124,6 +136,90 @@ def Page():
 
         image_url_summary = "images/summary.png"
         solara.Image(image_url_summary, width="800px")
+
+        asia_map_hist_image = "images/lonicera_historic.png"
+        asia_map_mod_image = "images/lonicera_modern.png"
+
+        with solara.Row(justify="start"):
+            solara.Markdown(
+                "### Asia",
+                style={"text-align": "left"},
+            )
+        with solara.Row(gap="2rem", justify="center"):
+            # Left image with caption
+            with solara.Column():
+                solara.Markdown(
+                    "**Historic Range _Lonicera japonica_**",
+                    style={"text-align": "center"},
+                )
+                solara.Image(asia_map_hist_image, width="600px")
+
+            # Right image with caption
+            with solara.Column():
+                solara.Markdown(
+                    "**Modern Range _Lonicera japonica_**",
+                    style={"text-align": "center"},
+                )
+                solara.Image(asia_map_mod_image, width="600px")
+
+        asia_summary = "images/lonicera_dynamic.png"
+        solara.Image(asia_summary, width="800px")
+
+        sa_map_hist_image = "images/chamaecrista_historic.png"
+        sa_map_mod_image = "images/chamaecrista_modern.png"
+
+        with solara.Row(justify="start"):
+            solara.Markdown(
+                "### Central and Southern Africa",
+                style={"text-align": "left"},
+            )
+        with solara.Row(gap="2rem", justify="center"):
+            # Left image with caption
+            with solara.Column():
+                solara.Markdown(
+                    "**Historic Range _Chamaecrista mimosoides_**",
+                    style={"text-align": "center"},
+                )
+                solara.Image(sa_map_hist_image, width="600px")
+
+            # Right image with caption
+            with solara.Column():
+                solara.Markdown(
+                    "**Modern Range _Chamaecrista mimosoides_**",
+                    style={"text-align": "center"},
+                )
+                solara.Image(sa_map_mod_image, width="600px")
+
+        sa_summary = "images/chamaecrista_dynamic.png"
+        solara.Image(sa_summary, width="800px")
+
+        australia_map_hist_image = "images/acacia_historic.png"
+        australia_map_mod_image = "images/acacia_modern.png"
+
+        with solara.Row(justify="start"):
+            solara.Markdown(
+                "### Oceania",
+                style={"text-align": "left"},
+            )
+        with solara.Row(gap="2rem", justify="center"):
+            # Left image with caption
+            with solara.Column():
+                solara.Markdown(
+                    "**Historic Range _Acacia pycnantha_**",
+                    style={"text-align": "center"},
+                )
+                solara.Image(australia_map_hist_image, width="600px")
+
+            # Right image with caption
+            with solara.Column():
+                solara.Markdown(
+                    "**Modern Range _Acacia pycnantha_**",
+                    style={"text-align": "center"},
+                )
+                solara.Image(australia_map_mod_image, width="600px")
+
+        acacia_summary = "images/acacia_dynamic.png"
+        solara.Image(acacia_summary, width="800px")
 
         solara.Markdown(
             "###**Propagule Pressure** = Range Edge x Directional Movement x Distance to Source x Distance Decay x Population Size x Population Density Change",
@@ -189,14 +285,15 @@ def Page():
                 "While many citizen scientists care about the species in their communities, currently there are few tools that allow individuals to translate that awareness into meaningful action. By understanding the expected persistence of individuals both locally and in surrounding areas, _ecospat_ provides information that enable targeted, community-level management of species — effectively bridging the gap between knowledge and on-the-ground action."
             )
             solara.Markdown(
-                "### Please see [use-case](/use-case) to see _ecospat_ in action."
+                "### Please see [use-case](/use-case) to see _ecospat_ in action.",
+                style={"text-align": "center"},
             )
 
 
 import solara
 
-filter_mode = solara.reactive("Northward Movement")
-filter_mode_pop = solara.reactive("Northward Movement")
+filter_mode = solara.reactive("Poleward Movement")
+filter_mode_pop = solara.reactive("Poleward Movement")
 
 
 @solara.component
@@ -205,7 +302,7 @@ def ImageWithToggleMarkdown():
     # Single toggle for the content
     solara.ToggleButtonsSingle(
         value=filter_mode,
-        values=["Northward Movement", "Stability"],
+        values=["Poleward Movement", "Stability"],
         style={"display": "flex", "justifyContent": "center", "marginBottom": "10px"},
     )
 
@@ -222,48 +319,48 @@ def ImageWithToggleMarkdown():
         # Left: Image
         image_to_show = (
             "images/conserve_priority_north.png"
-            if filter_mode.value == "Northward Movement"
+            if filter_mode.value == "Poleward Movement"
             else "images/conserve_priority_stable.png"
         )
         solara.Image(image_to_show, width="300px")
 
         # Right: Conditional Markdown
         with solara.Column(style={"maxWidth": "600px"}):
-            if filter_mode.value == "Northward Movement":
+            if filter_mode.value == "Poleward Movement":
                 solara.Markdown(
                     """
-                    ### Leading: Northernmost edges.
-                    - **Low** genetic diversity
-                    - **Low** functional diversity
+                    ### Leading: Poleward edges.
+                    - **Low** among population genetic variation
+                    - **Low** functional trait diversity
 
                     ### Core: Central zone of admixture.
                     - Stability
 
-                    ### Trailing: Southernmost edges.
-                    - **High** genetic diversity
-                    - **High** functional diversity
+                    ### Trailing: Equatorward edges.
+                    - **High** among population genetic variation
+                    - **High** functional trait diversity
 
                     ### Relict: Latitudinal and longitudinal outliers.
-                    - High genetic and functional diversity
+                    - High genetic variation and functional trait diversity
                     - Low stability
                     """
                 )
             else:
                 solara.Markdown(
                     """
-                    ### Leading: Northernmost edges.
-                    - **High** genetic diversity
-                    - **High** functional diversity
+                    ### Leading: Poleward edges.
+                    - **High** among population genetic variation
+                    - **High** functional trait diversity
 
                     ### Core: Central zone of admixture.
                     - Stability
 
-                    ### Trailing: Southernmost edges.
-                    - **Low** genetic diversity
-                    - **Low** functional diversity
+                    ### Trailing: Equatorward edges.
+                    - **Moderate** among population genetic variation
+                    - **Low** functional trait diversity
 
                     ### Relict: Latitudinal and longitudinal outliers.
-                    - High genetic and functional diversity
+                    - High genetic variation and functional trait diversity
                     - Low stability
                     """
                 )
@@ -275,7 +372,7 @@ def ImageWithToggleMarkdownPopulation():
     # Single toggle for the content
     solara.ToggleButtonsSingle(
         value=filter_mode_pop,
-        values=["Northward Movement", "Stability"],
+        values=["Poleward Movement", "Stability"],
         style={"display": "flex", "justifyContent": "center", "marginBottom": "10px"},
     )
 
@@ -292,7 +389,7 @@ def ImageWithToggleMarkdownPopulation():
 
         # Right: Conditional Markdown
         with solara.Column(style={"maxWidth": "600px"}):
-            if filter_mode_pop.value == "Northward Movement":
+            if filter_mode_pop.value == "Poleward Movement":
                 solara.Markdown(
                     """
                     ### Leading: Increasing
@@ -319,7 +416,7 @@ def ImageWithToggleMarkdownPopulation():
                 # Left: Image
         image_to_show = (
             "images/North Gray.png"
-            if filter_mode_pop.value == "Northward Movement"
+            if filter_mode_pop.value == "Poleward Movement"
             else "images/Stability Gray.png"
         )
         solara.Image(image_to_show, width="300px")

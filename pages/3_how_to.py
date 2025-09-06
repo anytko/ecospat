@@ -37,6 +37,8 @@ def FilterSection():
             """
             **GBIF Data**
             - GBIF Limit
+            - Bounding Box
+            - Start Year
 
             **Biology**
             - Baseline Mortality
@@ -50,9 +52,9 @@ def FilterSection():
             """
             **GBIF Data**
             - GBIF Limit
+            - Bounding Box
             - Start Year
             - End Date
-            - Bounding Box
             - Basis of Record
 
             **Biology**
@@ -64,6 +66,48 @@ def FilterSection():
             - Raster Resolution
             """
         )
+
+
+bounding_boxes = {
+    "north_america": {"lat_min": 15, "lat_max": 72, "lon_min": -170, "lon_max": -50},
+    "europe": {"lat_min": 35, "lat_max": 72, "lon_min": -10, "lon_max": 40},
+    "asia": {"lat_min": 5, "lat_max": 80, "lon_min": 60, "lon_max": 150},
+    # South America split at equator
+    "central_north_south_america": {
+        "lat_min": 0,
+        "lat_max": 15,
+        "lon_min": -80,
+        "lon_max": -35,
+    },
+    "central_south_south_america": {
+        "lat_min": -55,
+        "lat_max": 0,
+        "lon_min": -80,
+        "lon_max": -35,
+    },
+    # Africa split at equator
+    "north_africa": {"lat_min": 0, "lat_max": 37, "lon_min": -20, "lon_max": 50},
+    "central_south_africa": {
+        "lat_min": -35,
+        "lat_max": 0,
+        "lon_min": -20,
+        "lon_max": 50,
+    },
+    "oceania": {"lat_min": -50, "lat_max": 0, "lon_min": 110, "lon_max": 180},
+}
+
+bounding_labels = {
+    "asia": "Asia",
+    "europe": "Europe",
+    "central_north_south_america": "Central & Northern South America",
+    "central_south_africa": "Central & Southern Africa",
+    "central_south_south_america": "Central & Southern South America",
+    "north_africa": "North Africa",
+    "north_america": "North America",
+    "oceania": "Oceania",
+}
+
+selected_region = solara.reactive("north_america")
 
 
 @solara.component
@@ -92,7 +136,11 @@ def Page():
         solara.Markdown(
             """
                         ###_ecospat_ is a tool that uses GBIF data to categorize the range edges of species through time to understand patterns of movement, population dynamics, and persistence.
-
+                        """
+        )
+        solara.Markdown(
+            """
+                        ###It is designed to be robust across spatial scales and user expertise, making biodiversity insights more accessible in the Global North and South and across researchers, conservationists, and community scientists.
                         """
         )
 
@@ -100,7 +148,7 @@ def Page():
             solara.Markdown(
                 """
                             ## A search begins by entering a species scientific name.
-                            If the species is unavailable on GBIF it will return the original search window.
+                            If the species is unavailable on GBIF or if there are not enough occurrences to estimate the species range, it will return the original search window.
                             """
             )
             solara.InputText(label="Species", value=""),
@@ -126,29 +174,49 @@ def Page():
 
             with solara.Column(style={"max-width": "800px", "gap": "1rem"}):
 
-                with solara.Card(title="GBIF Filters"):
+                with solara.Card(title="Advice & Suggestions"):
                     solara.Markdown(
-                        "**GBIF Limit:** Maximum number of GBIF occurrence records to use. Recommended: 2000–4000. Processing time increases with more records, and some species may have fewer available occurrences."
+                        """
+                        - **GBIF Limit:** Recommended: 2000–4000. Processing time increases with more records, and some species may have fewer available occurrences.
+                        - **Bounding Box:** Defaults are set for North America. Range dynamics are region-specific. Globally distributed species may move differently across regions, and calculations can be skewed by large latitudinal differences across regions. For species distributed across multiple regions, we suggest searching each region separately.
+                        - **Start Year:** Required for global species not found in Little's range maps of North American tree species. Recommended: 1970-1980s. The start year should be as early as possible to capture the historical distribution of the species; however, many species do not have adequate occurrence data before the 1980s.
+                        - **Baseline Mortality:** Default value is set at 0.1 (10% annual mortality). Baseline mortality varies largely by species and location. We recommend researching species-specific mortality rates in the literature. If unavailable, many species fall between 2-12% annual mortality.
+                        - **Raster Resolution:** Default value is set at 0.1667° (approximately 400 km²). Higher resolution increases computational time.
+                        """
+                    )
+
+            with solara.Column(style={"max-width": "800px", "gap": "1rem"}):
+
+                with solara.Card(title="Filters, Definitions, and Defaults"):
+                    solara.Markdown(
+                        "**GBIF Limit:** Maximum number of GBIF occurrence records to use."
                     )
                     solara.InputInt("GBIF Limit", value=2000)
 
                     solara.Markdown(
-                        "**Start Year:** Start of historical distribution. Only required for global species not found in Little's range maps of North American tree species."
+                        "**Bounding Box:** Geographic limits for filtering GBIF occurrence records."
                     )
+
+                    solara.Select(
+                        label="Region",
+                        value=bounding_labels[
+                            selected_region.value
+                        ],  # show the current label
+                        values=list(bounding_labels.values()),
+                        on_value=lambda v: selected_region.set(
+                            next(
+                                k for k, label in bounding_labels.items() if label == v
+                            )
+                        ),
+                    )
+
+                    solara.Markdown("**Start Year:** Start of historical distribution.")
                     solara.InputText(
-                        "Start Year (only required for global species)", value=""
+                        "Start Year (required for global species)", value=""
                     )
 
                     solara.Markdown("**End Date:** End of modern distribution.")
                     solara.InputText("End Date", value=end_date)
-
-                    solara.Markdown(
-                        "**Bounding Box**  \nGeographic limits for filtering GBIF occurrence records. Defaults are set for North America."
-                    )
-                    solara.InputText("Latitudinal Minimum", value=6.6)
-                    solara.InputText("Latitudinal Maximum", value=83.3)
-                    solara.InputText("Longitudinal Minimum", value=-178.2)
-                    solara.InputText("Longitudinal Maximum", value=-49)
 
                     solara.Markdown(
                         "**Basis of Record**  \nSpecific nature of the GBIF record."
