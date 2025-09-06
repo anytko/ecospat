@@ -613,13 +613,7 @@ def convert_to_gdf(euc_data):
 
 
 def make_dbscan_polygons_with_points_from_gdf(
-    gdf,
-    eps=0.008,
-    min_samples=3,
-    lat_min=6.6,
-    lat_max=83.3,
-    lon_min=-178.2,
-    lon_max=-49.0,
+    gdf, eps=0.008, min_samples=3, continent="north_america"
 ):
     """
     Performs DBSCAN clustering on a GeoDataFrame and returns a GeoDataFrame of
@@ -634,6 +628,51 @@ def make_dbscan_polygons_with_points_from_gdf(
     Returns:
     - expanded_gdf (GeoDataFrame): GeoDataFrame of cluster polygons with retained point geometries and years.
     """
+
+    bounding_boxes = {
+        "north_america": {
+            "lat_min": 15,
+            "lat_max": 72,
+            "lon_min": -170,
+            "lon_max": -50,
+        },
+        "europe": {"lat_min": 35, "lat_max": 72, "lon_min": -10, "lon_max": 40},
+        "asia": {"lat_min": 5, "lat_max": 80, "lon_min": 60, "lon_max": 150},
+        # South America split at equator
+        "central_north_south_america": {
+            "lat_min": 0,
+            "lat_max": 15,
+            "lon_min": -80,
+            "lon_max": -35,
+        },
+        "central_south_south_america": {
+            "lat_min": -55,
+            "lat_max": 0,
+            "lon_min": -80,
+            "lon_max": -35,
+        },
+        # Africa split at equator
+        "north_africa": {"lat_min": 0, "lat_max": 37, "lon_min": -20, "lon_max": 50},
+        "central_south_africa": {
+            "lat_min": -35,
+            "lat_max": 0,
+            "lon_min": -20,
+            "lon_max": 50,
+        },
+        "oceania": {"lat_min": -50, "lat_max": 0, "lon_min": 110, "lon_max": 180},
+    }
+
+    if continent not in bounding_boxes:
+        raise ValueError(
+            f"Continent '{continent}' not recognized. Available: {list(bounding_boxes.keys())}"
+        )
+
+    bounds = bounding_boxes[continent]
+
+    lat_min = bounds["lat_min"]
+    lat_max = bounds["lat_max"]
+    lon_min = bounds["lon_min"]
+    lon_max = bounds["lon_max"]
 
     if "decimalLatitude" not in gdf.columns or "decimalLongitude" not in gdf.columns:
         raise ValueError(
@@ -1380,10 +1419,7 @@ def remove_lakes_and_plot_gbif(polygons_gdf):
 
 def clip_polygons_to_continent_gbif(
     input_gdf,
-    lat_min=6.6,
-    lat_max=83.3,
-    lon_min=-178.2,
-    lon_max=-49.0,
+    continent="north_america",
 ):
     """
     Clips polygon geometries to a bounding box while preserving one row per original point.
@@ -1408,6 +1444,51 @@ def clip_polygons_to_continent_gbif(
         where polygon geometries have been clipped to a bounding box.
     """
     from shapely.geometry import box
+
+    bounding_boxes = {
+        "north_america": {
+            "lat_min": 15,
+            "lat_max": 72,
+            "lon_min": -170,
+            "lon_max": -50,
+        },
+        "europe": {"lat_min": 35, "lat_max": 72, "lon_min": -10, "lon_max": 40},
+        "asia": {"lat_min": 5, "lat_max": 80, "lon_min": 60, "lon_max": 150},
+        # South America split at equator
+        "central_north_south_america": {
+            "lat_min": 0,
+            "lat_max": 15,
+            "lon_min": -80,
+            "lon_max": -35,
+        },
+        "central_south_south_america": {
+            "lat_min": -55,
+            "lat_max": 0,
+            "lon_min": -80,
+            "lon_max": -35,
+        },
+        # Africa split at equator
+        "north_africa": {"lat_min": 0, "lat_max": 37, "lon_min": -20, "lon_max": 50},
+        "central_south_africa": {
+            "lat_min": -35,
+            "lat_max": 0,
+            "lon_min": -20,
+            "lon_max": 50,
+        },
+        "oceania": {"lat_min": -50, "lat_max": 0, "lon_min": 110, "lon_max": 180},
+    }
+
+    if continent not in bounding_boxes:
+        raise ValueError(
+            f"Continent '{continent}' not recognized. Available: {list(bounding_boxes.keys())}"
+        )
+
+    bounds = bounding_boxes[continent]
+
+    lat_min = bounds["lat_min"]
+    lat_max = bounds["lat_max"]
+    lon_min = bounds["lon_min"]
+    lon_max = bounds["lon_max"]
 
     # Load continent polygons (land areas)
     land_url = (
@@ -1904,9 +1985,7 @@ def process_gbif_data_pipeline(
         year_range = (start_year, end_year)
 
     # Step 1: Create DBSCAN polygons
-    polys = make_dbscan_polygons_with_points_from_gdf(
-        gdf, lat_min=lat_min, lon_min=lon_min, lat_max=lat_max, lon_max=lon_max
-    )
+    polys = make_dbscan_polygons_with_points_from_gdf(gdf, continent=continent)
 
     # Step 2: Optionally prune by year for modern data
     if is_modern:
@@ -1921,10 +2000,7 @@ def process_gbif_data_pipeline(
     # Step 5: Clip to continents
     clipped_polys = clip_polygons_to_continent_gbif(
         unique_polys_no_lakes,
-        lat_min=lat_min,
-        lon_min=lon_min,
-        lat_max=lat_max,
-        lon_max=lon_max,
+        continent=continent,
     )
 
     # Step 6: Assign cluster ID and large polygon
@@ -4313,9 +4389,7 @@ def process_gbif_data_pipeline_south(
         year_range = (start_year, end_year)
 
     # Step 1: Create DBSCAN polygons
-    polys = make_dbscan_polygons_with_points_from_gdf(
-        gdf, lat_min=lat_min, lon_min=lon_min, lat_max=lat_max, lon_max=lon_max
-    )
+    polys = make_dbscan_polygons_with_points_from_gdf(gdf, continent=continent)
 
     # Step 2: Optionally prune by year for modern data
     if is_modern:
@@ -4330,10 +4404,7 @@ def process_gbif_data_pipeline_south(
     # Step 5: Clip to continents
     clipped_polys = clip_polygons_to_continent_gbif(
         unique_polys_no_lakes,
-        lat_min=lat_min,
-        lon_min=lon_min,
-        lat_max=lat_max,
-        lon_max=lon_max,
+        continent=continent,
     )
 
     # Step 6: Assign cluster ID and large polygon
