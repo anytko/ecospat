@@ -2,7 +2,7 @@
 
 __author__ = """Alivia Nytko"""
 __email__ = "anytko@vols.utk.edu"
-__version__ = "1.0.1"
+__version__ = "1.1.0"
 
 from .ecospat import *
 from .references_data import *
