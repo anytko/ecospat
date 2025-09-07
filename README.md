@@ -26,7 +26,7 @@
 -   Free software: <a href="https://opensource.org/license/MIT" target="_blank">MIT License</a>
 
 ## Introduction & Statement of Need
-**Ecospat** is a Python package and accompanying webapp for the interactive mapping and characterization of range edges, the identification of range and population dynamics within and across edges, and the predicted propagule pressure and persistence of individuals.
+**Ecospat** is a Python package and accompanying web application for the interactive mapping and characterization of range edges, the identification of range and population dynamics within and across edges, and the predicted propagule pressure and persistence of individuals.
 
 Species ranges are often noncontiguous and comprised of disjunct populations. We can characterize these populations into different range edges based on their latitudinal positions.
 - Leading Edge: Poleward populations
@@ -50,7 +50,7 @@ Using the historical ranges of over 670 North American tree species, historical 
 ## Features
 
 -   Maps and identifies historical and contemporary range edges of species.
--   Calculates the northward rate of movement, change in population density through time, average temperature, precipitation, and elevation of range edges.
+-   Calculates the poleward rate of movement and change in population density through time.
 -   Assigns a range movement pattern (i.e. Expanding or Contracting together, Pulling apart, Stability, or Reabsorption)
 -   Generates a propagule pressure raster that can be downloaded and used in further analyses.
 -   Predicts the one and five year persistence of individuals and assigns them to a risk decile based on predicted persistence.
