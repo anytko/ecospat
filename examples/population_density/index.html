@@ -18,7 +18,7 @@
         <link rel="prev" href="../range_movement/">
       
       
-        <link rel="next" href="../persistence_raster/">
+        <link rel="next" href="../propagule_pressure_raster/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#steps-to-visualizing-population-density-and-calculating-change-in-relative-population-density-by-range-edge-though-time" class="md-skip">
+        <a href="#calculating-and-visualizing-population-density-change" class="md-skip">
           Skip to content
         </a>
       
@@ -601,52 +601,37 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#steps-to-visualizing-population-density-and-calculating-change-in-relative-population-density-by-range-edge-though-time" class="md-nav__link">
+  <a href="#calculating-and-visualizing-population-density-change" class="md-nav__link">
     <span class="md-ellipsis">
-      Steps to visualizing population density and calculating change in relative population density by range edge though time.
+      Calculating and visualizing population density change
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Steps to visualizing population density and calculating change in relative population density by range edge though time.">
+    <nav class="md-nav" aria-label="Calculating and visualizing population density change">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#first-we-need-to-classify-the-historic-and-modern-range-edges-using-gbif-data" class="md-nav__link">
+  <a href="#classify-historic-and-modern-range-edges" class="md-nav__link">
     <span class="md-ellipsis">
-      First, we need to classify the historic and modern range edges using GBIF data.
+      Classify historic and modern range edges
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#next-we-can-calculate-the-rate-of-change-in-individuals-per-range-edge-though-time" class="md-nav__link">
+  <a href="#calculate-rate-of-change-in-individuals-per-range-edge-though-time" class="md-nav__link">
     <span class="md-ellipsis">
-      Next, we can calculate the rate of change in individuals per range edge though time.
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Next, we can calculate the rate of change in individuals per range edge though time.">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#remember-that-this-is-a-proportional-metric-a-density-change-of-08-in-the-leading-edge-means-that-though-the-time-period-examined-the-leading-edge-has-proportionally-less-individuals-out-of-the-total-individuals-then-it-did-in-the-past" class="md-nav__link">
-    <span class="md-ellipsis">
-      Remember that this is a proportional metric; a density change of -0.8 in the leading edge means that though the time period examined, the leading edge has proportionally less individuals out of the total individuals then it did in the past.
+      Calculate rate of change in individuals per range edge though time.
     </span>
   </a>
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-        
           <li class="md-nav__item">
-  <a href="#we-can-also-plot-the-population-density-of-the-modern-or-historic-polygons-on-a-3d-map" class="md-nav__link">
+  <a href="#plot-population-density-on-a-3d-map" class="md-nav__link">
     <span class="md-ellipsis">
-      We can also plot the population density of the modern (or historic) polygons on a 3D map.
+      Plot population density on a 3D map.
     </span>
   </a>
   
@@ -673,12 +658,12 @@
   
   
     <li class="md-nav__item">
-      <a href="../persistence_raster/" class="md-nav__link">
+      <a href="../propagule_pressure_raster/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
-    Persistence raster
+    Propagule pressure raster
     
   </span>
   
@@ -702,29 +687,6 @@
   
   <span class="md-ellipsis">
     Individual persistence
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../widgets.ipynb" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    None
     
   </span>
   
@@ -904,52 +866,37 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#steps-to-visualizing-population-density-and-calculating-change-in-relative-population-density-by-range-edge-though-time" class="md-nav__link">
+  <a href="#calculating-and-visualizing-population-density-change" class="md-nav__link">
     <span class="md-ellipsis">
-      Steps to visualizing population density and calculating change in relative population density by range edge though time.
+      Calculating and visualizing population density change
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Steps to visualizing population density and calculating change in relative population density by range edge though time.">
+    <nav class="md-nav" aria-label="Calculating and visualizing population density change">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#first-we-need-to-classify-the-historic-and-modern-range-edges-using-gbif-data" class="md-nav__link">
+  <a href="#classify-historic-and-modern-range-edges" class="md-nav__link">
     <span class="md-ellipsis">
-      First, we need to classify the historic and modern range edges using GBIF data.
+      Classify historic and modern range edges
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#next-we-can-calculate-the-rate-of-change-in-individuals-per-range-edge-though-time" class="md-nav__link">
+  <a href="#calculate-rate-of-change-in-individuals-per-range-edge-though-time" class="md-nav__link">
     <span class="md-ellipsis">
-      Next, we can calculate the rate of change in individuals per range edge though time.
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Next, we can calculate the rate of change in individuals per range edge though time.">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#remember-that-this-is-a-proportional-metric-a-density-change-of-08-in-the-leading-edge-means-that-though-the-time-period-examined-the-leading-edge-has-proportionally-less-individuals-out-of-the-total-individuals-then-it-did-in-the-past" class="md-nav__link">
-    <span class="md-ellipsis">
-      Remember that this is a proportional metric; a density change of -0.8 in the leading edge means that though the time period examined, the leading edge has proportionally less individuals out of the total individuals then it did in the past.
+      Calculate rate of change in individuals per range edge though time.
     </span>
   </a>
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-        
           <li class="md-nav__item">
-  <a href="#we-can-also-plot-the-population-density-of-the-modern-or-historic-polygons-on-a-3d-map" class="md-nav__link">
+  <a href="#plot-population-density-on-a-3d-map" class="md-nav__link">
     <span class="md-ellipsis">
-      We can also plot the population density of the modern (or historic) polygons on a 3D map.
+      Plot population density on a 3D map.
     </span>
   </a>
   
@@ -1498,7 +1445,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="steps-to-visualizing-population-density-and-calculating-change-in-relative-population-density-by-range-edge-though-time">Steps to visualizing population density and calculating change in relative population density by range edge though time.<a class="anchor-link" href="#steps-to-visualizing-population-density-and-calculating-change-in-relative-population-density-by-range-edge-though-time">¶</a></h2>
+<h2 id="calculating-and-visualizing-population-density-change">Calculating and visualizing population density change<a class="anchor-link" href="#calculating-and-visualizing-population-density-change">¶</a></h2>
 </div>
 </div>
 </div>
@@ -1548,7 +1495,7 @@ from ecospat.stand_alone_functions import (
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="first-we-need-to-classify-the-historic-and-modern-range-edges-using-gbif-data">First, we need to classify the historic and modern range edges using GBIF data.<a class="anchor-link" href="#first-we-need-to-classify-the-historic-and-modern-range-edges-using-gbif-data">¶</a></h3>
+<h3 id="classify-historic-and-modern-range-edges">Classify historic and modern range edges<a class="anchor-link" href="#classify-historic-and-modern-range-edges">¶</a></h3>
 </div>
 </div>
 </div>
@@ -1704,18 +1651,7 @@ Historic records (&lt; 1976): 254
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="next-we-can-calculate-the-rate-of-change-in-individuals-per-range-edge-though-time">Next, we can calculate the rate of change in individuals per range edge though time.<a class="anchor-link" href="#next-we-can-calculate-the-rate-of-change-in-individuals-per-range-edge-though-time">¶</a></h3>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="remember-that-this-is-a-proportional-metric-a-density-change-of-08-in-the-leading-edge-means-that-though-the-time-period-examined-the-leading-edge-has-proportionally-less-individuals-out-of-the-total-individuals-then-it-did-in-the-past">Remember that this is a proportional metric; a density change of -0.8 in the leading edge means that though the time period examined, the leading edge has proportionally less individuals out of the total individuals then it did in the past.<a class="anchor-link" href="#remember-that-this-is-a-proportional-metric-a-density-change-of-08-in-the-leading-edge-means-that-though-the-time-period-examined-the-leading-edge-has-proportionally-less-individuals-out-of-the-total-individuals-then-it-did-in-the-past">¶</a></h4>
+<h3 id="calculate-rate-of-change-in-individuals-per-range-edge-though-time">Calculate rate of change in individuals per range edge though time.<a class="anchor-link" href="#calculate-rate-of-change-in-individuals-per-range-edge-though-time">¶</a></h3>
 </div>
 </div>
 </div>
@@ -1738,12 +1674,14 @@ Historic records (&lt; 1976): 254
 </div>
 </clipboard-copy>
 </div>
-<div class="highlight-ipynb hl-python"><pre><span></span><span class="n">pop_change</span> <span class="o">=</span> <span class="n">calculate_rate_of_change_first_last</span><span class="p">(</span>
+<div class="highlight-ipynb hl-python"><pre><span></span><span class="c1"># Remember that this is a proportional metric; a density change of -0.8 in the leading edge means that though the time period examined, the leading edge has proportionally less individuals out of the total individuals then it did in the past.</span>
+<span class="n">pop_change</span> <span class="o">=</span> <span class="n">calculate_rate_of_change_first_last</span><span class="p">(</span>
     <span class="n">classified_historic</span><span class="p">,</span> <span class="n">classified_modern</span><span class="p">,</span> <span class="s2">"Populus angustifolia"</span><span class="p">,</span> <span class="n">custom_end_year</span><span class="o">=</span><span class="mi">2025</span>
 <span class="p">)</span>
 <span class="n">pop_change</span>
 </pre></div>
-<div class="clipboard-copy-txt" id="cell-4">pop_change = calculate_rate_of_change_first_last(
+<div class="clipboard-copy-txt" id="cell-4"># Remember that this is a proportional metric; a density change of -0.8 in the leading edge means that though the time period examined, the leading edge has proportionally less individuals out of the total individuals then it did in the past.
+pop_change = calculate_rate_of_change_first_last(
     classified_historic, classified_modern, "Populus angustifolia", custom_end_year=2025
 )
 pop_change</div>
@@ -1946,7 +1884,7 @@ pop_change</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="we-can-also-plot-the-population-density-of-the-modern-or-historic-polygons-on-a-3d-map">We can also plot the population density of the modern (or historic) polygons on a 3D map.<a class="anchor-link" href="#we-can-also-plot-the-population-density-of-the-modern-or-historic-polygons-on-a-3d-map">¶</a></h3>
+<h3 id="plot-population-density-on-a-3d-map">Plot population density on a 3D map.<a class="anchor-link" href="#plot-population-density-on-a-3d-map">¶</a></h3>
 </div>
 </div>
 </div>
@@ -1983,7 +1921,7 @@ create_interactive_map(classified_modern, if_save=False)</div>
 </div> <!-- jp-Notebook -->
 </div> <!-- jupyter-wrapper -->
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"25e39bb745e440b58c62d65f62f674b8": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "91de3d81e2f745479fba57a12690f666": {"model_name": "ForceLoadModel", "model_module": "jupyter-vue", "model_module_version": "^1.11.2", "state": {"_dom_classes": [], "_model_module": "jupyter-vue", "_model_module_version": "^1.11.2", "_model_name": "ForceLoadModel", "_view_count": null, "_view_module": null, "_view_module_version": "", "_view_name": null, "layout": "IPY_MODEL_25e39bb745e440b58c62d65f62f674b8", "tabbable": null, "tooltip": null}}, "3aada8448db746a3bb20d13a5ca03937": {"model_name": "ThemeModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeModel", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "dark": null, "dark_effective": null}}, "45261da7b2e04aae8d68ed7b9920a977": {"model_name": "ThemeColorsModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeColorsModel", "_theme_name": "light", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "accent": "#82B1FF", "anchor": null, "error": "#FF5252", "info": "#2196F3", "primary": "#1976D2", "secondary": "#424242", "success": "#4CAF50", "warning": "#FB8C00"}}, "b60c6d6a44b24592802924279f72421a": {"model_name": "ThemeColorsModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeColorsModel", "_theme_name": "dark", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "accent": "#FF4081", "anchor": null, "error": "#FF5252", "info": "#2196F3", "primary": "#2196F3", "secondary": "#424242", "success": "#4CAF50", "warning": "#FB8C00"}}, "5c572523afa1416288bccde1763a6169": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "03e452f0efe242098ee8b088eed2f801": {"model_name": "JupyterTransportModel", "model_module": "@deck.gl\/jupyter-widget", "model_module_version": "~9.0.*", "state": {"_dom_classes": [], "_model_module": "@deck.gl\/jupyter-widget", "_model_module_version": "~9.0.*", "_model_name": "JupyterTransportModel", "_view_count": null, "_view_module": "@deck.gl\/jupyter-widget", "_view_module_version": "~9.0.*", "_view_name": "JupyterTransportView", "carto_key": "", "configuration": null, "custom_libraries": null, "data_buffer": null, "google_maps_key": "", "height": 500, "json_input": "", "layout": "IPY_MODEL_5c572523afa1416288bccde1763a6169", "mapbox_key": "", "tabbable": null, "tooltip": true, "width": "100%"}}, "945d128110e8484d8c3304cb740d6d89": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "50b0b063ec2b48d8b8bb22b18a41a4b6": {"model_name": "JupyterTransportModel", "model_module": "@deck.gl\/jupyter-widget", "model_module_version": "~9.0.*", "state": {"_dom_classes": [], "_model_module": "@deck.gl\/jupyter-widget", "_model_module_version": "~9.0.*", "_model_name": "JupyterTransportModel", "_view_count": null, "_view_module": "@deck.gl\/jupyter-widget", "_view_module_version": "~9.0.*", "_view_name": "JupyterTransportView", "carto_key": null, "configuration": null, "custom_libraries": [], "data_buffer": null, "google_maps_key": null, "height": 500, "json_input": "", "layout": "IPY_MODEL_945d128110e8484d8c3304cb740d6d89", "mapbox_key": null, "tabbable": null, "tooltip": {"text": "Height (density): {elevationValue}"}, "width": "100%"}}, "fbb663fb1f8e4d23b5af9fc9130a799f": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "6a4eabaee13340c392d47f2c4ca36cea": {"model_name": "JupyterTransportModel", "model_module": "@deck.gl\/jupyter-widget", "model_module_version": "~9.0.*", "state": {"_dom_classes": [], "_model_module": "@deck.gl\/jupyter-widget", "_model_module_version": "~9.0.*", "_model_name": "JupyterTransportModel", "_view_count": null, "_view_module": "@deck.gl\/jupyter-widget", "_view_module_version": "~9.0.*", "_view_name": "JupyterTransportView", "carto_key": "", "configuration": null, "custom_libraries": null, "data_buffer": null, "google_maps_key": "", "height": 500, "json_input": "", "layout": "IPY_MODEL_fbb663fb1f8e4d23b5af9fc9130a799f", "mapbox_key": "", "tabbable": null, "tooltip": true, "width": "100%"}}, "ba2b6575083d49f380099b6b46cca665": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "59f708e0333f4cd682a3895064507400": {"model_name": "JupyterTransportModel", "model_module": "@deck.gl\/jupyter-widget", "model_module_version": "~9.0.*", "state": {"_dom_classes": [], "_model_module": "@deck.gl\/jupyter-widget", "_model_module_version": "~9.0.*", "_model_name": "JupyterTransportModel", "_view_count": null, "_view_module": "@deck.gl\/jupyter-widget", "_view_module_version": "~9.0.*", "_view_name": "JupyterTransportView", "carto_key": "", "configuration": null, "custom_libraries": null, "data_buffer": null, "google_maps_key": "", "height": 500, "json_input": "", "layout": "IPY_MODEL_ba2b6575083d49f380099b6b46cca665", "mapbox_key": "", "tabbable": null, "tooltip": true, "width": "100%"}}, "bc63e65235e84b46b3defd032e0b21fd": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "b3c37e457027495ea9c6835dba26ac2a": {"model_name": "JupyterTransportModel", "model_module": "@deck.gl\/jupyter-widget", "model_module_version": "~9.0.*", "state": {"_dom_classes": [], "_model_module": "@deck.gl\/jupyter-widget", "_model_module_version": "~9.0.*", "_model_name": "JupyterTransportModel", "_view_count": null, "_view_module": "@deck.gl\/jupyter-widget", "_view_module_version": "~9.0.*", "_view_name": "JupyterTransportView", "carto_key": "", "configuration": null, "custom_libraries": null, "data_buffer": null, "google_maps_key": "", "height": 500, "json_input": "", "layout": "IPY_MODEL_bc63e65235e84b46b3defd032e0b21fd", "mapbox_key": "", "tabbable": null, "tooltip": true, "width": "100%"}}}, "version_major": 2, "version_minor": 0}
+{"state": {"620321e8ea0c447abd38e0515d2799ec": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "9816e9bda0f346b8974b766a7bd1f964": {"model_name": "ForceLoadModel", "model_module": "jupyter-vue", "model_module_version": "^1.11.2", "state": {"_dom_classes": [], "_model_module": "jupyter-vue", "_model_module_version": "^1.11.2", "_model_name": "ForceLoadModel", "_view_count": null, "_view_module": null, "_view_module_version": "", "_view_name": null, "layout": "IPY_MODEL_620321e8ea0c447abd38e0515d2799ec", "tabbable": null, "tooltip": null}}, "09c72522c38b4175803edcb10d0d1d93": {"model_name": "ThemeModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeModel", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "dark": null, "dark_effective": null}}, "076188066bc54503b0863654eefac344": {"model_name": "ThemeColorsModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeColorsModel", "_theme_name": "light", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "accent": "#82B1FF", "anchor": null, "error": "#FF5252", "info": "#2196F3", "primary": "#1976D2", "secondary": "#424242", "success": "#4CAF50", "warning": "#FB8C00"}}, "82ac353dca2345db8d5ac4fa91b6f518": {"model_name": "ThemeColorsModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeColorsModel", "_theme_name": "dark", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "accent": "#FF4081", "anchor": null, "error": "#FF5252", "info": "#2196F3", "primary": "#2196F3", "secondary": "#424242", "success": "#4CAF50", "warning": "#FB8C00"}}, "f67518ab4649402c9be40ec5ab1abc41": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "4cf4d80142ba461aa060fc9485877df8": {"model_name": "JupyterTransportModel", "model_module": "@deck.gl\/jupyter-widget", "model_module_version": "~9.0.*", "state": {"_dom_classes": [], "_model_module": "@deck.gl\/jupyter-widget", "_model_module_version": "~9.0.*", "_model_name": "JupyterTransportModel", "_view_count": null, "_view_module": "@deck.gl\/jupyter-widget", "_view_module_version": "~9.0.*", "_view_name": "JupyterTransportView", "carto_key": "", "configuration": null, "custom_libraries": null, "data_buffer": null, "google_maps_key": "", "height": 500, "json_input": "", "layout": "IPY_MODEL_f67518ab4649402c9be40ec5ab1abc41", "mapbox_key": "", "tabbable": null, "tooltip": true, "width": "100%"}}, "bf19341f72a24e59bce4067beabe18a0": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "d403d150b7634ca2975be41bf2a859bd": {"model_name": "JupyterTransportModel", "model_module": "@deck.gl\/jupyter-widget", "model_module_version": "~9.0.*", "state": {"_dom_classes": [], "_model_module": "@deck.gl\/jupyter-widget", "_model_module_version": "~9.0.*", "_model_name": "JupyterTransportModel", "_view_count": null, "_view_module": "@deck.gl\/jupyter-widget", "_view_module_version": "~9.0.*", "_view_name": "JupyterTransportView", "carto_key": null, "configuration": null, "custom_libraries": [], "data_buffer": null, "google_maps_key": null, "height": 500, "json_input": "", "layout": "IPY_MODEL_bf19341f72a24e59bce4067beabe18a0", "mapbox_key": null, "tabbable": null, "tooltip": {"text": "Height (density): {elevationValue}"}, "width": "100%"}}, "2b406a3dc71744fe8535115dce6661d1": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "abf25d492f9441a4890c34d73a733a4b": {"model_name": "JupyterTransportModel", "model_module": "@deck.gl\/jupyter-widget", "model_module_version": "~9.0.*", "state": {"_dom_classes": [], "_model_module": "@deck.gl\/jupyter-widget", "_model_module_version": "~9.0.*", "_model_name": "JupyterTransportModel", "_view_count": null, "_view_module": "@deck.gl\/jupyter-widget", "_view_module_version": "~9.0.*", "_view_name": "JupyterTransportView", "carto_key": "", "configuration": null, "custom_libraries": null, "data_buffer": null, "google_maps_key": "", "height": 500, "json_input": "", "layout": "IPY_MODEL_2b406a3dc71744fe8535115dce6661d1", "mapbox_key": "", "tabbable": null, "tooltip": true, "width": "100%"}}, "bd27c232b5fd43c9909a6f7b2dbdec04": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "a1e301976d874f80a62fc8be06642193": {"model_name": "JupyterTransportModel", "model_module": "@deck.gl\/jupyter-widget", "model_module_version": "~9.0.*", "state": {"_dom_classes": [], "_model_module": "@deck.gl\/jupyter-widget", "_model_module_version": "~9.0.*", "_model_name": "JupyterTransportModel", "_view_count": null, "_view_module": "@deck.gl\/jupyter-widget", "_view_module_version": "~9.0.*", "_view_name": "JupyterTransportView", "carto_key": "", "configuration": null, "custom_libraries": null, "data_buffer": null, "google_maps_key": "", "height": 500, "json_input": "", "layout": "IPY_MODEL_bd27c232b5fd43c9909a6f7b2dbdec04", "mapbox_key": "", "tabbable": null, "tooltip": true, "width": "100%"}}, "6fb6f388f3444e8586631ba0bc7b522e": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "ae40152abbd44b3b85c126fd4b72ff16": {"model_name": "JupyterTransportModel", "model_module": "@deck.gl\/jupyter-widget", "model_module_version": "~9.0.*", "state": {"_dom_classes": [], "_model_module": "@deck.gl\/jupyter-widget", "_model_module_version": "~9.0.*", "_model_name": "JupyterTransportModel", "_view_count": null, "_view_module": "@deck.gl\/jupyter-widget", "_view_module_version": "~9.0.*", "_view_name": "JupyterTransportView", "carto_key": "", "configuration": null, "custom_libraries": null, "data_buffer": null, "google_maps_key": "", "height": 500, "json_input": "", "layout": "IPY_MODEL_6fb6f388f3444e8586631ba0bc7b522e", "mapbox_key": "", "tabbable": null, "tooltip": true, "width": "100%"}}}, "version_major": 2, "version_minor": 0}
 </script>
 
         <style>
@@ -2012,7 +1950,7 @@ create_interactive_map(classified_modern, if_save=False)</div>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="September 6, 2025 15:00:44 UTC"><span class="timeago" datetime="2025-09-06T15:00:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 6, 2025 15:00:44 UTC">2025-09-06</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="September 7, 2025 00:33:17 UTC"><span class="timeago" datetime="2025-09-07T00:33:17+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 7, 2025 00:33:17 UTC">2025-09-07</span>
   </span>
 
     

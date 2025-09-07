@@ -12,7 +12,7 @@
         <meta name="author" content="anytko">
       
       
-        <link rel="canonical" href="https://anytko.github.io/ecospat/examples/persistence_raster/">
+        <link rel="canonical" href="https://anytko.github.io/ecospat/examples/propagule_pressure_raster/">
       
       
         <link rel="prev" href="../population_density/">
@@ -26,7 +26,7 @@
     
     
       
-        <title>Persistence raster - ecospat</title>
+        <title>Propagule pressure raster - ecospat</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#steps-and-pipeline-for-creating-and-visualizing-a-persistence-raster-for-a-species-given-its-modern-distribution-northward-movement-and-population-density-change" class="md-skip">
+        <a href="#creating-and-visualizing-a-propagule-pressure-raster" class="md-skip">
           Skip to content
         </a>
       
@@ -118,7 +118,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Persistence raster
+              Propagule pressure raster
             
           </span>
         </div>
@@ -590,7 +590,7 @@
   
   
   <span class="md-ellipsis">
-    Persistence raster
+    Propagule pressure raster
     
   </span>
   
@@ -603,7 +603,7 @@
   
   
   <span class="md-ellipsis">
-    Persistence raster
+    Propagule pressure raster
     
   </span>
   
@@ -624,13 +624,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#steps-and-pipeline-for-creating-and-visualizing-a-persistence-raster-for-a-species-given-its-modern-distribution-northward-movement-and-population-density-change" class="md-nav__link">
+  <a href="#creating-and-visualizing-a-propagule-pressure-raster" class="md-nav__link">
     <span class="md-ellipsis">
-      Steps and pipeline for creating and visualizing a persistence raster for a species given it's modern distribution, northward movement, and population density change.
+      Creating and visualizing a propagule pressure raster
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Steps and pipeline for creating and visualizing a persistence raster for a species given it&#39;s modern distribution, northward movement, and population density change.">
+    <nav class="md-nav" aria-label="Creating and visualizing a propagule pressure raster">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -644,81 +644,81 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#first-we-need-to-classify-the-historical-range-edges" class="md-nav__link">
+  <a href="#classify-historical-range-edges" class="md-nav__link">
     <span class="md-ellipsis">
-      First, we need to classify the historical range edges.
+      Classify historical range edges
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#then-we-need-to-classify-the-modern-range-edges" class="md-nav__link">
+  <a href="#classify-modern-range-edges" class="md-nav__link">
     <span class="md-ellipsis">
-      Then we need to classify the modern range edges.
+      Classify modern range edges.
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#next-we-will-calculate-the-northward-rate-of-change-we-will-also-clean-this-dataframe-to-only-include-the-movement-for-leading-core-and-trailing-populations" class="md-nav__link">
+  <a href="#calculate-the-northward-movement" class="md-nav__link">
     <span class="md-ellipsis">
-      Next we will calculate the northward rate of change. We will also clean this dataframe to only include the movement for leading, core, and trailing populations.
+      Calculate the northward movement
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#after-we-will-calculate-the-population-density-change-and-clean-the-dataframe-to-only-include-density-change-for-leading-core-and-trailing-populations" class="md-nav__link">
+  <a href="#calculate-population-density-change" class="md-nav__link">
     <span class="md-ellipsis">
-      After, we will calculate the population density change and clean the dataframe to only include density change for leading, core, and trailing populations.
+      Calculate population density change
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#we-will-then-merge-these-dataframes-and-prepare-them-for-persistence-raster-creation" class="md-nav__link">
+  <a href="#merge-dataframes-and-prepare-for-rasterization" class="md-nav__link">
     <span class="md-ellipsis">
-      We will then merge these dataframes and prepare them for persistence raster creation.
+      Merge dataframes and prepare for rasterization
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#once-the-data-is-preped-we-will-rasterize-each-element-into-one-raster-object-of-4-different-bands-we-can-either-rasterize-just-the-range-of-the-species-rasterize_multiband_gdf_match-or-we-can-extend-this-raster-to-the-entire-world-rasterize_multiband_gdf_world" class="md-nav__link">
+  <a href="#rasterization" class="md-nav__link">
     <span class="md-ellipsis">
-      Once the data is preped, we will rasterize each element into one raster object of 4 different bands. We can either rasterize just the range of the species (rasterize_multiband_gdf_match) or we can extend this raster to the entire world (rasterize_multiband_gdf_world).
+      Rasterization
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#after-rasterizing-the-data-we-can-now-construct-the-persistence-raster" class="md-nav__link">
+  <a href="#construct-propagule-pressure-raster" class="md-nav__link">
     <span class="md-ellipsis">
-      After rasterizing the data, we can now construct the persistence raster.
+      Construct propagule pressure raster.
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-we-can-also-save-this-raster-as-a-tif" class="md-nav__link">
+  <a href="#optional-save-raster-as-a-tif" class="md-nav__link">
     <span class="md-ellipsis">
-      (Optional) We can also save this raster as a .tif
+      (Optional) Save raster as a .tif
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#to-display-this-saved-tif-raster-we-can-use-the-add_raster-method-there-is-already-an-example-raster-download-within-the-package-to-add-here" class="md-nav__link">
+  <a href="#view-raster" class="md-nav__link">
     <span class="md-ellipsis">
-      To display this saved .tif raster we can use the .add_raster method. There is already an example raster download within the package to add here.
+      View raster
     </span>
   </a>
   
@@ -735,21 +735,6 @@
       Pipeline to generate persistence raster
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Pipeline to generate persistence raster">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#for-the-simplified-pipeline-we-will-still-need-to-fetch-the-gbif-data-calculate-the-northward-movement-and-the-population-density-change" class="md-nav__link">
-    <span class="md-ellipsis">
-      For the simplified pipeline, we will still need to fetch the gbif data, calculate the northward movement, and the population density change.
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -780,29 +765,6 @@
   
   <span class="md-ellipsis">
     Individual persistence
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../widgets.ipynb" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    None
     
   </span>
   
@@ -982,13 +944,13 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#steps-and-pipeline-for-creating-and-visualizing-a-persistence-raster-for-a-species-given-its-modern-distribution-northward-movement-and-population-density-change" class="md-nav__link">
+  <a href="#creating-and-visualizing-a-propagule-pressure-raster" class="md-nav__link">
     <span class="md-ellipsis">
-      Steps and pipeline for creating and visualizing a persistence raster for a species given it's modern distribution, northward movement, and population density change.
+      Creating and visualizing a propagule pressure raster
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Steps and pipeline for creating and visualizing a persistence raster for a species given it&#39;s modern distribution, northward movement, and population density change.">
+    <nav class="md-nav" aria-label="Creating and visualizing a propagule pressure raster">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1002,81 +964,81 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#first-we-need-to-classify-the-historical-range-edges" class="md-nav__link">
+  <a href="#classify-historical-range-edges" class="md-nav__link">
     <span class="md-ellipsis">
-      First, we need to classify the historical range edges.
+      Classify historical range edges
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#then-we-need-to-classify-the-modern-range-edges" class="md-nav__link">
+  <a href="#classify-modern-range-edges" class="md-nav__link">
     <span class="md-ellipsis">
-      Then we need to classify the modern range edges.
+      Classify modern range edges.
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#next-we-will-calculate-the-northward-rate-of-change-we-will-also-clean-this-dataframe-to-only-include-the-movement-for-leading-core-and-trailing-populations" class="md-nav__link">
+  <a href="#calculate-the-northward-movement" class="md-nav__link">
     <span class="md-ellipsis">
-      Next we will calculate the northward rate of change. We will also clean this dataframe to only include the movement for leading, core, and trailing populations.
+      Calculate the northward movement
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#after-we-will-calculate-the-population-density-change-and-clean-the-dataframe-to-only-include-density-change-for-leading-core-and-trailing-populations" class="md-nav__link">
+  <a href="#calculate-population-density-change" class="md-nav__link">
     <span class="md-ellipsis">
-      After, we will calculate the population density change and clean the dataframe to only include density change for leading, core, and trailing populations.
+      Calculate population density change
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#we-will-then-merge-these-dataframes-and-prepare-them-for-persistence-raster-creation" class="md-nav__link">
+  <a href="#merge-dataframes-and-prepare-for-rasterization" class="md-nav__link">
     <span class="md-ellipsis">
-      We will then merge these dataframes and prepare them for persistence raster creation.
+      Merge dataframes and prepare for rasterization
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#once-the-data-is-preped-we-will-rasterize-each-element-into-one-raster-object-of-4-different-bands-we-can-either-rasterize-just-the-range-of-the-species-rasterize_multiband_gdf_match-or-we-can-extend-this-raster-to-the-entire-world-rasterize_multiband_gdf_world" class="md-nav__link">
+  <a href="#rasterization" class="md-nav__link">
     <span class="md-ellipsis">
-      Once the data is preped, we will rasterize each element into one raster object of 4 different bands. We can either rasterize just the range of the species (rasterize_multiband_gdf_match) or we can extend this raster to the entire world (rasterize_multiband_gdf_world).
+      Rasterization
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#after-rasterizing-the-data-we-can-now-construct-the-persistence-raster" class="md-nav__link">
+  <a href="#construct-propagule-pressure-raster" class="md-nav__link">
     <span class="md-ellipsis">
-      After rasterizing the data, we can now construct the persistence raster.
+      Construct propagule pressure raster.
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#optional-we-can-also-save-this-raster-as-a-tif" class="md-nav__link">
+  <a href="#optional-save-raster-as-a-tif" class="md-nav__link">
     <span class="md-ellipsis">
-      (Optional) We can also save this raster as a .tif
+      (Optional) Save raster as a .tif
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#to-display-this-saved-tif-raster-we-can-use-the-add_raster-method-there-is-already-an-example-raster-download-within-the-package-to-add-here" class="md-nav__link">
+  <a href="#view-raster" class="md-nav__link">
     <span class="md-ellipsis">
-      To display this saved .tif raster we can use the .add_raster method. There is already an example raster download within the package to add here.
+      View raster
     </span>
   </a>
   
@@ -1093,21 +1055,6 @@
       Pipeline to generate persistence raster
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Pipeline to generate persistence raster">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#for-the-simplified-pipeline-we-will-still-need-to-fetch-the-gbif-data-calculate-the-northward-movement-and-the-population-density-change" class="md-nav__link">
-    <span class="md-ellipsis">
-      For the simplified pipeline, we will still need to fetch the gbif data, calculate the northward movement, and the population density change.
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
         
@@ -1129,7 +1076,7 @@
               <article class="md-content__inner md-typeset">
                 
 
-    <a href="/ecospat/examples/persistence_raster/persistence_raster.ipynb" title="Download Notebook" class="md-content__button md-icon">
+    <a href="/ecospat/examples/propagule_pressure_raster/propagule_pressure_raster.ipynb" title="Download Notebook" class="md-content__button md-icon">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5 20h14v-2H5m14-9h-4V3H9v6H5l7 7z"/></svg>
     </a>
 
@@ -1142,7 +1089,7 @@
   
 
 
-  <h1>Persistence raster</h1>
+  <h1>Propagule pressure raster</h1>
 
 <script>
 (function (global, factory) {
@@ -1614,7 +1561,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p><a href="https://colab.research.google.com/github/anytko/ecospat/blob/main/docs/examples/persistence_raster.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></a></p>
+<p><a href="https://colab.research.google.com/github/anytko/ecospat/blob/main/docs/examples/propagule_pressure_raster.ipynb"><img alt="Open In Colab" src="https://colab.research.google.com/assets/colab-badge.svg"/></a></p>
 </div>
 </div>
 </div>
@@ -1654,7 +1601,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="steps-and-pipeline-for-creating-and-visualizing-a-persistence-raster-for-a-species-given-its-modern-distribution-northward-movement-and-population-density-change">Steps and pipeline for creating and visualizing a persistence raster for a species given it's modern distribution, northward movement, and population density change.<a class="anchor-link" href="#steps-and-pipeline-for-creating-and-visualizing-a-persistence-raster-for-a-species-given-its-modern-distribution-northward-movement-and-population-density-change">¶</a></h2>
+<h2 id="creating-and-visualizing-a-propagule-pressure-raster">Creating and visualizing a propagule pressure raster<a class="anchor-link" href="#creating-and-visualizing-a-propagule-pressure-raster">¶</a></h2>
 </div>
 </div>
 </div>
@@ -1731,7 +1678,7 @@ from ecospat.stand_alone_functions import (
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="first-we-need-to-classify-the-historical-range-edges">First, we need to classify the historical range edges.<a class="anchor-link" href="#first-we-need-to-classify-the-historical-range-edges">¶</a></h4>
+<h4 id="classify-historical-range-edges">Classify historical range edges<a class="anchor-link" href="#classify-historical-range-edges">¶</a></h4>
 </div>
 </div>
 </div>
@@ -1788,7 +1735,7 @@ hist_range = process_species_historical_range(
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="then-we-need-to-classify-the-modern-range-edges">Then we need to classify the modern range edges.<a class="anchor-link" href="#then-we-need-to-classify-the-modern-range-edges">¶</a></h4>
+<h4 id="classify-modern-range-edges">Classify modern range edges.<a class="anchor-link" href="#classify-modern-range-edges">¶</a></h4>
 </div>
 </div>
 </div>
@@ -1844,7 +1791,7 @@ Historic records (&lt; 1976): 254
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="next-we-will-calculate-the-northward-rate-of-change-we-will-also-clean-this-dataframe-to-only-include-the-movement-for-leading-core-and-trailing-populations">Next we will calculate the northward rate of change. We will also clean this dataframe to only include the movement for leading, core, and trailing populations.<a class="anchor-link" href="#next-we-will-calculate-the-northward-rate-of-change-we-will-also-clean-this-dataframe-to-only-include-the-movement-for-leading-core-and-trailing-populations">¶</a></h4>
+<h4 id="calculate-the-northward-movement">Calculate the northward movement<a class="anchor-link" href="#calculate-the-northward-movement">¶</a></h4>
 </div>
 </div>
 </div>
@@ -1900,7 +1847,7 @@ northward_rate_df["category"] = northward_rate_df["category"].str.title()</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="after-we-will-calculate-the-population-density-change-and-clean-the-dataframe-to-only-include-density-change-for-leading-core-and-trailing-populations">After, we will calculate the population density change and clean the dataframe to only include density change for leading, core, and trailing populations.<a class="anchor-link" href="#after-we-will-calculate-the-population-density-change-and-clean-the-dataframe-to-only-include-density-change-for-leading-core-and-trailing-populations">¶</a></h4>
+<h4 id="calculate-population-density-change">Calculate population density change<a class="anchor-link" href="#calculate-population-density-change">¶</a></h4>
 </div>
 </div>
 </div>
@@ -1970,7 +1917,7 @@ change["Category"] = change["Category"].str.title()</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="we-will-then-merge-these-dataframes-and-prepare-them-for-persistence-raster-creation">We will then merge these dataframes and prepare them for persistence raster creation.<a class="anchor-link" href="#we-will-then-merge-these-dataframes-and-prepare-them-for-persistence-raster-creation">¶</a></h4>
+<h4 id="merge-dataframes-and-prepare-for-rasterization">Merge dataframes and prepare for rasterization<a class="anchor-link" href="#merge-dataframes-and-prepare-for-rasterization">¶</a></h4>
 </div>
 </div>
 </div>
@@ -2106,7 +2053,7 @@ preped_gdf_new.head()</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="once-the-data-is-preped-we-will-rasterize-each-element-into-one-raster-object-of-4-different-bands-we-can-either-rasterize-just-the-range-of-the-species-rasterize_multiband_gdf_match-or-we-can-extend-this-raster-to-the-entire-world-rasterize_multiband_gdf_world">Once the data is preped, we will rasterize each element into one raster object of 4 different bands. We can either rasterize just the range of the species (rasterize_multiband_gdf_match) or we can extend this raster to the entire world (rasterize_multiband_gdf_world).<a class="anchor-link" href="#once-the-data-is-preped-we-will-rasterize-each-element-into-one-raster-object-of-4-different-bands-we-can-either-rasterize-just-the-range-of-the-species-rasterize_multiband_gdf_match-or-we-can-extend-this-raster-to-the-entire-world-rasterize_multiband_gdf_world">¶</a></h4>
+<h4 id="rasterization">Rasterization<a class="anchor-link" href="#rasterization">¶</a></h4>
 </div>
 </div>
 </div>
@@ -2215,7 +2162,7 @@ plt.show()</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="after-rasterizing-the-data-we-can-now-construct-the-persistence-raster">After rasterizing the data, we can now construct the persistence raster.<a class="anchor-link" href="#after-rasterizing-the-data-we-can-now-construct-the-persistence-raster">¶</a></h4>
+<h4 id="construct-propagule-pressure-raster">Construct propagule pressure raster.<a class="anchor-link" href="#construct-propagule-pressure-raster">¶</a></h4>
 </div>
 </div>
 </div>
@@ -2304,7 +2251,7 @@ plt.show()</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="optional-we-can-also-save-this-raster-as-a-tif">(Optional) We can also save this raster as a .tif<a class="anchor-link" href="#optional-we-can-also-save-this-raster-as-a-tif">¶</a></h4>
+<h4 id="optional-save-raster-as-a-tif">(Optional) Save raster as a .tif<a class="anchor-link" href="#optional-save-raster-as-a-tif">¶</a></h4>
 </div>
 </div>
 </div>
@@ -2342,7 +2289,7 @@ plt.show()</div>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="to-display-this-saved-tif-raster-we-can-use-the-add_raster-method-there-is-already-an-example-raster-download-within-the-package-to-add-here">To display this saved .tif raster we can use the .add_raster method. There is already an example raster download within the package to add here.<a class="anchor-link" href="#to-display-this-saved-tif-raster-we-can-use-the-add_raster-method-there-is-already-an-example-raster-download-within-the-package-to-add-here">¶</a></h4>
+<h4 id="view-raster">View raster<a class="anchor-link" href="#view-raster">¶</a></h4>
 </div>
 </div>
 </div>
@@ -2396,12 +2343,12 @@ persistence_map</div>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child jp-OutputArea-executeResult">
 <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
-<div class="jupyter-widgets jp-OutputArea-output jp-OutputArea-executeResult" id="1f63c580-f851-4e11-a518-1858b6f3a18c" tabindex="0">
+<div class="jupyter-widgets jp-OutputArea-output jp-OutputArea-executeResult" id="8b1ca0f5-46df-42d2-a5ff-1b63e1c77aa7" tabindex="0">
 <script type="text/javascript">
-var element = document.getElementById('1f63c580-f851-4e11-a518-1858b6f3a18c');
+var element = document.getElementById('8b1ca0f5-46df-42d2-a5ff-1b63e1c77aa7');
 </script>
 <script type="application/vnd.jupyter.widget-view+json">
-{"version_major": 2, "version_minor": 0, "model_id": "8167df8a116b4aee97b60d2c2886bc12"}
+{"version_major": 2, "version_minor": 0, "model_id": "a485cd0ea55440a3a440bc46fd847ef8"}
 </script>
 </div>
 </div>
@@ -2416,17 +2363,6 @@ var element = document.getElementById('1f63c580-f851-4e11-a518-1858b6f3a18c');
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h3 id="pipeline-to-generate-persistence-raster">Pipeline to generate persistence raster<a class="anchor-link" href="#pipeline-to-generate-persistence-raster">¶</a></h3>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h4 id="for-the-simplified-pipeline-we-will-still-need-to-fetch-the-gbif-data-calculate-the-northward-movement-and-the-population-density-change">For the simplified pipeline, we will still need to fetch the gbif data, calculate the northward movement, and the population density change.<a class="anchor-link" href="#for-the-simplified-pipeline-we-will-still-need-to-fetch-the-gbif-data-calculate-the-northward-movement-and-the-population-density-change">¶</a></h4>
 </div>
 </div>
 </div>
@@ -2516,7 +2452,7 @@ plt.show()</div>
 </div> <!-- jp-Notebook -->
 </div> <!-- jupyter-wrapper -->
 <script type="application/vnd.jupyter.widget-state+json">
-{"state": {"f2237433a7f54a509f1f58dc187c4708": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "37a0c94b6a9b4a54b1ab6cea91c13660": {"model_name": "ForceLoadModel", "model_module": "jupyter-vue", "model_module_version": "^1.11.2", "state": {"_dom_classes": [], "_model_module": "jupyter-vue", "_model_module_version": "^1.11.2", "_model_name": "ForceLoadModel", "_view_count": null, "_view_module": null, "_view_module_version": "", "_view_name": null, "layout": "IPY_MODEL_f2237433a7f54a509f1f58dc187c4708", "tabbable": null, "tooltip": null}}, "bdf9d5dd5c274a2c84090f74e4b757bf": {"model_name": "ThemeModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeModel", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "dark": null, "dark_effective": null}}, "8c9ec170eb024afeb20de0e07f904cde": {"model_name": "ThemeColorsModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeColorsModel", "_theme_name": "light", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "accent": "#82B1FF", "anchor": null, "error": "#FF5252", "info": "#2196F3", "primary": "#1976D2", "secondary": "#424242", "success": "#4CAF50", "warning": "#FB8C00"}}, "797530f5043b4ca29a4ac028d6ded61a": {"model_name": "ThemeColorsModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeColorsModel", "_theme_name": "dark", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "accent": "#FF4081", "anchor": null, "error": "#FF5252", "info": "#2196F3", "primary": "#2196F3", "secondary": "#424242", "success": "#4CAF50", "warning": "#FB8C00"}}, "19b52be445264246b89ebc8472da16b3": {"model_name": "LeafletMapStyleModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletMapStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "cursor": "grab"}}, "aff345a65fea421e937acd1a33875450": {"model_name": "LeafletMapStyleModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletMapStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "cursor": "move"}}, "16164bf220fa48339baff5e58b28df0f": {"model_name": "LeafletTileLayerModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletTileLayerModel", "_view_count": null, "_view_module": "jupyter-leaflet", "_view_module_version": "^0.20", "_view_name": "LeafletTileLayerView", "attribution": "&copy; <a href=\"https:\/\/www.openstreetmap.org\/copyright\">OpenStreetMap<\/a> contributors", "base": true, "bottom": true, "bounds": null, "detect_retina": false, "loading": false, "max_native_zoom": null, "max_zoom": 19, "min_native_zoom": null, "min_zoom": 1, "name": "OpenStreetMap.Mapnik", "no_wrap": false, "opacity": 1.0, "options": ["attribution", "bounds", "detect_retina", "max_native_zoom", "max_zoom", "min_native_zoom", "min_zoom", "no_wrap", "pm_ignore", "tile_size", "tms", "zoom_offset"], "pane": "", "pm_ignore": true, "popup": null, "popup_max_height": null, "popup_max_width": 300, "popup_min_width": 50, "show_loading": false, "snap_ignore": true, "subitems": [], "tile_size": 256, "tms": false, "url": "https:\/\/tile.openstreetmap.org\/{z}\/{x}\/{y}.png", "visible": true, "zoom_offset": 0}}, "bb09ff7ec39940a5b5bdcf3c85f3ce07": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": "600px", "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "cf8bf246f91b45eb91df77ac0f8c7ff6": {"model_name": "LeafletMapStyleModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletMapStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "cursor": "grab"}}, "1473ff459b1041ceb8b62a63d426e17c": {"model_name": "LeafletMapModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_dom_classes": [], "_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletMapModel", "_view_count": null, "_view_module": "jupyter-leaflet", "_view_module_version": "^0.20", "_view_name": "LeafletMapView", "bottom": 0.0, "bounce_at_zoom_limits": true, "box_zoom": true, "center": [42.94033923363183, -80.9033203125], "close_popup_on_click": true, "controls": ["IPY_MODEL_f6ced2dcf824408c9a03d8c56af8106e", "IPY_MODEL_6e7d4df49b8c44c089dcdfd373bbb6fe"], "crs": {"name": "EPSG3857", "custom": false}, "default_style": "IPY_MODEL_19b52be445264246b89ebc8472da16b3", "double_click_zoom": true, "dragging": true, "dragging_style": "IPY_MODEL_aff345a65fea421e937acd1a33875450", "east": 0.0, "fullscreen": false, "inertia": true, "inertia_deceleration": 3000, "inertia_max_speed": 1500, "interpolation": "bilinear", "keyboard": true, "keyboard_pan_offset": 80, "keyboard_zoom_offset": 1, "layers": ["IPY_MODEL_16164bf220fa48339baff5e58b28df0f"], "layout": "IPY_MODEL_bb09ff7ec39940a5b5bdcf3c85f3ce07", "left": 9007199254740991.0, "max_zoom": null, "min_zoom": null, "modisdate": "2025-09-05", "north": 0.0, "options": ["bounce_at_zoom_limits", "box_zoom", "center", "close_popup_on_click", "double_click_zoom", "dragging", "fullscreen", "inertia", "inertia_deceleration", "inertia_max_speed", "interpolation", "keyboard", "keyboard_pan_offset", "keyboard_zoom_offset", "max_zoom", "min_zoom", "prefer_canvas", "scroll_wheel_zoom", "tap", "tap_tolerance", "touch_zoom", "world_copy_jump", "zoom", "zoom_animation_threshold", "zoom_delta", "zoom_snap"], "panes": {}, "prefer_canvas": false, "right": 0.0, "scroll_wheel_zoom": true, "south": 0.0, "style": "IPY_MODEL_cf8bf246f91b45eb91df77ac0f8c7ff6", "tabbable": null, "tap": true, "tap_tolerance": 15, "tooltip": null, "top": 9007199254740991.0, "touch_zoom": true, "west": 0.0, "window_url": "", "world_copy_jump": false, "zoom": 4.0, "zoom_animation_threshold": 4, "zoom_delta": 1.0, "zoom_snap": 1.0}}, "f6ced2dcf824408c9a03d8c56af8106e": {"model_name": "LeafletZoomControlModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletZoomControlModel", "_view_count": null, "_view_module": "jupyter-leaflet", "_view_module_version": "^0.20", "_view_name": "LeafletZoomControlView", "options": ["position", "zoom_in_text", "zoom_in_title", "zoom_out_text", "zoom_out_title"], "position": "topleft", "zoom_in_text": "+", "zoom_in_title": "Zoom in", "zoom_out_text": "-", "zoom_out_title": "Zoom out"}}, "6e7d4df49b8c44c089dcdfd373bbb6fe": {"model_name": "LeafletAttributionControlModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletAttributionControlModel", "_view_count": null, "_view_module": "jupyter-leaflet", "_view_module_version": "^0.20", "_view_name": "LeafletAttributionControlView", "options": ["position", "prefix"], "position": "bottomright", "prefix": "ipyleaflet"}}, "a83305d8a31641d6b0bdeb8545f9cc13": {"model_name": "LeafletMapStyleModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletMapStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "cursor": "grab"}}, "90b2ac8367994e2baa2508bdb198b10c": {"model_name": "LeafletMapStyleModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletMapStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "cursor": "move"}}, "47a9856873284c5fb0431a5128d6e895": {"model_name": "LeafletTileLayerModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletTileLayerModel", "_view_count": null, "_view_module": "jupyter-leaflet", "_view_module_version": "^0.20", "_view_name": "LeafletTileLayerView", "attribution": "&copy; <a href=\"https:\/\/www.openstreetmap.org\/copyright\">OpenStreetMap<\/a> contributors", "base": true, "bottom": true, "bounds": null, "detect_retina": false, "loading": false, "max_native_zoom": null, "max_zoom": 19, "min_native_zoom": null, "min_zoom": 1, "name": "OpenStreetMap.Mapnik", "no_wrap": false, "opacity": 1.0, "options": ["attribution", "bounds", "detect_retina", "max_native_zoom", "max_zoom", "min_native_zoom", "min_zoom", "no_wrap", "pm_ignore", "tile_size", "tms", "zoom_offset"], "pane": "", "pm_ignore": true, "popup": null, "popup_max_height": null, "popup_max_width": 300, "popup_min_width": 50, "show_loading": false, "snap_ignore": true, "subitems": [], "tile_size": 256, "tms": false, "url": "https:\/\/tile.openstreetmap.org\/{z}\/{x}\/{y}.png", "visible": true, "zoom_offset": 0}}, "a6f34ca6fbb54918b43a4b2af4065d80": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": "600px", "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "02386814b76f4e62ba3eab3f8abf14fb": {"model_name": "LeafletMapStyleModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletMapStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "cursor": "grab"}}, "8167df8a116b4aee97b60d2c2886bc12": {"model_name": "LeafletMapModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_dom_classes": [], "_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletMapModel", "_view_count": null, "_view_module": "jupyter-leaflet", "_view_module_version": "^0.20", "_view_name": "LeafletMapView", "bottom": 0.0, "bounce_at_zoom_limits": true, "box_zoom": true, "center": [41.245052, -109.464795], "close_popup_on_click": true, "controls": ["IPY_MODEL_737fb2b6539a49cfbc4f3d0d38151204", "IPY_MODEL_a40e57855a724ec6863944c80608b7ef"], "crs": {"name": "EPSG3857", "custom": false}, "default_style": "IPY_MODEL_a83305d8a31641d6b0bdeb8545f9cc13", "double_click_zoom": true, "dragging": true, "dragging_style": "IPY_MODEL_90b2ac8367994e2baa2508bdb198b10c", "east": 0.0, "fullscreen": false, "inertia": true, "inertia_deceleration": 3000, "inertia_max_speed": 1500, "interpolation": "bilinear", "keyboard": true, "keyboard_pan_offset": 80, "keyboard_zoom_offset": 1, "layers": ["IPY_MODEL_47a9856873284c5fb0431a5128d6e895", "IPY_MODEL_966634c5f1d34efd8f268b15a4715a6d", "IPY_MODEL_b5a4d5fd80cf4ade88af182f9226f4f8"], "layout": "IPY_MODEL_a6f34ca6fbb54918b43a4b2af4065d80", "left": 9007199254740991.0, "max_zoom": null, "min_zoom": null, "modisdate": "2025-09-05", "north": 0.0, "options": ["bounce_at_zoom_limits", "box_zoom", "center", "close_popup_on_click", "double_click_zoom", "dragging", "fullscreen", "inertia", "inertia_deceleration", "inertia_max_speed", "interpolation", "keyboard", "keyboard_pan_offset", "keyboard_zoom_offset", "max_zoom", "min_zoom", "prefer_canvas", "scroll_wheel_zoom", "tap", "tap_tolerance", "touch_zoom", "world_copy_jump", "zoom", "zoom_animation_threshold", "zoom_delta", "zoom_snap"], "panes": {}, "prefer_canvas": false, "right": 0.0, "scroll_wheel_zoom": true, "south": 0.0, "style": "IPY_MODEL_02386814b76f4e62ba3eab3f8abf14fb", "tabbable": null, "tap": true, "tap_tolerance": 15, "tooltip": null, "top": 9007199254740991.0, "touch_zoom": true, "west": 0.0, "window_url": "", "world_copy_jump": false, "zoom": 3.0, "zoom_animation_threshold": 4, "zoom_delta": 1.0, "zoom_snap": 1.0}}, "737fb2b6539a49cfbc4f3d0d38151204": {"model_name": "LeafletZoomControlModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletZoomControlModel", "_view_count": null, "_view_module": "jupyter-leaflet", "_view_module_version": "^0.20", "_view_name": "LeafletZoomControlView", "options": ["position", "zoom_in_text", "zoom_in_title", "zoom_out_text", "zoom_out_title"], "position": "topleft", "zoom_in_text": "+", "zoom_in_title": "Zoom in", "zoom_out_text": "-", "zoom_out_title": "Zoom out"}}, "a40e57855a724ec6863944c80608b7ef": {"model_name": "LeafletAttributionControlModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletAttributionControlModel", "_view_count": null, "_view_module": "jupyter-leaflet", "_view_module_version": "^0.20", "_view_name": "LeafletAttributionControlView", "options": ["position", "prefix"], "position": "bottomright", "prefix": "ipyleaflet"}}, "966634c5f1d34efd8f268b15a4715a6d": {"model_name": "LeafletTileLayerModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletTileLayerModel", "_view_count": null, "_view_module": "jupyter-leaflet", "_view_module_version": "^0.20", "_view_name": "LeafletTileLayerView", "attribution": "GBIF", "base": false, "bottom": true, "bounds": null, "detect_retina": false, "loading": false, "max_native_zoom": null, "max_zoom": 18, "min_native_zoom": null, "min_zoom": 0, "name": "GBIF Classic", "no_wrap": false, "opacity": 1.0, "options": ["attribution", "bounds", "detect_retina", "max_native_zoom", "max_zoom", "min_native_zoom", "min_zoom", "no_wrap", "pm_ignore", "tile_size", "tms", "zoom_offset"], "pane": "", "pm_ignore": true, "popup": null, "popup_max_height": null, "popup_max_width": 300, "popup_min_width": 50, "show_loading": false, "snap_ignore": true, "subitems": [], "tile_size": 256, "tms": false, "url": "https:\/\/tile.gbif.org\/3857\/omt\/{z}\/{x}\/{y}@1x.png?style=gbif-classic", "visible": true, "zoom_offset": 0}}, "b5a4d5fd80cf4ade88af182f9226f4f8": {"model_name": "LeafletTileLayerModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletTileLayerModel", "_view_count": null, "_view_module": "jupyter-leaflet", "_view_module_version": "^0.20", "_view_name": "LeafletTileLayerView", "attribution": "Raster file served by <a href='https:\/\/github.com\/banesullivan\/localtileserver' target='_blank'>localtileserver<\/a>.", "base": false, "bottom": true, "bounds": [[32.370717, -114.49631], [50.119387, -104.43328]], "detect_retina": false, "loading": false, "max_native_zoom": 30, "max_zoom": 30, "min_native_zoom": null, "min_zoom": 0, "name": "Persistence Raster", "no_wrap": false, "opacity": 1.0, "options": ["attribution", "bounds", "detect_retina", "max_native_zoom", "max_zoom", "min_native_zoom", "min_zoom", "no_wrap", "pm_ignore", "tile_size", "tms", "zoom_offset"], "pane": "", "pm_ignore": true, "popup": null, "popup_max_height": null, "popup_max_width": 300, "popup_min_width": 50, "show_loading": true, "snap_ignore": true, "subitems": [], "tile_size": 256, "tms": false, "url": "http:\/\/127.0.0.1:43225\/api\/tiles\/{z}\/{x}\/{y}.png?&filename=%2Fhome%2Frunner%2Fwork%2Fecospat%2Fecospat%2Fdocs%2Fexamples%2FPopulus_angustifolia_persistence_raster.tif&colormap=viridis", "visible": true, "zoom_offset": 0}}}, "version_major": 2, "version_minor": 0}
+{"state": {"0c8d566eee234806b112151afccc80f2": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "257ab70b1043421e8bea6ff3318e5d69": {"model_name": "ForceLoadModel", "model_module": "jupyter-vue", "model_module_version": "^1.11.2", "state": {"_dom_classes": [], "_model_module": "jupyter-vue", "_model_module_version": "^1.11.2", "_model_name": "ForceLoadModel", "_view_count": null, "_view_module": null, "_view_module_version": "", "_view_name": null, "layout": "IPY_MODEL_0c8d566eee234806b112151afccc80f2", "tabbable": null, "tooltip": null}}, "cac39c71c210479480236b5030961821": {"model_name": "ThemeModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeModel", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "dark": null, "dark_effective": null}}, "30e6990948794c0aa972f4dedbe940f6": {"model_name": "ThemeColorsModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeColorsModel", "_theme_name": "light", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "accent": "#82B1FF", "anchor": null, "error": "#FF5252", "info": "#2196F3", "primary": "#1976D2", "secondary": "#424242", "success": "#4CAF50", "warning": "#FB8C00"}}, "57f44f0bc70d4fa097f281a19262547e": {"model_name": "ThemeColorsModel", "model_module": "jupyter-vuetify", "model_module_version": "^1.11.3", "state": {"_model_module": "jupyter-vuetify", "_model_module_version": "^1.11.3", "_model_name": "ThemeColorsModel", "_theme_name": "dark", "_view_count": null, "_view_module": null, "_view_module_version": "^1.11.3", "_view_name": null, "accent": "#FF4081", "anchor": null, "error": "#FF5252", "info": "#2196F3", "primary": "#2196F3", "secondary": "#424242", "success": "#4CAF50", "warning": "#FB8C00"}}, "c63a4e3056e945dea54a3cb03419caf5": {"model_name": "LeafletMapStyleModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletMapStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "cursor": "grab"}}, "7d6221e8cca84c3abc285dbdbbd01dae": {"model_name": "LeafletMapStyleModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletMapStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "cursor": "move"}}, "63f8989818a34131bd9fe761c25ee06a": {"model_name": "LeafletTileLayerModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletTileLayerModel", "_view_count": null, "_view_module": "jupyter-leaflet", "_view_module_version": "^0.20", "_view_name": "LeafletTileLayerView", "attribution": "&copy; <a href=\"https:\/\/www.openstreetmap.org\/copyright\">OpenStreetMap<\/a> contributors", "base": true, "bottom": true, "bounds": null, "detect_retina": false, "loading": false, "max_native_zoom": null, "max_zoom": 19, "min_native_zoom": null, "min_zoom": 1, "name": "OpenStreetMap.Mapnik", "no_wrap": false, "opacity": 1.0, "options": ["attribution", "bounds", "detect_retina", "max_native_zoom", "max_zoom", "min_native_zoom", "min_zoom", "no_wrap", "pm_ignore", "tile_size", "tms", "zoom_offset"], "pane": "", "pm_ignore": true, "popup": null, "popup_max_height": null, "popup_max_width": 300, "popup_min_width": 50, "show_loading": false, "snap_ignore": true, "subitems": [], "tile_size": 256, "tms": false, "url": "https:\/\/tile.openstreetmap.org\/{z}\/{x}\/{y}.png", "visible": true, "zoom_offset": 0}}, "b696454e920a4e8cb4a89867f19ad1bc": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": "600px", "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "45f082d5d13f4f44a6afb1ef71671f5a": {"model_name": "LeafletMapStyleModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletMapStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "cursor": "grab"}}, "fc19a790dcf84222a7640fd7cfc50aaa": {"model_name": "LeafletMapModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_dom_classes": [], "_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletMapModel", "_view_count": null, "_view_module": "jupyter-leaflet", "_view_module_version": "^0.20", "_view_name": "LeafletMapView", "bottom": 0.0, "bounce_at_zoom_limits": true, "box_zoom": true, "center": [42.94033923363183, -80.9033203125], "close_popup_on_click": true, "controls": ["IPY_MODEL_5cdd2f79765048fd88cb80abbd91b007", "IPY_MODEL_86e70ffb88a740109472e752006c70d5"], "crs": {"name": "EPSG3857", "custom": false}, "default_style": "IPY_MODEL_c63a4e3056e945dea54a3cb03419caf5", "double_click_zoom": true, "dragging": true, "dragging_style": "IPY_MODEL_7d6221e8cca84c3abc285dbdbbd01dae", "east": 0.0, "fullscreen": false, "inertia": true, "inertia_deceleration": 3000, "inertia_max_speed": 1500, "interpolation": "bilinear", "keyboard": true, "keyboard_pan_offset": 80, "keyboard_zoom_offset": 1, "layers": ["IPY_MODEL_63f8989818a34131bd9fe761c25ee06a"], "layout": "IPY_MODEL_b696454e920a4e8cb4a89867f19ad1bc", "left": 9007199254740991.0, "max_zoom": null, "min_zoom": null, "modisdate": "2025-09-06", "north": 0.0, "options": ["bounce_at_zoom_limits", "box_zoom", "center", "close_popup_on_click", "double_click_zoom", "dragging", "fullscreen", "inertia", "inertia_deceleration", "inertia_max_speed", "interpolation", "keyboard", "keyboard_pan_offset", "keyboard_zoom_offset", "max_zoom", "min_zoom", "prefer_canvas", "scroll_wheel_zoom", "tap", "tap_tolerance", "touch_zoom", "world_copy_jump", "zoom", "zoom_animation_threshold", "zoom_delta", "zoom_snap"], "panes": {}, "prefer_canvas": false, "right": 0.0, "scroll_wheel_zoom": true, "south": 0.0, "style": "IPY_MODEL_45f082d5d13f4f44a6afb1ef71671f5a", "tabbable": null, "tap": true, "tap_tolerance": 15, "tooltip": null, "top": 9007199254740991.0, "touch_zoom": true, "west": 0.0, "window_url": "", "world_copy_jump": false, "zoom": 4.0, "zoom_animation_threshold": 4, "zoom_delta": 1.0, "zoom_snap": 1.0}}, "5cdd2f79765048fd88cb80abbd91b007": {"model_name": "LeafletZoomControlModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletZoomControlModel", "_view_count": null, "_view_module": "jupyter-leaflet", "_view_module_version": "^0.20", "_view_name": "LeafletZoomControlView", "options": ["position", "zoom_in_text", "zoom_in_title", "zoom_out_text", "zoom_out_title"], "position": "topleft", "zoom_in_text": "+", "zoom_in_title": "Zoom in", "zoom_out_text": "-", "zoom_out_title": "Zoom out"}}, "86e70ffb88a740109472e752006c70d5": {"model_name": "LeafletAttributionControlModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletAttributionControlModel", "_view_count": null, "_view_module": "jupyter-leaflet", "_view_module_version": "^0.20", "_view_name": "LeafletAttributionControlView", "options": ["position", "prefix"], "position": "bottomright", "prefix": "ipyleaflet"}}, "d903e5e3f2454bf8ad8260c748a75a0c": {"model_name": "LeafletMapStyleModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletMapStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "cursor": "grab"}}, "f77b6e18c2234a8d9b86baf4097eadfa": {"model_name": "LeafletMapStyleModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletMapStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "cursor": "move"}}, "edfebe6851ad459f924b3d39defdf91f": {"model_name": "LeafletTileLayerModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletTileLayerModel", "_view_count": null, "_view_module": "jupyter-leaflet", "_view_module_version": "^0.20", "_view_name": "LeafletTileLayerView", "attribution": "&copy; <a href=\"https:\/\/www.openstreetmap.org\/copyright\">OpenStreetMap<\/a> contributors", "base": true, "bottom": true, "bounds": null, "detect_retina": false, "loading": false, "max_native_zoom": null, "max_zoom": 19, "min_native_zoom": null, "min_zoom": 1, "name": "OpenStreetMap.Mapnik", "no_wrap": false, "opacity": 1.0, "options": ["attribution", "bounds", "detect_retina", "max_native_zoom", "max_zoom", "min_native_zoom", "min_zoom", "no_wrap", "pm_ignore", "tile_size", "tms", "zoom_offset"], "pane": "", "pm_ignore": true, "popup": null, "popup_max_height": null, "popup_max_width": 300, "popup_min_width": 50, "show_loading": false, "snap_ignore": true, "subitems": [], "tile_size": 256, "tms": false, "url": "https:\/\/tile.openstreetmap.org\/{z}\/{x}\/{y}.png", "visible": true, "zoom_offset": 0}}, "efb2addd236d4042858cb3af8d74df5b": {"model_name": "LayoutModel", "model_module": "@jupyter-widgets\/base", "model_module_version": "2.0.0", "state": {"_model_module": "@jupyter-widgets\/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": "600px", "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "57c257a238dc42f199216a85e43336a6": {"model_name": "LeafletMapStyleModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletMapStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets\/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "cursor": "grab"}}, "a485cd0ea55440a3a440bc46fd847ef8": {"model_name": "LeafletMapModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_dom_classes": [], "_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletMapModel", "_view_count": null, "_view_module": "jupyter-leaflet", "_view_module_version": "^0.20", "_view_name": "LeafletMapView", "bottom": 0.0, "bounce_at_zoom_limits": true, "box_zoom": true, "center": [41.245052, -109.464795], "close_popup_on_click": true, "controls": ["IPY_MODEL_a4d821c09145486ebf1145cabc1f47ab", "IPY_MODEL_3a18c0c5e92e44c99337d3402d691078"], "crs": {"name": "EPSG3857", "custom": false}, "default_style": "IPY_MODEL_d903e5e3f2454bf8ad8260c748a75a0c", "double_click_zoom": true, "dragging": true, "dragging_style": "IPY_MODEL_f77b6e18c2234a8d9b86baf4097eadfa", "east": 0.0, "fullscreen": false, "inertia": true, "inertia_deceleration": 3000, "inertia_max_speed": 1500, "interpolation": "bilinear", "keyboard": true, "keyboard_pan_offset": 80, "keyboard_zoom_offset": 1, "layers": ["IPY_MODEL_edfebe6851ad459f924b3d39defdf91f", "IPY_MODEL_5f53676542eb406ab8271873177226f3", "IPY_MODEL_94ec85bcfb10493eb073287386a38fed"], "layout": "IPY_MODEL_efb2addd236d4042858cb3af8d74df5b", "left": 9007199254740991.0, "max_zoom": null, "min_zoom": null, "modisdate": "2025-09-06", "north": 0.0, "options": ["bounce_at_zoom_limits", "box_zoom", "center", "close_popup_on_click", "double_click_zoom", "dragging", "fullscreen", "inertia", "inertia_deceleration", "inertia_max_speed", "interpolation", "keyboard", "keyboard_pan_offset", "keyboard_zoom_offset", "max_zoom", "min_zoom", "prefer_canvas", "scroll_wheel_zoom", "tap", "tap_tolerance", "touch_zoom", "world_copy_jump", "zoom", "zoom_animation_threshold", "zoom_delta", "zoom_snap"], "panes": {}, "prefer_canvas": false, "right": 0.0, "scroll_wheel_zoom": true, "south": 0.0, "style": "IPY_MODEL_57c257a238dc42f199216a85e43336a6", "tabbable": null, "tap": true, "tap_tolerance": 15, "tooltip": null, "top": 9007199254740991.0, "touch_zoom": true, "west": 0.0, "window_url": "", "world_copy_jump": false, "zoom": 3.0, "zoom_animation_threshold": 4, "zoom_delta": 1.0, "zoom_snap": 1.0}}, "a4d821c09145486ebf1145cabc1f47ab": {"model_name": "LeafletZoomControlModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletZoomControlModel", "_view_count": null, "_view_module": "jupyter-leaflet", "_view_module_version": "^0.20", "_view_name": "LeafletZoomControlView", "options": ["position", "zoom_in_text", "zoom_in_title", "zoom_out_text", "zoom_out_title"], "position": "topleft", "zoom_in_text": "+", "zoom_in_title": "Zoom in", "zoom_out_text": "-", "zoom_out_title": "Zoom out"}}, "3a18c0c5e92e44c99337d3402d691078": {"model_name": "LeafletAttributionControlModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletAttributionControlModel", "_view_count": null, "_view_module": "jupyter-leaflet", "_view_module_version": "^0.20", "_view_name": "LeafletAttributionControlView", "options": ["position", "prefix"], "position": "bottomright", "prefix": "ipyleaflet"}}, "5f53676542eb406ab8271873177226f3": {"model_name": "LeafletTileLayerModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletTileLayerModel", "_view_count": null, "_view_module": "jupyter-leaflet", "_view_module_version": "^0.20", "_view_name": "LeafletTileLayerView", "attribution": "GBIF", "base": false, "bottom": true, "bounds": null, "detect_retina": false, "loading": false, "max_native_zoom": null, "max_zoom": 18, "min_native_zoom": null, "min_zoom": 0, "name": "GBIF Classic", "no_wrap": false, "opacity": 1.0, "options": ["attribution", "bounds", "detect_retina", "max_native_zoom", "max_zoom", "min_native_zoom", "min_zoom", "no_wrap", "pm_ignore", "tile_size", "tms", "zoom_offset"], "pane": "", "pm_ignore": true, "popup": null, "popup_max_height": null, "popup_max_width": 300, "popup_min_width": 50, "show_loading": false, "snap_ignore": true, "subitems": [], "tile_size": 256, "tms": false, "url": "https:\/\/tile.gbif.org\/3857\/omt\/{z}\/{x}\/{y}@1x.png?style=gbif-classic", "visible": true, "zoom_offset": 0}}, "94ec85bcfb10493eb073287386a38fed": {"model_name": "LeafletTileLayerModel", "model_module": "jupyter-leaflet", "model_module_version": "^0.20", "state": {"_model_module": "jupyter-leaflet", "_model_module_version": "^0.20", "_model_name": "LeafletTileLayerModel", "_view_count": null, "_view_module": "jupyter-leaflet", "_view_module_version": "^0.20", "_view_name": "LeafletTileLayerView", "attribution": "Raster file served by <a href='https:\/\/github.com\/banesullivan\/localtileserver' target='_blank'>localtileserver<\/a>.", "base": false, "bottom": true, "bounds": [[32.370717, -114.49631], [50.119387, -104.43328]], "detect_retina": false, "loading": false, "max_native_zoom": 30, "max_zoom": 30, "min_native_zoom": null, "min_zoom": 0, "name": "Persistence Raster", "no_wrap": false, "opacity": 1.0, "options": ["attribution", "bounds", "detect_retina", "max_native_zoom", "max_zoom", "min_native_zoom", "min_zoom", "no_wrap", "pm_ignore", "tile_size", "tms", "zoom_offset"], "pane": "", "pm_ignore": true, "popup": null, "popup_max_height": null, "popup_max_width": 300, "popup_min_width": 50, "show_loading": true, "snap_ignore": true, "subitems": [], "tile_size": 256, "tms": false, "url": "http:\/\/127.0.0.1:36879\/api\/tiles\/{z}\/{x}\/{y}.png?&filename=%2Fhome%2Frunner%2Fwork%2Fecospat%2Fecospat%2Fdocs%2Fexamples%2FPopulus_angustifolia_persistence_raster.tif&colormap=viridis", "visible": true, "zoom_offset": 0}}}, "version_major": 2, "version_minor": 0}
 </script>
 
         <style>
@@ -2545,7 +2481,7 @@ plt.show()</div>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="September 6, 2025 15:00:44 UTC"><span class="timeago" datetime="2025-09-06T15:00:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 6, 2025 15:00:44 UTC">2025-09-06</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="September 7, 2025 00:33:17 UTC"><span class="timeago" datetime="2025-09-07T00:33:17+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="September 7, 2025 00:33:17 UTC">2025-09-07</span>
   </span>
 
     
