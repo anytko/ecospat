@@ -29,14 +29,14 @@
 **Ecospat** is a Python package and accompanying webapp for the interactive mapping and characterization of range edges, the identification of range and population dynamics within and across edges, and the predicted propagule pressure and persistence of individuals.
 
 Species ranges are often noncontiguous and comprised of disjunct populations. We can characterize these populations into different range edges based on their latitudinal positions.
-- Leading Edge: Populations north of the core
+- Leading Edge: Poleward populations
 - Core: Largest, most central populations representing a core zone of admixture
-- Trailing Edge: Populations south of the core
-- Relict (latitudinal or longitudinal): Highly disconnected populations south of the trailing edge or eastern/western isolates
+- Trailing Edge: Equatorward populations
+- Relict (latitudinal or longitudinal): Highly disconnected, equatorward populations or eastern/western isolates
 
-We expect that species are moving northward to track their climate envelopes; however, under climate change, populations have demonstrated a wide variety of range movement dynamics - including moving north or southward together, pulling apart, reabsorbing into the core zone of admixture, and remaining stable. Not only are species' ranges moving, but individuals within and across range edges are also moving, resulting in differential population dynamics.
+We expect that species are moving poleward to track their climate envelopes; however, under climate change, populations have demonstrated a wide variety of range movement dynamics - including moving towards the poles, contracting together, pulling apart, reabsorbing into the core zone of admixture, and remaining stable. Not only are species' ranges moving, but individuals within and across range edges are also moving, resulting in differential population dynamics.
 
-#### Therefore, if we can identify
+#### If we can identify
 1. range edges
 2. range movement patterns
 3. population dynamics within and across range edges
@@ -45,12 +45,12 @@ We can better understand how species have responded to past climate change and i
 
 At present, there are no widely adopted software implementations for characterizing range edges or their dynamics. However, occurrence data spanning both small and large spatial and temporal scales makes this possible.
 
-Using the historical ranges of over 670 North American tree species, historical GBIF data, and modern GBIF data, **_ecospat_** categorizes the range edges of species, northward movement of ranges, and changes in population density over time to identify range patterns, generate a propagule pressure raster, and calculate the predicted persistence of individuals through time to connect community science to community conservation.
+Using the historical ranges of over 670 North American tree species, historical GBIF data, and modern GBIF data, **_ecospat_** categorizes the range edges of species, movement of ranges, and changes in population density over time to identify range patterns, generate a propagule pressure raster, and calculate the predicted persistence of individuals through time to connect community science to community conservation.
 
 ## Features
 
 -   Maps and identifies historical and contemporary range edges of species.
 -   Calculates the northward rate of movement, change in population density through time, average temperature, precipitation, and elevation of range edges.
--   Assigns a range movement pattern (i.e. Moving together, Pulling apart, Stability, or Reabsorption)
+-   Assigns a range movement pattern (i.e. Expanding or Contracting together, Pulling apart, Stability, or Reabsorption)
 -   Generates a propagule pressure raster that can be downloaded and used in further analyses.
 -   Predicts the one and five year persistence of individuals and assigns them to a risk decile based on predicted persistence.
