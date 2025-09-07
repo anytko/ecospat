@@ -22,7 +22,7 @@
 -   GitHub Repo: <https://github.com/anytko/ecospat>
 -   Documentation: <https://anytko.github.io/ecospat>
 -   PyPI: <https://pypi.org/project/ecospat/>
--   Ecospat tutorials on YouTube: <a href="https://youtu.be/Lc7Zh47KA8w" target="_blank">An introduction to ecospat</a>
+-   Ecospat tutorials on YouTube: <a href="https://youtu.be/kFqi0BIAuZM" target="_blank">An introduction to ecospat</a>
 -   Free software: <a href="https://opensource.org/license/MIT" target="_blank">MIT License</a>
 
 ## Introduction & Statement of Need
