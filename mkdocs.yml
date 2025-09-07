@@ -85,9 +85,8 @@ nav:
         - examples/range_edges.ipynb
         - examples/range_movement.ipynb
         - examples/population_density.ipynb
-        - examples/persistence_raster.ipynb
+        - examples/propagule_pressure_raster.ipynb
         - examples/individual_persistence.ipynb
-        - examples/widgets.ipynb
     - API Reference:
           - ecospat module: ecospat.md
           - stand alone module: stand_alone.md
