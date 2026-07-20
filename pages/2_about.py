@@ -66,8 +66,7 @@ def Page():
         solara.Markdown(
             "### Many populations are expanding poleward; however, not all range edges are moving in the same way."
         )
-        solara.Markdown(
-            """
+        solara.Markdown("""
             Range edges can:
 
             - Expand poleward together
@@ -75,8 +74,7 @@ def Page():
             - Pull apart (leading edge expanding and trailing edge contracting)
             - Reabsorb (leading and trailing edges moving back into core zone of admixture)
             - Stabilize
-            """
-        )
+            """)
 
         range_options = "images/range_movement_types.png"
         solara.Image(range_options, width="800px")
@@ -90,8 +88,7 @@ def Page():
         )
         ImageWithToggleMarkdownPopulation()
 
-        solara.Markdown(
-            """
+        solara.Markdown("""
         #### If we can identify
         1. range edges
         2. range movement patterns
@@ -102,8 +99,7 @@ def Page():
         Until recently, these insights were largely unattainable due to limitations of scale and data availability. Historically, southward range shifts in species from the Global South have been underrepresented, and tools to analyze these dynamics lag behind those developed for northern species.
 
         However, global occurrence data spanning both small and large spatial and temporal scales makes this possible.
-        """
-        )
+        """)
 
         solara.Markdown(
             "## _ecospat_ uses GBIF historical and modern data to identify range and population dynamics through time"
@@ -327,8 +323,7 @@ def ImageWithToggleMarkdown():
         # Right: Conditional Markdown
         with solara.Column(style={"maxWidth": "600px"}):
             if filter_mode.value == "Poleward Movement":
-                solara.Markdown(
-                    """
+                solara.Markdown("""
                     ### Leading: Poleward edges.
                     - **Low** among population genetic variation
                     - **Low** functional trait diversity
@@ -343,11 +338,9 @@ def ImageWithToggleMarkdown():
                     ### Relict: Latitudinal and longitudinal outliers.
                     - High genetic variation and functional trait diversity
                     - Low stability
-                    """
-                )
+                    """)
             else:
-                solara.Markdown(
-                    """
+                solara.Markdown("""
                     ### Leading: Poleward edges.
                     - **High** among population genetic variation
                     - **High** functional trait diversity
@@ -362,8 +355,7 @@ def ImageWithToggleMarkdown():
                     ### Relict: Latitudinal and longitudinal outliers.
                     - High genetic variation and functional trait diversity
                     - Low stability
-                    """
-                )
+                    """)
 
 
 @solara.component
@@ -390,8 +382,7 @@ def ImageWithToggleMarkdownPopulation():
         # Right: Conditional Markdown
         with solara.Column(style={"maxWidth": "600px"}):
             if filter_mode_pop.value == "Poleward Movement":
-                solara.Markdown(
-                    """
+                solara.Markdown("""
                     ### Leading: Increasing
 
                     ### Core: Stable
@@ -399,11 +390,9 @@ def ImageWithToggleMarkdownPopulation():
                     ### Trailing: Decreasing
 
                     ### Relict: Decreasing
-                    """
-                )
+                    """)
             else:
-                solara.Markdown(
-                    """
+                solara.Markdown("""
                     ### Leading: Stable
 
                     ### Core: Increasing
@@ -411,8 +400,7 @@ def ImageWithToggleMarkdownPopulation():
                     ### Trailing: Stable
 
                     ### Relict: Decreasing
-                    """
-                )
+                    """)
                 # Left: Image
         image_to_show = (
             "images/North Gray.png"
