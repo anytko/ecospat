@@ -7,7 +7,6 @@ import ecospat
 import datetime
 from solara import component, reactive, HTML
 
-
 # Reactive state
 species_name = solara.reactive("")
 gbif_limit = solara.reactive(2000)
