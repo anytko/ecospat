@@ -2,7 +2,6 @@
 
 """Tests for `ecospat` package."""
 
-
 import unittest
 
 from ecospat import ecospat
