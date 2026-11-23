@@ -33,8 +33,7 @@ def FilterSection():
     )
 
     if filter_mode.value == "Simple Filters":
-        solara.Markdown(
-            """
+        solara.Markdown("""
             **GBIF Data**
             - GBIF Limit
             - Bounding Box
@@ -45,11 +44,9 @@ def FilterSection():
 
             **Output**
             - Raster Resolution
-            """
-        )
+            """)
     else:
-        solara.Markdown(
-            """
+        solara.Markdown("""
             **GBIF Data**
             - GBIF Limit
             - Bounding Box
@@ -64,8 +61,7 @@ def FilterSection():
 
             **Output**
             - Raster Resolution
-            """
-        )
+            """)
 
 
 bounding_boxes = {
@@ -133,57 +129,45 @@ def Page():
         image_url = "images/logo.png"
         solara.Image(image_url, width="200px")
 
-        solara.Markdown(
-            """
+        solara.Markdown("""
                         ###_ecospat_ is a tool that uses GBIF data to categorize the range edges of species through time to understand patterns of movement, population dynamics, and persistence.
-                        """
-        )
-        solara.Markdown(
-            """
+                        """)
+        solara.Markdown("""
                         ###It is designed to be robust across spatial scales and user expertise, making biodiversity insights more accessible in the Global North and South and across researchers, conservationists, and community scientists.
-                        """
-        )
+                        """)
 
         with solara.Column(style={"text-align": "left"}):
-            solara.Markdown(
-                """
+            solara.Markdown("""
                             ## A search begins by entering a species scientific name.
                             If the species is unavailable on GBIF or if there are not enough occurrences to estimate the species range, it will return the original search window.
-                            """
-            )
+                            """)
             solara.InputText(label="Species", value=""),
             solara.Button(
                 "Search",
                 style={"width": "100%", "marginTop": "10px", "marginBottom": "10px"},
             ),
-            solara.Markdown(
-                """
+            solara.Markdown("""
                             ### However, the range edges and estimates of species persistence depend on the data and biological parameters specified by the user.
-                            """
-            )
+                            """)
 
         # Body text inside container
         with solara.Column(style={"text-align": "left"}):
-            solara.Markdown(
-                """
+            solara.Markdown("""
                             ## Simple and advanced filters can be accessed and changed using buttons
-                            """
-            )
+                            """)
 
             FilterSection()
 
             with solara.Column(style={"max-width": "800px", "gap": "1rem"}):
 
                 with solara.Card(title="Advice & Suggestions"):
-                    solara.Markdown(
-                        """
+                    solara.Markdown("""
                         - **GBIF Limit:** Recommended: 2000–4000. Processing time increases with more records, and some species may have fewer available occurrences.
                         - **Bounding Box:** Defaults are set for North America. Range dynamics are region-specific. Globally distributed species may move differently across regions, and calculations can be skewed by large latitudinal differences across regions. For species distributed across multiple regions, we suggest searching each region separately.
                         - **Start Year:** Required for global species not found in Little's range maps of North American tree species. Recommended: 1970-1980s. The start year should be as early as possible to capture the historical distribution of the species; however, many species do not have adequate occurrence data before the 1980s.
                         - **Baseline Mortality:** Default value is set at 0.1 (10% annual mortality). Baseline mortality varies largely by species and location. We recommend researching species-specific mortality rates in the literature. If unavailable, many species fall between 2-12% annual mortality.
                         - **Raster Resolution:** Default value is set at 0.1667° (approximately 400 km²). Higher resolution increases computational time.
-                        """
-                    )
+                        """)
 
             with solara.Column(style={"max-width": "800px", "gap": "1rem"}):
 
